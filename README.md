@@ -1,43 +1,57 @@
-# gemma-isaac-grc
-Cybersecurity GRC portfolio covering risk acceptance, third-party risk, incident analysis, and regulatory compliance. UK-focused.
 # Gemma Isaac — GRC Portfolio
 
-**Cybersecurity GRC | Risk & Governance | Manchester, UK**
+**Cybersecurity GRC · Risk & Governance · Manchester, UK**
 
 This portfolio demonstrates how I think about cyber risk, how I approach decisions under regulatory and business pressure, and how I communicate security to different audiences.
 
 I am a career changer with an MSc in Computer Science and Cybersecurity (University of York, Merit) and a background in information governance, research methodology, and cross-cultural analysis. I am actively seeking GRC roles in the Manchester area and beyond.
 
-> All artefacts use clearly defined fictional scenarios. They are thinking exercises designed to show judgement — not templates, not compliance theatre.
+All artefacts use clearly defined fictional scenarios. They are thinking exercises designed to show judgement — not templates, not compliance theatre.
 
 ---
 
-## Portfolio Sections
+## 📁 How I Think
 
-### 📁 [How I Think](./how-i-think/)
 My underlying principles around risk, uncertainty, and governance. Start here.
+
 - Risk Manifesto *(coming soon)*
 
-### 📁 [How I Decide](./how-i-decide/)
+---
+
+## 📁 How I Decide
+
 Risk trade-offs, acceptance decisions, and escalation under pressure.
-- [Artefact A — Risk Acceptance With Teeth](./how-i-decide/artefact-a-risk-acceptance.md) — Documented risk acceptance for a third-party supplier certification gap at a Series B UK fintech. Includes compensating controls, named ownership, review triggers, and a formal acceptance statement.
-- Tool 01 — Third-Party Questionnaire Auto-Scorer *(coming soon)*
+
+- **Artefact A — Risk Acceptance With Teeth** — Documented risk acceptance for a third-party supplier certification gap at a Series B UK fintech. Includes compensating controls, named ownership, review triggers, and a formal acceptance statement.
+- 🔗 [**Tool 01 — Third-Party Risk Auto-Scorer**](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-autoscorer.html) — Weighted scoring tool for vendor risk assessment with full methodology.
 - Tool 03 — Human Attack Surface OSINT Risk Mapper *(coming soon)*
 
-### 📁 [How Things Fail](./how-things-fail/)
+---
+
+## 📁 How Things Fail
+
 Failure mode analysis, root cause thinking, and attack reconstruction.
+
 - Artefact B — Failure Mode Analysis: The 2am Test *(coming soon)*
 - Artefact C — Human-Centred Root Cause Analysis *(coming soon)*
 - Tool 05 — Rebuild Famous Attacks *(coming soon)*
 
-### 📁 [How I Communicate](./how-i-communicate/)
-Board briefs, non-technical risk communication, and practical security guidance.
-- Artefact D — One-Page Board Brief *(coming soon)*
-- Tool 02 — BEC / Invoice Fraud Control Simulator *(coming soon)*
-- 🔗 [Cybersecurity Small Business Kit](https://github.com/gemmaisaac555-gif/[your-small-business-repo]) — A practical security starter kit for small UK businesses. Jargon-free, sector-specific, built for non-technical owners.
+---
 
-### 📁 [Regulatory Judgement](./regulatory-judgement/)
+## 📁 How I Communicate
+
+Board briefs, non-technical risk communication, and practical security guidance.
+
+- Artefact D — One-Page Board Brief *(coming soon)*
+- 🔗 [**Tool 02 — BEC / Invoice Fraud Control Simulator**](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-bec-simulator.html) — Interactive simulator for testing BEC and invoice fraud controls across email, finance, and process layers.
+- 🔗 [**Tool 04 — Small Business Security Kit**](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-small-business-kit.html) — Practical security starter kit for small UK businesses. Built around a real NorthWest Heating & Gas case study: £474 cost, 31× ROI.
+
+---
+
+## 📁 Regulatory Judgement
+
 Regulatory intuition, ICO/FCA/DORA lens, and compliance under uncertainty.
+
 - Artefact E — Regulatory Intuition Memo *(coming soon)*
 
 ---
@@ -51,15 +65,15 @@ Regulatory intuition, ICO/FCA/DORA lens, and compliance under uncertainty.
 | **Languages** | English (native), Mandarin (intermediate) |
 | **Community** | OWASP Manchester, Grey Hats, BSides |
 | **Home lab** | Kali Linux, Metasploitable, CSI Linux — 24GB RAM |
-| **Certifications** | CompTIA Security+ (in progress) |
+| **Certifications** | ISO 27001 Lead Implementer (in progress) |
 
 ---
 
 ## Contact
 
-- 🔗 LinkedIn: *coming soon*
-- 📧 *coming soon*
+- 🔗 LinkedIn: coming soon
+- 📧 coming soon
 
 ---
 
-*Licensed under [CC BY 4.0](./LICENSE) — you may reference or share this work with attribution.*
+*Licensed under CC BY 4.0 — you may reference or share this work with attribution.*
