@@ -23,7 +23,7 @@ My underlying principles around risk, uncertainty, and governance. Start here.
 Risk trade-offs, acceptance decisions, and escalation under pressure.
 
 - **Artefact A — Risk Acceptance With Teeth** — Documented risk acceptance for a third-party supplier certification gap at a Series B UK fintech. Includes compensating controls, named ownership, review triggers, and a formal acceptance statement.
-- 🔗 [**Tool 01 — Third-Party Risk Auto-Scorer**](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-autoscorer.html) — Weighted scoring tool for vendor risk assessment with full methodology.
+- 🔗 [**Tool 01 — Third-Party Risk Auto-Scorer**- **[Artefact A — Risk Acceptance With Teeth](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/how-i-decide/artefact-a-risk-acceptance.md)** — Documented risk acceptance for a third-party supplier certification gap at a Series B UK fintech. Includes compensating controls, named ownership, review triggers, and a formal acceptance statement. — Weighted scoring tool for vendor risk assessment with full methodology.
 - Tool 03 — Human Attack Surface OSINT Risk Mapper *(coming soon)*
 
 ---
