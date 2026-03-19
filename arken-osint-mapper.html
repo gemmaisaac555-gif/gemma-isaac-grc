@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arken Systems — OSINT Human Attack Surface Mapper</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0d0f;
+  --surface: #131518;
+  --surface2: #1a1d22;
+  --surface3: #21252c;
+  --border: #2a2f38;
+  --border2: #343b47;
+  --amber: #f59e0b;
+  --amber-dim: #b45309;
+  --amber-glow: rgba(245,158,11,0.12);
+  --amber-glow2: rgba(245,158,11,0.06);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.1);
+  --orange: #f97316;
+  --orange-bg: rgba(249,115,22,0.1);
+  --yellow: #eab308;
+  --yellow-bg: rgba(234,179,8,0.1);
+  --green: #22c55e;
+  --green-bg: rgba(34,197,94,0.1);
+  --blue: #60a5fa;
+  --blue-bg: rgba(96,165,250,0.1);
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --text-faint: #475569;
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;}
+
+/* SCANLINE OVERLAY */
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:1000;}
+
+/* LAYOUT */
+.wrap{max-width:960px;margin:0 auto;padding:0 24px 80px;}
+
+/* HEADER */
+.site-header{padding:32px 0 0;margin-bottom:0;}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:20px;}
+.header-badge{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--amber);border:1px solid var(--amber-dim);padding:4px 10px;background:var(--amber-glow2);}
+.header-status{font-family:var(--mono);font-size:10px;color:var(--text-faint);display:flex;align-items:center;gap:8px;}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.site-title{font-family:var(--mono);font-size:clamp(18px,3vw,26px);font-weight:500;color:var(--text);letter-spacing:-0.02em;margin-bottom:6px;}
+.site-title span{color:var(--amber);}
+.site-subtitle{font-family:var(--mono);font-size:11px;color:var(--text-faint);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;}
+.header-desc{font-size:13px;color:var(--text-dim);line-height:1.8;max-width:620px;border-left:2px solid var(--amber-dim);padding-left:14px;margin-bottom:28px;}
+
+/* NAV TABS */
+.tab-nav{display:flex;border-bottom:1px solid var(--border);margin-bottom:32px;overflow-x:auto;gap:0;}
+.tab-btn{font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:10px 20px;cursor:pointer;color:var(--text-faint);border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all 0.15s;display:flex;align-items:center;gap:8px;}
+.tab-btn:hover{color:var(--text-dim);}
+.tab-btn.active{color:var(--amber);border-bottom-color:var(--amber);}
+.tab-num{font-size:10px;opacity:0.6;}
+
+/* PANELS */
+.panel{display:none;}
+.panel.active{display:block;animation:fadeUp 0.2s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* PROGRESS */
+.progress-bar{height:2px;background:var(--border);margin-bottom:32px;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--amber-dim),var(--amber));transition:width 0.4s ease;}
+
+/* SECTION HEADERS */
+.section-label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--amber);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.panel-title{font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.panel-sub{font-size:13px;color:var(--text-dim);margin-bottom:28px;}
+
+/* FORM */
+.field-group{margin-bottom:20px;}
+.field-label{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;display:block;}
+.field-hint{font-size:12px;color:var(--text-faint);margin-bottom:8px;line-height:1.6;}
+.field-input{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:13px;padding:10px 14px;outline:none;transition:border-color 0.15s;}
+.field-input:focus{border-color:var(--amber-dim);}
+.field-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2710%27 height=%276%27%3E%3Cpath d=%27M0 0l5 6 5-6z%27 fill=%27%2394a3b8%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;}
+
+/* ASSESSMENT ITEMS */
+.assessment-block{background:var(--surface);border:1px solid var(--border);margin-bottom:12px;overflow:hidden;}
+.assessment-header{padding:14px 18px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:background 0.15s;}
+.assessment-header:hover{background:var(--surface2);}
+.assessment-title{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text);letter-spacing:0.04em;}
+.assessment-cat{font-family:var(--mono);font-size:10px;color:var(--text-faint);margin-top:2px;}
+.assessment-body{padding:0 18px;max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s ease;}
+.assessment-body.open{max-height:600px;padding:16px 18px;}
+.intel-note{background:var(--surface2);border-left:2px solid var(--amber-dim);padding:10px 14px;font-size:12px;color:var(--text-dim);line-height:1.7;margin-bottom:14px;}
+.intel-note strong{color:var(--amber);font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:4px;}
+
+/* RADIO / CHECK */
+.option-group{display:flex;flex-direction:column;gap:6px;}
+.option-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--border);cursor:pointer;transition:all 0.15s;}
+.option-item:hover{border-color:var(--border2);}
+.option-item.selected{border-color:var(--amber-dim);background:var(--amber-glow2);}
+.option-item input{margin-top:2px;flex-shrink:0;accent-color:var(--amber);}
+.option-label{font-size:13px;color:var(--text);}
+.option-score{font-family:var(--mono);font-size:11px;margin-top:2px;}
+.score-high{color:var(--red);}
+.score-med{color:var(--orange);}
+.score-low{color:var(--green);}
+
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+@media(max-width:520px){.check-grid{grid-template-columns:1fr;}}
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border:1px solid var(--border);cursor:pointer;transition:all 0.15s;}
+.check-item:hover{border-color:var(--border2);}
+.check-item.checked{border-color:var(--amber-dim);background:var(--amber-glow2);}
+.check-item input{margin-top:2px;accent-color:var(--amber);}
+.check-label{font-size:12px;color:var(--text-dim);}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;}
+.btn-primary{background:var(--amber);color:#0c0d0f;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:12px 28px;border:none;cursor:pointer;transition:background 0.15s;}
+.btn-primary:hover{background:#fbbf24;}
+.btn-secondary{background:transparent;color:var(--text-dim);font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:12px 20px;border:1px solid var(--border);cursor:pointer;transition:all 0.15s;}
+.btn-secondary:hover{border-color:var(--border2);color:var(--text);}
+
+/* RESULTS */
+.result-header{background:var(--surface);border:1px solid var(--border);padding:24px 28px;margin-bottom:24px;position:relative;overflow:hidden;}
+.result-header::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber-dim),var(--amber),var(--amber-dim));}
+.result-meta{font-family:var(--mono);font-size:10px;color:var(--text-faint);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;}
+.result-org{font-size:22px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.result-score-row{display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-top:16px;}
+.score-block{text-align:center;}
+.score-num{font-family:var(--mono);font-size:48px;font-weight:500;line-height:1;color:var(--amber);}
+.score-label{font-family:var(--mono);font-size:10px;color:var(--text-faint);letter-spacing:0.15em;text-transform:uppercase;margin-top:4px;}
+.exposure-badge{font-family:var(--mono);font-size:11px;font-weight:500;padding:6px 16px;border:1px solid;letter-spacing:0.1em;text-transform:uppercase;}
+.exposure-critical{color:var(--red);border-color:var(--red);background:var(--red-bg);}
+.exposure-high{color:var(--orange);border-color:var(--orange);background:var(--orange-bg);}
+.exposure-medium{color:var(--yellow);border-color:var(--yellow);background:var(--yellow-bg);}
+.exposure-low{color:var(--green);border-color:var(--green);background:var(--green-bg);}
+
+.domain-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+@media(max-width:600px){.domain-grid{grid-template-columns:1fr;}}
+.domain-card{background:var(--surface);border:1px solid var(--border);padding:16px 18px;}
+.domain-name{font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-faint);margin-bottom:8px;}
+.domain-score-row{display:flex;align-items:center;justify-content:space-between;}
+.domain-score{font-family:var(--mono);font-size:24px;font-weight:500;}
+.domain-bar-wrap{height:3px;background:var(--border);margin-top:10px;border-radius:2px;}
+.domain-bar{height:100%;border-radius:2px;}
+
+.finding-list{margin-bottom:24px;}
+.finding-section-label{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-faint);padding:8px 0;border-bottom:1px solid var(--border);margin-bottom:12px;}
+.finding-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--surface2);align-items:flex-start;}
+.finding-item:last-child{border-bottom:none;}
+.finding-severity{font-family:var(--mono);font-size:10px;padding:3px 8px;border:1px solid;white-space:nowrap;flex-shrink:0;margin-top:2px;letter-spacing:0.06em;text-transform:uppercase;}
+.sev-critical{color:var(--red);border-color:var(--red);background:var(--red-bg);}
+.sev-high{color:var(--orange);border-color:var(--orange);background:var(--orange-bg);}
+.sev-medium{color:var(--yellow);border-color:var(--yellow);background:var(--yellow-bg);}
+.finding-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px;}
+.finding-detail{font-size:12px;color:var(--text-dim);line-height:1.7;}
+.finding-rec{font-family:var(--mono);font-size:11px;color:var(--amber);margin-top:6px;}
+
+.intel-table{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:20px;font-family:var(--mono);}
+.intel-table th{text-align:left;padding:8px 12px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);border-bottom:1px solid var(--border);font-weight:400;}
+.intel-table td{padding:10px 12px;border-bottom:1px solid var(--surface2);color:var(--text-dim);vertical-align:top;}
+.intel-table td:first-child{color:var(--text);}
+.intel-table tr:last-child td{border-bottom:none;}
+
+/* METHODOLOGY */
+.method-card{background:var(--surface);border:1px solid var(--border);padding:20px 24px;margin-bottom:14px;}
+.method-card h3{font-family:var(--mono);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber);margin-bottom:10px;}
+.method-card p{font-size:13px;color:var(--text-dim);line-height:1.8;margin-bottom:8px;}
+.method-card p:last-child{margin-bottom:0;}
+.code-block{background:var(--bg);border:1px solid var(--border);padding:12px 16px;font-family:var(--mono);font-size:11px;color:var(--text-dim);line-height:1.8;margin-top:10px;}
+
+.disclaimer{margin-top:48px;padding:14px 18px;border:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--text-faint);line-height:1.7;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="site-header">
+  <div class="header-top">
+    <div class="header-badge">Arken Systems // GRC Tooling</div>
+    <div class="header-status"><span class="status-dot"></span><span>Assessment framework active</span></div>
+  </div>
+  <div class="site-title"><span>OSINT</span> Human Attack Surface Mapper</div>
+  <div class="site-subtitle">Tool 03 — Arken Systems Threat Intelligence Suite</div>
+  <p class="header-desc">A structured assessment framework for mapping the human attack surface of a target organisation. Covers people-layer exposure, organisational intelligence, and digital footprint — the information an attacker gathers before touching a single system.</p>
+</header>
+
+<div class="progress-bar"><div class="progress-fill" id="progress" style="width:20%"></div></div>
+
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="goTo(0)" id="tab-0"><span class="tab-num">01</span>Target</button>
+  <button class="tab-btn" onclick="goTo(1)" id="tab-1"><span class="tab-num">02</span>People Layer</button>
+  <button class="tab-btn" onclick="goTo(2)" id="tab-2"><span class="tab-num">03</span>Org Intelligence</button>
+  <button class="tab-btn" onclick="goTo(3)" id="tab-3"><span class="tab-num">04</span>Digital Footprint</button>
+  <button class="tab-btn" onclick="goTo(4)" id="tab-4"><span class="tab-num">05</span>Results</button>
+  <button class="tab-btn" onclick="goTo(5)" id="tab-5"><span class="tab-num">06</span>Methodology</button>
+</nav>
+
+<!-- PANEL 0: TARGET -->
+<div class="panel active" id="panel-0">
+  <div class="section-label">Assessment configuration</div>
+  <div class="panel-title">Target Organisation</div>
+  <div class="panel-sub">Define the scope and context of this OSINT assessment.</div>
+
+  <div class="assessment-block">
+    <div class="assessment-header" onclick="toggleBlock(this)">
+      <div><div class="assessment-title">Assessment Context</div><div class="assessment-cat">Scope · Engagement type · Fictional scenario</div></div>
+      <span style="color:var(--amber);font-family:var(--mono);font-size:11px;">▼</span>
+    </div>
+    <div class="assessment-body open">
+      <div class="intel-note"><strong>Arken Systems — Engagement note</strong>This tool is used by Arken Systems consultants to conduct structured OSINT assessments on behalf of clients. All assessments are conducted within a defined engagement scope and with appropriate authorisation. This tool does not perform live data collection — it is a structured framework for recording and scoring findings from manual OSINT research.</div>
+      <div class="field-group">
+        <label class="field-label">Target organisation name</label>
+        <input class="field-input" id="target-name" type="text" placeholder="e.g. Veriflow Payments Ltd">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Engagement type</label>
+        <div class="option-group" id="engagement-type">
+          <label class="option-item" onclick="selectOpt(this,'eng-type')"><input type="radio" name="eng-type" value="red-team"> <div><div class="option-label">Red team / adversary simulation</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'eng-type')"><input type="radio" name="eng-type" value="vendor-due-dil"> <div><div class="option-label">Third-party / vendor due diligence</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'eng-type')"><input type="radio" name="eng-type" value="self-assess"> <div><div class="option-label">Self-assessment (client assessing own exposure)</div></div></label>
+          <label class="option-item selected" onclick="selectOpt(this,'eng-type')"><input type="radio" name="eng-type" value="demo" checked> <div><div class="option-label">Portfolio demonstration — Veriflow Payments scenario</div></div></label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Organisation size (approximate headcount)</label>
+        <select class="field-input field-select" id="org-size">
+          <option value="micro">Under 25</option>
+          <option value="small" selected>25–100</option>
+          <option value="mid">100–500</option>
+          <option value="large">500+</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Sector</label>
+        <select class="field-input field-select" id="org-sector">
+          <option value="fintech" selected>Financial services / fintech</option>
+          <option value="defence">Defence / government</option>
+          <option value="health">Healthcare</option>
+          <option value="tech">Technology</option>
+          <option value="professional">Professional services</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row"><button class="btn-primary" onclick="goTo(1)">Begin Assessment →</button></div>
+</div>
+
+<!-- PANEL 1: PEOPLE LAYER -->
+<div class="panel" id="panel-1">
+  <div class="section-label">Domain 01 — People layer</div>
+  <div class="panel-title">Personnel Exposure</div>
+  <div class="panel-sub">What can an attacker learn about the organisation's people from open sources?</div>
+
+  <!-- LinkedIn / Org Chart -->
+  <div class="assessment-block">
+    <div class="assessment-header" onclick="toggleBlock(this)">
+      <div><div class="assessment-title">LinkedIn & Org Chart Exposure</div><div class="assessment-cat">People intelligence · Role mapping · Targeting</div></div>
+      <span style="color:var(--amber);font-family:var(--mono);font-size:11px;">▼</span>
+    </div>
+    <div class="assessment-body open">
+      <div class="intel-note"><strong>Why this matters</strong>LinkedIn is the attacker's primary people intelligence source. Named employees, roles, tenure, reporting lines, and career history are all visible. An attacker can identify high-value targets (finance, IT, C-suite), map the org chart, and craft spear-phishing pretexts using real job titles and relationships — before sending a single email.</div>
+      <div class="field-group">
+        <label class="field-label">LinkedIn presence and employee visibility</label>
+        <div class="option-group">
+          <label class="option-item" onclick="selectOpt(this,'linkedin')"><input type="radio" name="linkedin" value="3"> <div><div class="option-label">High exposure — most employees have detailed public profiles, org chart largely reconstructable</div><div class="option-score score-high">Exposure score: High</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'linkedin')"><input type="radio" name="linkedin" value="2"> <div><div class="option-label">Medium exposure — key roles visible, some gaps, org chart partially reconstructable</div><div class="option-score score-med">Exposure score: Medium</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'linkedin')"><input type="radio" name="linkedin" value="1"> <div><div class="option-label">Low exposure — few employees visible, limited role detail</div><div class="option-score score-low">Exposure score: Low</div></div></label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">High-value target roles visible (finance, IT admin, C-suite, HR)?</label>
+        <div class="option-group">
+          <label class="option-item" onclick="selectOpt(this,'hvt')"><input type="radio" name="hvt" value="2"> <div><div class="option-label">Yes — CFO, IT leads, and finance staff are named and profiled</div><div class="option-score score-high">Exposure score: High</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'hvt')"><input type="radio" name="hvt" value="1"> <div><div class="option-label">Partially — some senior roles visible, finance/IT not fully exposed</div><div class="option-score score-med">Exposure score: Medium</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'hvt')"><input type="radio" name="hvt" value="0"> <div><div class="option-label">No — high-value roles not identifiable from open sources</div><div class="option-score score-low">Exposure score: Low</div></div></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email Format -->
+  <div class="assessment-block">
+    <div class="assessment-header" onclick="toggleBlock(this)">
+      <div><div class="assessment-title">Email Format & Address Inference</div><div class="assessment-cat">Credential intelligence · Phishing enablement</div></div>
+      <span style="color:var(--amber);font-family:var(--mono);font-size:11px;">▼</span>
+    </div>
+    <div class="assessment-body open">
+      <div class="intel-note"><strong>Why this matters</strong>Once an attacker knows a name and the email format (firstname.lastname@domain.com), they can construct valid email addresses for any employee. Combined with LinkedIn data, this enables targeted spear-phishing at scale. Email formats are frequently exposed in press releases, conference listings, published research, or data breach dumps.</div>
+      <div class="field-group">
+        <label class="field-label">Email format inferability</label>
+        <div class="option-group">
+          <label class="option-item" onclick="selectOpt(this,'email-fmt')"><input type="radio" name="email-fmt" value="3"> <div><div class="option-label">Confirmed — email format visible in published contact details, press releases, or breach data</div><div class="option-score score-high">Exposure score: High</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'email-fmt')"><input type="radio" name="email-fmt" value="2"> <div><div class="option-label">Inferable — format can be guessed from one or two visible addresses</div><div class="option-score score-med">Exposure score: Medium</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'email-fmt')"><input type="radio" name="email-fmt" value="1"> <div><div class="option-label">Unclear — format not apparent from open sources</div><div class="option-score score-low">Exposure score: Low</div></div></label>
+        </div>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Credentials visible in breach data (HaveIBeenPwned, Dehashed, etc.)?</label>
+        <div class="option-group">
+          <label class="option-item" onclick="selectOpt(this,'breach-creds')"><input type="radio" name="breach-creds" value="3"> <div><div class="option-label">Yes — employee credentials found in known breach datasets</div><div class="option-score score-high">Exposure score: Critical</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'breach-creds')"><input type="radio" name="breach-creds" value="1"> <div><div class="option-label">Partial — some email addresses found, passwords not confirmed</div><div class="option-score score-med">Exposure score: Medium</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'breach-creds')"><input type="radio" name="breach-creds" value="0"> <div><div class="option-label">No — no credentials identified in breach data</div><div class="option-score score-low">Exposure score: Low</div></div></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Social Media -->
+  <div class="assessment-block">
+    <div class="assessment-header" onclick="toggleBlock(this)">
+      <div><div class="assessment-title">Social Media & Personal Exposure</div><div class="assessment-cat">Pretext intelligence · Personal targeting</div></div>
+      <span style="color:var(--amber);font-family:var(--mono);font-size:11px;">▼</span>
+    </div>
+    <div class="assessment-body">
+      <div class="intel-note"><strong>Why this matters</strong>Personal social media profiles reveal interests, relationships, travel patterns, and frustrations — all useful for building convincing pretexts. An attacker who knows a finance manager supports a particular football team, recently returned from holiday, and is frustrated with their IT department has significant social engineering material before making contact.</div>
+      <div class="field-group">
+        <label class="field-label">Key personnel social media exposure</label>
+        <div class="option-group">
+          <label class="option-item" onclick="selectOpt(this,'social')"><input type="radio" name="social" value="2"> <div><div class="option-label">High — senior staff have active public social media with personal detail visible</div><div class="option-score score-high">Exposure score: High</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'social')"><input type="radio" name="social" value="1"> <div><div class="option-label">Medium — some presence, limited personal detail</div><div class="option-score score-med">Exposure score: Medium</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'social')"><input type="radio" name="social" value="0"> <div><div class="option-label">Low — minimal social media presence for key personnel</div><div class="option-score score-low">Exposure score: Low</div></div></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-primary" onclick="goTo(2)">Next: Org Intelligence →</button>
+    <button class="btn-secondary" onclick="goTo(0)">← Back</button>
+  </div>
+</div>
+
+<!-- PANEL 2: ORG INTELLIGENCE -->
+<div class="panel" id="panel-2">
+  <div class="section-label">Domain 02 — Organisational intelligence</div>
+  <div class="panel-title">Organisational Exposure</div>
+  <div class="panel-sub">What does an attacker learn about the organisation itself from open sources?</div>
+
+  <!-- Job Postings -->
+  <div class="assessment-block">
+    <div class="assessment-header" onclick="toggleBlock(this)">
+      <div><div class="assessment-title">Job Postings & Tech Stack Exposure</div><div class="assessment-cat">Technology intelligence · Vulnerability targeting</div></div>
+      <span style="color:var(--amber);font-family:var(--mono);font-size:11px;">▼</span>
+    </div>
+    <div class="assessment-body open">
+      <div class="intel-note"><strong>Why this matters</strong>Job postings are one of the richest unintentional intelligence sources available. A posting for a "Senior AWS Security Engineer" confirms cloud infrastructure. A posting requiring "experience with Palo Alto firewalls" confirms the firewall vendor. A posting for "Salesforce administrator" confirms the CRM. Security researchers have mapped entire technology stacks from LinkedIn job ads alone.</div>
+      <div class="field-group">
+        <label class="field-label">Technology stack inferability from job postings</label>
+        <div class="option-group">
+          <label class="option-item" onclick="selectOpt(this,'jobs')"><input type="radio" name="jobs" value="3"> <div><div class="option-label">High — cloud provider, security tools, software stack clearly identifiable from current postings</div><div class="option-score score-high">Exposure score: High</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'jobs')"><input type="radio" name="jobs" value="2"> <div><div class="option-label">Medium — partial stack visible, some tools identifiable</div><div class="option-score score-med">Exposure score: Medium</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'jobs')"><input type="radio" name="jobs" value="1"> <div><div class="option-label">Low — job postings are generic, tech stack not exposed</div><div class="option-score score-low">Exposure score: Low</div></div></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Companies House / Public Records -->
+  <div class="assessment-block">
+    <div class="assessment-header" onclick="toggleBlock(this)">
+      <div><div class="assessment-title">Companies House & Public Filings</div><div class="assessment-cat">Director intelligence · Corporate structure</div></div>
+      <span style="color:var(--amber);font-family:var(--mono);font-size:11px;">▼</span>
+    </div>
+    <div class="assessment-body open">
+      <div class="intel-note"><strong>Why this matters</strong>UK Companies House exposes director names, home addresses (for older filings), company accounts, filing history, and corporate structure. For UK-registered companies this is unavoidable — but many organisations do not consider what this information enables. Director home addresses combined with LinkedIn profiles creates a targeting package for physical social engineering or spear-phishing.</div>
+      <div class="field-group">
+        <label class="field-label">Director / officer information exposed in public filings</label>
+        <div class="option-group">
+          <label class="option-item" onclick="selectOpt(this,'ch')"><input type="radio" name="ch" value="3"> <div><div class="option-label">High — director home addresses visible in older filings, full corporate structure exposed</div><div class="option-score score-high">Exposure score: High</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'ch')"><input type="radio" name="ch" value="2"> <div><div class="option-label">Medium — names and roles visible, addresses suppressed or redacted</div><div class="option-score score-med">Exposure score: Medium</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'ch')"><input type="radio" name="ch" value="1"> <div><div class="option-label">Low — minimal useful intelligence from public filings</div><div class="option-score score-low">Exposure score: Low</div></div></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supplier / Partner Relationships -->
+  <div class="assessment-block">
+    <div class="assessment-header" onclick="toggleBlock(this)">
+      <div><div class="assessment-title">Supplier & Partner Relationships</div><div class="assessment-cat">Supply chain attack surface · Trust relationship exploitation</div></div>
+      <span style="color:var(--amber);font-family:var(--mono);font-size:11px;">▼</span>
+    </div>
+    <div class="assessment-body">
+      <div class="intel-note"><strong>Why this matters</strong>Named supplier relationships — visible in press releases, case studies, conference presentations, and LinkedIn posts — enable trust relationship attacks. An attacker impersonating a known supplier is significantly more likely to succeed than one approaching cold. "Hi, this is James from Tradify — we're following up on your account" works better when the target has posted on LinkedIn about using Tradify.</div>
+      <div class="field-group">
+        <label class="field-label">Supplier / partner relationships publicly visible</label>
+        <div class="option-group">
+          <label class="option-item" onclick="selectOpt(this,'suppliers')"><input type="radio" name="suppliers" value="2"> <div><div class="option-label">High — named suppliers, cloud providers, and key vendors publicly visible</div><div class="option-score score-high">Exposure score: High</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'suppliers')"><input type="radio" name="suppliers" value="1"> <div><div class="option-label">Medium — some relationships visible, not comprehensive</div><div class="option-score score-med">Exposure score: Medium</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'suppliers')"><input type="radio" name="suppliers" value="0"> <div><div class="option-label">Low — supplier relationships not publicly disclosed</div><div class="option-score score-low">Exposure score: Low</div></div></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-primary" onclick="goTo(3)">Next: Digital Footprint →</button>
+    <button class="btn-secondary" onclick="goTo(1)">← Back</button>
+  </div>
+</div>
+
+<!-- PANEL 3: DIGITAL FOOTPRINT -->
+<div class="panel" id="panel-3">
+  <div class="section-label">Domain 03 — Digital footprint</div>
+  <div class="panel-title">Digital Footprint & Technical Exposure</div>
+  <div class="panel-sub">What does the organisation's digital presence reveal to a patient attacker?</div>
+
+  <!-- Domain / Cert Intelligence -->
+  <div class="assessment-block">
+    <div class="assessment-header" onclick="toggleBlock(this)">
+      <div><div class="assessment-title">Domain & Certificate Intelligence</div><div class="assessment-cat">Infrastructure mapping · Subdomain exposure</div></div>
+      <span style="color:var(--amber);font-family:var(--mono);font-size:11px;">▼</span>
+    </div>
+    <div class="assessment-body open">
+      <div class="intel-note"><strong>Why this matters</strong>Certificate transparency logs (crt.sh) expose every TLS certificate issued for a domain, including subdomains — staging environments, internal tools, admin portals, and development systems that were never intended to be publicly discoverable. WHOIS and passive DNS data reveals infrastructure history. This is technical OSINT that directly informs attack surface mapping.</div>
+      <div class="field-group">
+        <label class="field-label">Subdomain exposure via certificate transparency</label>
+        <div class="option-group">
+          <label class="option-item" onclick="selectOpt(this,'certs')"><input type="radio" name="certs" value="3"> <div><div class="option-label">High — staging, dev, admin subdomains visible in CT logs</div><div class="option-score score-high">Exposure score: High</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'certs')"><input type="radio" name="certs" value="1"> <div><div class="option-label">Medium — some subdomains visible, no sensitive environments exposed</div><div class="option-score score-med">Exposure score: Medium</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'certs')"><input type="radio" name="certs" value="0"> <div><div class="option-label">Low — minimal subdomain exposure, no sensitive systems visible</div><div class="option-score score-low">Exposure score: Low</div></div></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GitHub / Code Exposure -->
+  <div class="assessment-block">
+    <div class="assessment-header" onclick="toggleBlock(this)">
+      <div><div class="assessment-title">Code Repository & GitHub Exposure</div><div class="assessment-cat">Credential leakage · Architecture intelligence</div></div>
+      <span style="color:var(--amber);font-family:var(--mono);font-size:11px;">▼</span>
+    </div>
+    <div class="assessment-body open">
+      <div class="intel-note"><strong>Why this matters</strong>Public GitHub repositories — including personal repos of employees — frequently contain API keys, credentials, internal hostnames, architecture diagrams, and configuration files committed accidentally. GitHub dorking (searching for org name + common credential patterns) is a standard attacker technique. Even deleted commits may be recoverable.</div>
+      <div class="field-group">
+        <label class="field-label">Code / repository exposure</label>
+        <div class="option-group">
+          <label class="option-item" onclick="selectOpt(this,'github')"><input type="radio" name="github" value="3"> <div><div class="option-label">High — credentials, API keys, or internal config found in public repositories</div><div class="option-score score-high">Exposure score: Critical</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'github')"><input type="radio" name="github" value="2"> <div><div class="option-label">Medium — public repos exist, no credentials found, some architecture visible</div><div class="option-score score-med">Exposure score: Medium</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'github')"><input type="radio" name="github" value="0"> <div><div class="option-label">Low — no relevant public repositories identified</div><div class="option-score score-low">Exposure score: Low</div></div></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Conference / Publication Exposure -->
+  <div class="assessment-block">
+    <div class="assessment-header" onclick="toggleBlock(this)">
+      <div><div class="assessment-title">Conference, Publication & Media Exposure</div><div class="assessment-cat">Authority targeting · Pretext material</div></div>
+      <span style="color:var(--amber);font-family:var(--mono);font-size:11px;">▼</span>
+    </div>
+    <div class="assessment-body">
+      <div class="intel-note"><strong>Why this matters</strong>Conference presentations, published papers, podcast appearances, and press interviews reveal internal projects, security challenges, strategic priorities, and technical detail that staff may not consider sensitive in a professional context. A CISO describing their zero-trust implementation at a conference is providing an attacker with a detailed architecture brief.</div>
+      <div class="field-group">
+        <label class="field-label">Conference / media / publication exposure</label>
+        <div class="option-group">
+          <label class="option-item" onclick="selectOpt(this,'conf')"><input type="radio" name="conf" value="2"> <div><div class="option-label">High — senior staff regularly present at conferences, detailed technical content publicly available</div><div class="option-score score-high">Exposure score: High</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'conf')"><input type="radio" name="conf" value="1"> <div><div class="option-label">Medium — some external presence, limited technical detail</div><div class="option-score score-med">Exposure score: Medium</div></div></label>
+          <label class="option-item" onclick="selectOpt(this,'conf')"><input type="radio" name="conf" value="0"> <div><div class="option-label">Low — minimal external presence</div><div class="option-score score-low">Exposure score: Low</div></div></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-primary" onclick="generateResults()">Generate Attack Surface Report →</button>
+    <button class="btn-secondary" onclick="goTo(2)">← Back</button>
+  </div>
+</div>
+
+<!-- PANEL 4: RESULTS -->
+<div class="panel" id="panel-4">
+  <div class="section-label">Assessment output</div>
+  <div id="results-content"></div>
+  <div class="btn-row">
+    <button class="btn-secondary" onclick="goTo(5)">View Methodology</button>
+    <button class="btn-secondary" onclick="goTo(0)">← New Assessment</button>
+  </div>
+</div>
+
+<!-- PANEL 5: METHODOLOGY -->
+<div class="panel" id="panel-5">
+  <div class="section-label">Tool documentation</div>
+  <div class="panel-title">Methodology & Design Decisions</div>
+  <div class="panel-sub">How this tool works, what it assesses, and what it does not.</div>
+
+  <div class="method-card">
+    <h3>What this tool is</h3>
+    <p>A structured OSINT assessment framework for mapping the human attack surface of a target organisation. It covers three domains: people-layer exposure (personnel visibility, email intelligence, credential exposure), organisational intelligence (tech stack, corporate structure, supplier relationships), and digital footprint (domain intelligence, code repositories, public content).</p>
+    <p>The tool does not perform live data collection. It is a structured scoring framework for recording and interpreting findings from manual OSINT research — designed to be used by a consultant who has already conducted the research and is now translating findings into a risk-weighted assessment.</p>
+  </div>
+
+  <div class="method-card">
+    <h3>Scoring model</h3>
+    <p>Each domain question is scored 0–3 based on the selected exposure level. Domain scores are averaged and weighted equally across the three domains. The overall score is expressed as a percentage of maximum possible exposure (0–100), with four risk tiers:</p>
+    <div class="code-block">
+Critical  ≥ 75 — Significant, actionable attack surface across multiple domains
+High      55–74 — Material exposure in at least one domain, targeted attacks feasible
+Medium    35–54 — Limited exposure, opportunistic attacks possible
+Low       &lt; 35 — Minimal open-source attack surface identified
+    </div>
+    <p>The scoring deliberately weights people-layer and organisational intelligence more heavily than digital footprint, reflecting that most successful attacks against organisations of this size begin with social engineering rather than technical exploitation.</p>
+  </div>
+
+  <div class="method-card">
+    <h3>Design decisions</h3>
+    <p><strong>Why a structured framework rather than live queries?</strong> A tool that performs live OSINT queries raises significant legal and ethical questions around authorisation and data collection. A structured framework is honest about what it is — a way to record, score, and interpret findings — and can be used appropriately within a defined engagement scope.</p>
+    <p><strong>Why these three domains?</strong> People, organisation, and digital footprint represent the three reconnaissance layers a patient attacker works through before attempting contact. Technical vulnerability scanning is a fourth layer but requires different tooling and falls outside OSINT scope.</p>
+    <p><strong>Why is breach credential data included in the people layer?</strong> Credential exposure is fundamentally a people-layer risk — it directly enables targeting of specific individuals. Its presence in breach data is an OSINT finding, not a technical vulnerability finding.</p>
+  </div>
+
+  <div class="method-card">
+    <h3>Assumptions and limitations</h3>
+    <p>This tool assesses passive, open-source exposure only. It does not assess active reconnaissance, technical attack surface, physical security, or insider threat. Scores reflect the findings entered by the assessor — the quality of the output depends on the quality of the research conducted.</p>
+    <p>The tool is calibrated for organisations of 25–500 employees in regulated sectors. Very large organisations face different exposure profiles; very small organisations may have minimal OSINT footprint regardless of hygiene.</p>
+  </div>
+
+  <div class="method-card" style="border-left:2px solid var(--amber-dim);">
+    <h3>Governance note</h3>
+    <p>OSINT assessment is a legitimate and valuable component of a third-party risk programme, red team engagement, or security awareness initiative. It should be conducted within a clearly defined scope, with appropriate authorisation, and with findings treated as sensitive intelligence. This tool is a portfolio thinking exercise demonstrating OSINT assessment methodology — not a surveillance tool.</p>
+    <div class="code-block">Aligned to: NCSC Cyber Threat Intelligence guidance · PTES (Penetration Testing Execution Standard) reconnaissance phase · MITRE ATT&CK — Reconnaissance (TA0043)</div>
+  </div>
+
+  <div class="btn-row"><button class="btn-primary" onclick="goTo(0)">New Assessment</button></div>
+</div>
+
+<div class="disclaimer">
+  <strong style="color:var(--text-dim);">Notice:</strong> This tool is a portfolio thinking exercise. All assessments should be conducted within a defined engagement scope and with appropriate authorisation. This tool does not perform live data collection or active reconnaissance. Arken Systems Ltd is a fictional organisation.
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+const state = {};
+let current = 0;
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────────
+function goTo(n) {
+  document.querySelectorAll('.panel').forEach((p,i) => p.classList.toggle('active', i===n));
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===n));
+  current = n;
+  document.getElementById('progress').style.width = ((n+1)/6*100)+'%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── ACCORDION ──────────────────────────────────────────────────────────────
+function toggleBlock(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('span');
+  body.classList.toggle('open');
+  arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+}
+
+// ── FORM HELPERS ───────────────────────────────────────────────────────────
+function selectOpt(label, name) {
+  document.querySelectorAll(`[name="${name}"]`).forEach(r => {
+    r.closest('.option-item').classList.toggle('selected', r.value === label.querySelector('input').value);
+  });
+  label.querySelector('input').checked = true;
+}
+
+function getVal(name) {
+  const el = document.querySelector(`[name="${name}"]:checked`);
+  return el ? parseInt(el.value) : 0;
+}
+
+// ── SCORING ────────────────────────────────────────────────────────────────
+function calcDomain(fields) {
+  const vals = fields.map(f => getVal(f));
+  const max = fields.length * 3;
+  const total = vals.reduce((a,b) => a+b, 0);
+  return { score: Math.round(total/max*100), raw: total, max };
+}
+
+function getTier(score) {
+  if (score >= 75) return { label:'Critical Exposure', cls:'exposure-critical', color:'var(--red)' };
+  if (score >= 55) return { label:'High Exposure', cls:'exposure-high', color:'var(--orange)' };
+  if (score >= 35) return { label:'Medium Exposure', cls:'exposure-medium', color:'var(--yellow)' };
+  return { label:'Low Exposure', cls:'exposure-low', color:'var(--green)' };
+}
+
+function buildFindings(d1, d2, d3) {
+  const findings = [];
+
+  const breach = getVal('breach-creds');
+  if (breach >= 3) findings.push({ sev:'critical', title:'Employee credentials identified in breach data', detail:'Named employee credentials found in known breach datasets. An attacker can attempt credential stuffing or password spraying against Veriflow authentication systems immediately, without any further reconnaissance.', rec:'→ Enforce password resets for affected accounts. Verify MFA is active across all systems. Cross-reference breach data against active employee list.' });
+
+  const github = getVal('github');
+  if (github >= 3) findings.push({ sev:'critical', title:'Credentials or sensitive configuration in public repositories', detail:'API keys, credentials, or internal configuration data found in public code repositories. This provides direct access to internal systems and is the fastest path from OSINT to compromise.', rec:'→ Rotate all exposed credentials immediately. Audit repository history for additional exposures. Implement pre-commit secret scanning.' });
+
+  const linkedin = getVal('linkedin');
+  const hvt = getVal('hvt');
+  if (linkedin >= 3 && hvt >= 2) findings.push({ sev:'high', title:'High-value targets fully profiled and org chart reconstructable', detail:'Finance, IT, and C-suite roles are named and profiled on LinkedIn. An attacker can identify the exact individual to target for BEC, invoice fraud, or credential phishing — and craft a pretext using their real job title, reporting line, and tenure.', rec:'→ Brief high-value targets on spear-phishing risk. Review LinkedIn privacy settings policy. Consider whether role-level detail in profiles can be reduced.' });
+
+  const emailFmt = getVal('email-fmt');
+  if (emailFmt >= 2 && linkedin >= 2) findings.push({ sev:'high', title:'Email address construction trivially feasible for all named employees', detail:'Email format is known or inferrable, and employee names are visible on LinkedIn. An attacker can construct valid email addresses for any employee without any technical capability — enabling targeted phishing at scale.', rec:'→ Ensure all staff have completed phishing awareness training. Verify SPF, DKIM, and DMARC are correctly configured on all domains.' });
+
+  const certs = getVal('certs');
+  if (certs >= 3) findings.push({ sev:'high', title:'Staging and development environments exposed via certificate transparency', detail:'Non-production subdomains visible in certificate transparency logs. These environments typically have weaker security controls, older software versions, and may share credentials with production systems.', rec:'→ Audit all subdomains identified in CT logs. Ensure non-production environments require authentication. Review whether internal tools should be using publicly trusted certificates.' });
+
+  const jobs = getVal('jobs');
+  if (jobs >= 3) findings.push({ sev:'medium', title:'Technology stack mapped from job postings', detail:'Current job postings confirm cloud provider, security tooling, and core software stack. An attacker can focus vulnerability research on known versions and configurations rather than conducting blind discovery.', rec:'→ Review job posting language for unnecessary technical specificity. Generic descriptions ("cloud infrastructure" rather than "AWS Lambda") reduce signal without reducing applicant quality.' });
+
+  const suppliers = getVal('suppliers');
+  if (suppliers >= 2) findings.push({ sev:'medium', title:'Named supplier relationships enable trust relationship attacks', detail:'Key vendor relationships are publicly visible. An attacker can impersonate a known supplier — invoicing software provider, IT support vendor, cloud platform — with a pre-existing trust relationship that significantly increases the success rate of social engineering.', rec:'→ Establish a supplier verification protocol for inbound contact. Staff should verify supplier identity through known channels before acting on any request.' });
+
+  const conf = getVal('conf');
+  if (conf >= 2) findings.push({ sev:'medium', title:'Technical architecture detail exposed through conference presentations', detail:'Publicly available presentations describe internal security architecture, ongoing projects, and technical challenges. This provides an attacker with a detailed operational picture without any active reconnaissance.', rec:'→ Establish a review process for externally presented content. Architecture details should be described at a level that serves the audience without serving an attacker.' });
+
+  const social = getVal('social');
+  if (social >= 2) findings.push({ sev:'medium', title:'Senior staff personal social media provides pretext material', detail:'Personal social media of key personnel reveals interests, relationships, travel patterns, and workplace frustrations — material an attacker uses to build credible, personalised pretexts.', rec:'→ Include social media hygiene in security awareness training. Brief senior staff specifically on the value of their personal profiles to a social engineering attacker.' });
+
+  return findings;
+}
+
+// ── GENERATE RESULTS ───────────────────────────────────────────────────────
+function generateResults() {
+  const target = document.getElementById('target-name').value || 'Target Organisation';
+  const now = new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'long',year:'numeric'});
+
+  const d1 = calcDomain(['linkedin','hvt','email-fmt','breach-creds','social']);
+  const d2 = calcDomain(['jobs','ch','suppliers']);
+  const d3 = calcDomain(['certs','github','conf']);
+
+  const overall = Math.round((d1.score + d2.score + d3.score) / 3);
+  const tier = getTier(overall);
+  const findings = buildFindings(d1, d2, d3);
+
+  const criticalFindings = findings.filter(f => f.sev === 'critical');
+  const highFindings = findings.filter(f => f.sev === 'high');
+  const mediumFindings = findings.filter(f => f.sev === 'medium');
+
+  function domainColor(s) {
+    if (s >= 75) return 'var(--red)';
+    if (s >= 55) return 'var(--orange)';
+    if (s >= 35) return 'var(--yellow)';
+    return 'var(--green)';
+  }
+
+  function renderFindings(arr, label) {
+    if (!arr.length) return '';
+    return `<div class="finding-section-label">${label}</div>` + arr.map(f => `
+      <div class="finding-item">
+        <div class="finding-severity sev-${f.sev}">${f.sev}</div>
+        <div>
+          <div class="finding-title">${f.title}</div>
+          <div class="finding-detail">${f.detail}</div>
+          <div class="finding-rec">${f.rec}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  document.getElementById('results-content').innerHTML = `
+    <div class="result-header">
+      <div class="result-meta">Arken Systems · OSINT Human Attack Surface Assessment · ${now}</div>
+      <div class="result-org">${target}</div>
+      <div class="result-score-row">
+        <div class="score-block">
+          <div class="score-num">${overall}</div>
+          <div class="score-label">Attack Surface Score</div>
+        </div>
+        <div><span class="exposure-badge ${tier.cls}">${tier.label}</span></div>
+        <div style="font-size:12px;color:var(--text-faint);font-family:var(--mono);">
+          ${criticalFindings.length} critical · ${highFindings.length} high · ${mediumFindings.length} medium
+        </div>
+      </div>
+    </div>
+
+    <div class="domain-grid">
+      <div class="domain-card">
+        <div class="domain-name">People Layer</div>
+        <div class="domain-score-row">
+          <div class="domain-score" style="color:${domainColor(d1.score)}">${d1.score}</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text-faint);">/100</div>
+        </div>
+        <div class="domain-bar-wrap"><div class="domain-bar" style="width:${d1.score}%;background:${domainColor(d1.score)};"></div></div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-name">Org Intelligence</div>
+        <div class="domain-score-row">
+          <div class="domain-score" style="color:${domainColor(d2.score)}">${d2.score}</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text-faint);">/100</div>
+        </div>
+        <div class="domain-bar-wrap"><div class="domain-bar" style="width:${d2.score}%;background:${domainColor(d2.score)};"></div></div>
+      </div>
+      <div class="domain-card">
+        <div class="domain-name">Digital Footprint</div>
+        <div class="domain-score-row">
+          <div class="domain-score" style="color:${domainColor(d3.score)}">${d3.score}</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text-faint);">/100</div>
+        </div>
+        <div class="domain-bar-wrap"><div class="domain-bar" style="width:${d3.score}%;background:${domainColor(d3.score)};"></div></div>
+      </div>
+      <div class="domain-card" style="background:var(--surface2);">
+        <div class="domain-name">Intelligence Summary</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:8px;line-height:1.7;">
+          ${findings.length} findings identified.<br>
+          ${criticalFindings.length > 0 ? 'Immediate action required.' : highFindings.length > 0 ? 'Action recommended.' : 'Monitor and review.'}
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-list">
+      ${renderFindings(criticalFindings, '⚠ Critical — immediate action required')}
+      ${renderFindings(highFindings, '▲ High — action recommended')}
+      ${renderFindings(mediumFindings, '◆ Medium — review and monitor')}
+      ${findings.length === 0 ? '<div style="font-family:var(--mono);font-size:12px;color:var(--green);padding:20px 0;">No significant findings — attack surface appears well-managed.</div>' : ''}
+    </div>
+
+    <table class="intel-table">
+      <tr><th>Domain</th><th>Score</th><th>Key exposure</th></tr>
+      <tr><td>People layer</td><td style="color:${domainColor(d1.score)}">${d1.score}/100</td><td>${d1.score >= 55 ? 'Personnel profiling, email construction, credential exposure' : d1.score >= 35 ? 'Partial personnel visibility' : 'Limited people-layer exposure'}</td></tr>
+      <tr><td>Org intelligence</td><td style="color:${domainColor(d2.score)}">${d2.score}/100</td><td>${d2.score >= 55 ? 'Tech stack mapped, corporate structure exposed, supplier relationships visible' : d2.score >= 35 ? 'Partial organisational intelligence' : 'Limited organisational exposure'}</td></tr>
+      <tr><td>Digital footprint</td><td style="color:${domainColor(d3.score)}">${d3.score}/100</td><td>${d3.score >= 55 ? 'Subdomains exposed, code repositories visible, technical content public' : d3.score >= 35 ? 'Partial digital footprint' : 'Minimal digital footprint identified'}</td></tr>
+      <tr><td><strong>Overall</strong></td><td style="color:${tier.color}"><strong>${overall}/100</strong></td><td><strong>${tier.label}</strong></td></tr>
+    </table>
+    <p style="font-family:var(--mono);font-size:11px;color:var(--text-faint);margin-top:8px;">Assessment conducted by Arken Systems GRC Function · Engagement reference: OSINT-${Math.floor(Math.random()*9000)+1000} · ${now}</p>`;
+
+  goTo(4);
+}
+
+// ── INIT — pre-load Veriflow demo ──────────────────────────────────────────
+document.getElementById('target-name').value = 'Veriflow Payments Ltd';
+
+// Pre-select demo values reflecting a realistic fintech OSINT profile
+setTimeout(() => {
+  [['linkedin','3'],['hvt','2'],['email-fmt','2'],['breach-creds','1'],['social','1'],
+   ['jobs','3'],['ch','2'],['suppliers','2'],
+   ['certs','1'],['github','2'],['conf','1']].forEach(([name, val]) => {
+    const el = document.querySelector(`[name="${name}"][value="${val}"]`);
+    if (el) {
+      el.checked = true;
+      el.closest('.option-item').classList.add('selected');
+    }
+  });
+}, 100);
+</script>
+</body>
+</html>
