@@ -50,8 +50,7 @@ Board briefs, non-technical risk communication, and practical security guidance.
 
 Regulatory intuition, ICO/FCA/DORA lens, and compliance under uncertainty.
 
-- Artefact E — Regulatory Intuition Memo *(coming soon)*
-
+- [Artefact E — Regulatory Intuition Memo: EU AI Act](regulatory-judgement/artefact-e-regulatory-intuition-memo.md) — What financial services deployers should be doing now, seventeen months before the August 2026 compliance deadline. Five common mistakes, a phased action framework, and a direct reading of what the Act is actually trying to achieve.
 ---
 
 ## 🤖 AI Governance
