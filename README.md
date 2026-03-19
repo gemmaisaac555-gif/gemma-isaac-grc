@@ -54,6 +54,14 @@ Regulatory intuition, ICO/FCA/DORA lens, and compliance under uncertainty.
 
 ---
 
+## 🤖 AI Governance
+
+AI risk, algorithmic accountability, and regulatory compliance under the EU AI Act and UK AI framework.
+
+- [AI Risk Register — Credit Scoring Model Deployment](ai-governance/artefact-ai-risk-register.md) — Risk register for Veriflow Payments' deployment of a third-party AI credit scoring system. Six risks across bias, model drift, explainability, vendor dependency, and EU AI Act compliance. Includes regulatory hook mapping to EU AI Act, FCA Consumer Duty, Equality Act, and UK GDPR.
+- Fundamental Rights Impact Assessment — EU AI Act high-risk system *(coming soon)*
+- Internal AI Use Policy — model approval, human oversight, incident response *(coming soon)*
+
 ## Background
 
 | | |
