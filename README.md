@@ -28,13 +28,12 @@ Risk trade-offs, acceptance decisions, and escalation under pressure.
 ---
 
 ## 📁 How Things Fail
-
 Failure mode analysis, root cause thinking, and attack reconstruction.
 
-- Artefact B — Failure Mode Analysis: The 2am Test *(coming soon)*
-- Artefact C — Human-Centred Root Cause Analysis *(coming soon)*
+- [Artefact B — Third-Party Control Gap Analysis](how-things-fail/artefact-b-control-gap-analysis.md) — Cross-domain control gap analysis of Databridge Analytics Ltd, prepared for Veriflow's CISO and Risk Committee. Surfaces four high/critical findings including a fourth-party sub-processor gap not visible in the original risk acceptance.
+- Artefact C — Failure Mode Analysis: The 2am Test *(coming soon)*
+- Artefact D — Human-Centred Root Cause Analysis *(coming soon)*
 - Tool 05 — Rebuild Famous Attacks *(coming soon)*
-
 ---
 
 ## 📁 How I Communicate
