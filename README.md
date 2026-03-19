@@ -14,7 +14,7 @@ All artefacts use clearly defined fictional scenarios. They are thinking exercis
 
 My underlying principles around risk, uncertainty, and governance. Start here.
 
-- Risk Manifesto *(coming soon)*
+- [Risk Manifesto](how-i-think/risk-manifesto.md) — My underlying principles for managing risk under uncertainty.
 
 ---
 
