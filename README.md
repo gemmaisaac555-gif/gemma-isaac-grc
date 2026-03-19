@@ -50,8 +50,14 @@ Board briefs, non-technical risk communication, and practical security guidance.
 Regulatory intuition, ICO/FCA/DORA lens, and compliance under uncertainty.
 
 - [Artefact E — Regulatory Intuition Memo: EU AI Act](regulatory-judgement/artefact-e-regulatory-intuition-memo.md) — What financial services deployers should be doing now, seventeen months before the August 2026 compliance deadline. Five common mistakes, a phased action framework, and a direct reading of what the Act is actually trying to achieve.
+- 
 ---
+## 🏢 Arken Systems
 
+The fictional organisation underpinning this portfolio. All tools and artefacts are built around Arken Systems and its clients.
+
+- [Company Charter](arken-systems/arken-company-charter.md) — Who Arken Systems is, what they do, and the governance principles they apply to themselves.
+- [Risk Appetite Statement](arken-systems/arken-risk-appetite-statement.md) — Arken Systems' documented appetite across six risk categories, including client confidentiality, AI tool use, and professional quality.
 ## 🤖 AI Governance
 
 AI risk, algorithmic accountability, and regulatory compliance under the EU AI Act and UK AI framework.
