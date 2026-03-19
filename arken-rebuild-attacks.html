@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arken Systems — Rebuild Famous Attacks</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0c;
+  --surface: #111114;
+  --surface2: #18181d;
+  --surface3: #1f1f26;
+  --border: #2a2a35;
+  --border2: #353545;
+  --text: #e8e8f0;
+  --text-dim: #8888a8;
+  --text-faint: #44445a;
+  --red: #ff4455;
+  --red-bg: rgba(255,68,85,0.1);
+  --red-border: rgba(255,68,85,0.3);
+  --orange: #ff8833;
+  --orange-bg: rgba(255,136,51,0.1);
+  --yellow: #ffcc44;
+  --yellow-bg: rgba(255,204,68,0.08);
+  --green: #44dd88;
+  --green-bg: rgba(68,221,136,0.1);
+  --blue: #4488ff;
+  --blue-bg: rgba(68,136,255,0.1);
+  --purple: #aa66ff;
+  --purple-bg: rgba(170,102,255,0.1);
+  --mono: "Space Mono", monospace;
+  --sans: "Space Grotesk", sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh;}
+
+.wrap{max-width:900px;margin:0 auto;padding:0 24px 80px;}
+
+/* HEADER */
+.site-header{padding:36px 0 32px;border-bottom:1px solid var(--border);margin-bottom:36px;}
+.header-eyebrow{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-faint);margin-bottom:12px;}
+.site-title{font-size:clamp(22px,4vw,34px);font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-0.02em;}
+.site-title span{color:var(--red);}
+.header-desc{font-size:13px;color:var(--text-dim);line-height:1.8;max-width:580px;}
+.header-desc strong{color:var(--text);}
+
+/* CASE SELECT */
+.case-select{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:36px;}
+@media(max-width:600px){.case-select{grid-template-columns:1fr;}}
+.case-card{background:var(--surface);border:1px solid var(--border);padding:20px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
+.case-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity 0.2s;}
+.case-card:hover{border-color:var(--border2);background:var(--surface2);}
+.case-card.active{border-color:var(--red-border);}
+.case-card.active::before{opacity:1;}
+.case-year{font-family:var(--mono);font-size:10px;color:var(--text-faint);letter-spacing:0.1em;margin-bottom:8px;}
+.case-name{font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.case-type{font-family:var(--mono);font-size:10px;color:var(--text-dim);margin-bottom:12px;}
+.case-stat{font-family:var(--mono);font-size:11px;padding:4px 0;border-top:1px solid var(--border);margin-top:8px;color:var(--red);}
+
+/* TARGET colors */
+.target-theme .case-card.active{border-color:rgba(255,68,85,0.4);}
+.target-theme .case-card.active::before{background:var(--red);}
+
+/* PHASE NAV */
+.phase-nav{display:flex;gap:0;margin-bottom:28px;overflow-x:auto;}
+.phase-btn{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:10px 16px;cursor:pointer;color:var(--text-faint);border:none;background:none;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.15s;position:relative;}
+.phase-btn:hover{color:var(--text-dim);}
+.phase-btn.active{color:var(--text);border-bottom-color:var(--red);}
+.phase-btn.completed{color:var(--green);}
+.phase-btn.completed::after{content:"✓";margin-left:6px;font-size:9px;}
+
+/* ATTACK VIEWER */
+.attack-panel{display:none;}
+.attack-panel.active{display:block;animation:fadeIn 0.2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.phase-header{margin-bottom:20px;}
+.phase-tag{font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+.phase-title{font-size:20px;font-weight:700;margin-bottom:6px;}
+.phase-date{font-family:var(--mono);font-size:11px;color:var(--text-faint);}
+
+.narrative-block{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red);padding:18px 20px;margin-bottom:16px;font-size:13px;color:var(--text-dim);line-height:1.9;}
+.narrative-block strong{color:var(--text);}
+
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+@media(max-width:560px){.analysis-grid{grid-template-columns:1fr;}}
+
+.analysis-card{background:var(--surface);border:1px solid var(--border);padding:16px 18px;}
+.analysis-card-label{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;}
+.analysis-card-label.failed{color:var(--red);}
+.analysis-card-label.wouldve{color:var(--green);}
+.analysis-card-label.technique{color:var(--orange);}
+.analysis-card-label.lesson{color:var(--purple);}
+.analysis-card p{font-size:13px;color:var(--text-dim);line-height:1.7;}
+.analysis-card ul{padding-left:16px;margin-top:6px;}
+.analysis-card ul li{font-size:13px;color:var(--text-dim);line-height:1.8;margin-bottom:2px;}
+
+/* QUIZ */
+.quiz-block{background:var(--surface2);border:1px solid var(--border);padding:20px;margin-bottom:16px;}
+.quiz-question{font-size:14px;font-weight:600;color:var(--text);margin-bottom:14px;}
+.quiz-options{display:flex;flex-direction:column;gap:8px;}
+.quiz-opt{padding:12px 16px;border:1px solid var(--border);cursor:pointer;font-size:13px;color:var(--text-dim);transition:all 0.15s;background:var(--surface);}
+.quiz-opt:hover{border-color:var(--border2);color:var(--text);}
+.quiz-opt.correct{border-color:var(--green);background:var(--green-bg);color:var(--green);}
+.quiz-opt.incorrect{border-color:var(--red);background:var(--red-bg);color:var(--red);}
+.quiz-opt.reveal-correct{border-color:var(--green);background:var(--green-bg);color:var(--green);opacity:0.6;}
+.quiz-feedback{margin-top:12px;padding:12px 16px;font-size:13px;line-height:1.7;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.correct-fb{background:var(--green-bg);border:1px solid rgba(68,221,136,0.3);color:var(--green);}
+.quiz-feedback.incorrect-fb{background:var(--red-bg);border:1px solid var(--red-border);color:var(--text-dim);}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:24px;margin-bottom:20px;}
+.timeline::before{content:"";position:absolute;left:6px;top:0;bottom:0;width:1px;background:var(--border);}
+.tl-item{position:relative;margin-bottom:16px;}
+.tl-dot{position:absolute;left:-24px;top:4px;width:13px;height:13px;border-radius:50%;border:2px solid var(--red);background:var(--bg);}
+.tl-item.critical .tl-dot{background:var(--red);box-shadow:0 0 8px var(--red);}
+.tl-time{font-family:var(--mono);font-size:10px;color:var(--text-faint);margin-bottom:2px;}
+.tl-event{font-size:13px;color:var(--text-dim);line-height:1.7;}
+.tl-event strong{color:var(--text);}
+
+/* IMPACT BOX */
+.impact-box{background:var(--red-bg);border:1px solid var(--red-border);padding:18px 20px;margin-bottom:16px;}
+.impact-box-label{font-family:var(--mono);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
+.impact-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px;}
+@media(max-width:480px){.impact-stats{grid-template-columns:1fr 1fr;}}
+.impact-stat{text-align:center;}
+.impact-num{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--red);}
+.impact-label{font-family:var(--mono);font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.1em;margin-top:2px;}
+
+/* SCORE */
+.score-bar{background:var(--surface);border:1px solid var(--border);padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.score-label-text{font-family:var(--mono);font-size:11px;color:var(--text-faint);letter-spacing:0.08em;text-transform:uppercase;}
+.score-display{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--yellow);}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;}
+.btn-primary{background:var(--red);color:white;font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;padding:12px 28px;border:none;cursor:pointer;transition:background 0.15s;font-weight:700;}
+.btn-primary:hover{background:#ff2233;}
+.btn-secondary{background:transparent;color:var(--text-dim);font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;padding:12px 20px;border:1px solid var(--border);cursor:pointer;transition:all 0.15s;}
+.btn-secondary:hover{border-color:var(--border2);color:var(--text);}
+
+/* CASE OVERVIEW */
+.overview-header{background:var(--surface);border:1px solid var(--border);padding:24px 28px;margin-bottom:20px;position:relative;overflow:hidden;}
+.overview-header::after{content:attr(data-year);position:absolute;right:20px;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:80px;font-weight:700;color:var(--surface3);pointer-events:none;line-height:1;}
+.overview-org{font-size:24px;font-weight:700;margin-bottom:4px;}
+.overview-sub{font-family:var(--mono);font-size:11px;color:var(--text-dim);margin-bottom:16px;}
+.overview-tags{display:flex;gap:8px;flex-wrap:wrap;}
+.tag{font-family:var(--mono);font-size:10px;padding:4px 10px;border:1px solid var(--border);color:var(--text-faint);letter-spacing:0.06em;}
+.tag.supply-chain{border-color:rgba(255,136,51,0.4);color:var(--orange);}
+.tag.social-eng{border-color:rgba(170,102,255,0.4);color:var(--purple);}
+.tag.mfa{border-color:rgba(68,136,255,0.4);color:var(--blue);}
+.tag.nation-state{border-color:rgba(255,68,85,0.4);color:var(--red);}
+
+.framework-map{background:var(--surface);border:1px solid var(--border);padding:16px 20px;margin-bottom:16px;}
+.framework-map-label{font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-faint);margin-bottom:10px;}
+.mitre-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.mitre-tag{font-family:var(--mono);font-size:10px;padding:4px 10px;background:var(--purple-bg);border:1px solid rgba(170,102,255,0.3);color:var(--purple);}
+
+.disclaimer{margin-top:48px;padding:14px 18px;border:1px solid var(--border);font-family:var(--mono);font-size:11px;color:var(--text-faint);line-height:1.7;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="site-header">
+  <div class="header-eyebrow">Arken Systems // Threat Intelligence Suite // Tool 05</div>
+  <h1 class="site-title">Rebuild <span>Famous</span> Attacks</h1>
+  <p class="header-desc">Three landmark breaches reconstructed phase by phase. For each attack: <strong>what happened</strong>, <strong>what failed</strong>, <strong>what would have stopped it</strong>, and <strong>what the attacker was thinking</strong>. Test your analysis with questions at each phase.</p>
+</header>
+
+<!-- CASE SELECTOR -->
+<div class="case-select" id="case-select">
+  <div class="case-card active" onclick="selectCase(0)" id="case-btn-0">
+    <div class="case-year">2013</div>
+    <div class="case-name">Target Corporation</div>
+    <div class="case-type">Supply Chain · Third-Party Access</div>
+    <div class="case-stat">40M card records compromised</div>
+  </div>
+  <div class="case-card" onclick="selectCase(1)" id="case-btn-1">
+    <div class="case-year">2022</div>
+    <div class="case-name">Uber</div>
+    <div class="case-type">MFA Fatigue · Social Engineering</div>
+    <div class="case-stat">Complete internal access in hours</div>
+  </div>
+  <div class="case-card" onclick="selectCase(2)" id="case-btn-2">
+    <div class="case-year">2023</div>
+    <div class="case-name">MGM Resorts</div>
+    <div class="case-type">Vishing · LinkedIn OSINT · Ransomware</div>
+    <div class="case-stat">$100M+ estimated impact</div>
+  </div>
+</div>
+
+<!-- CASE VIEWER -->
+<div id="case-viewer"></div>
+
+<div class="disclaimer">
+  <strong style="color:var(--text-dim);">Notice:</strong> All attack reconstructions are based on publicly reported information, post-incident analyses, regulatory findings, and security research. Some details are simplified or reconstructed for analytical clarity. This tool is a portfolio thinking exercise demonstrating threat intelligence and attack chain analysis methodology. Arken Systems Ltd is a fictional organisation.
+</div>
+
+</div>
+
+<script>
+// ── ATTACK DATA ────────────────────────────────────────────────────────────
+const cases = [
+
+// ── TARGET 2013 ────────────────────────────────────────────────────────────
+{
+  id: 'target',
+  name: 'Target Corporation',
+  year: '2013',
+  subtitle: 'The breach that changed third-party risk management',
+  tags: ['Supply Chain', 'Third-Party Access', 'POS Malware', 'Lateral Movement'],
+  mitre: ['T1195 - Supply Chain Compromise', 'T1078 - Valid Accounts', 'T1059 - Command and Scripting', 'T1041 - Exfiltration Over C2'],
+  impact: { stat1: { num: '40M', label: 'Card records' }, stat2: { num: '70M', label: 'Customer records' }, stat3: { num: '$292M', label: 'Estimated cost' } },
+  phases: [
+    {
+      id: 'recon',
+      label: 'Reconnaissance',
+      date: 'Mid-2013',
+      title: 'Finding the Way In',
+      narrative: 'The attackers did not target Target directly. They identified <strong>Fazio Mechanical Services</strong> — a small Pennsylvania HVAC company that held a vendor relationship with Target for refrigeration and HVAC monitoring. Fazio had network access to Target systems for remote monitoring of store temperatures and energy usage. The attackers sent a phishing email to Fazio employees containing the <strong>Citadel banking trojan</strong> — malware designed to harvest credentials. Fazio was running a free version of Malwarebytes that did not provide real-time protection. The trojan ran undetected.',
+      failed: ['Fazio had no endpoint detection — free AV with no real-time scanning', 'Target had no minimum security requirements for vendors with network access', 'No verification that third-party access was limited to what was actually needed'],
+      wouldve: ['Vendor security assessment requiring endpoint protection before network access was granted', 'Network segmentation ensuring HVAC access could not reach POS systems', 'Phishing-resistant authentication for third-party remote access'],
+      technique: 'Spear-phishing targeting a small vendor with known weak security. Classic supply chain attack — find the weakest link in the target supplier ecosystem, not the target itself.',
+      quiz: {
+        q: 'Why did the attackers target Fazio Mechanical rather than Target directly?',
+        options: [
+          { text: 'Fazio had access to Target network credentials', correct: false, fb: 'Not quite — Fazio had network access to Target systems, but the attackers needed to compromise Fazio first to obtain those credentials.' },
+          { text: 'Fazio had weaker security controls but trusted network access to Target systems', correct: true, fb: 'Correct. This is the core logic of supply chain attacks — the target organisation perimeter is less relevant than the weakest point in its trusted supplier ecosystem. Fazio had legitimate, trusted network access and far fewer resources to defend itself.' },
+          { text: 'Target systems were too well defended to attack directly', correct: false, fb: 'The evidence does not support this — Target had significant security gaps. The attackers chose the supplier route because it was easier, not because Target was impenetrable.' },
+          { text: 'Fazio had access to Target customer payment data', correct: false, fb: 'Fazio had HVAC monitoring access, not payment data access. The attackers used Fazio as a pivot point to reach the payment systems.' },
+        ]
+      }
+    },
+    {
+      id: 'access',
+      label: 'Initial Access',
+      date: 'November 15, 2013',
+      title: 'Into the Network',
+      narrative: 'Using credentials harvested from Fazio, the attackers connected to Target network via a <strong>vendor portal</strong> — a system intended for supplier invoice management and contract access. From this initial foothold, they began mapping the internal network. Target had not segmented its vendor access zone from internal systems. The HVAC monitoring access that Fazio legitimately needed was on the same network segment as Target point-of-sale infrastructure. The attackers moved laterally with minimal friction.',
+      failed: ['Vendor portal access was not isolated from internal corporate network', 'No network segmentation between HVAC monitoring systems and POS infrastructure', 'Legitimate Fazio credentials raised no alerts — normal behaviour for a vendor login', 'No behaviour-based detection on the vendor access portal'],
+      wouldve: ['Network segmentation — HVAC access in an isolated zone with no route to POS systems', 'Anomaly detection on vendor portal — logins at unusual hours or from unusual locations', 'Least privilege — Fazio credentials scoped only to HVAC monitoring functions'],
+      technique: 'Legitimate credential use. No vulnerability exploitation required at this stage — valid credentials from a trusted vendor bypassed perimeter defences entirely. The attacker appeared as Fazio Mechanical, a known and trusted supplier.',
+      quiz: {
+        q: 'What single control would have most limited the damage from the initial access?',
+        options: [
+          { text: 'Stronger passwords on the vendor portal', correct: false, fb: 'The attackers had valid credentials — password strength was irrelevant once Fazio was compromised. MFA on the vendor portal would have helped, but the fundamental issue was network architecture.' },
+          { text: 'Network segmentation isolating vendor access from POS systems', correct: true, fb: 'Correct. Even with valid credentials, network segmentation would have contained the attacker to the vendor zone — HVAC monitoring systems, not POS infrastructure. This is the principle of zero trust: validate every connection, limit every access path.' },
+          { text: 'Better antivirus on Target systems', correct: false, fb: 'The initial breach was at Fazio, not Target. Better AV on Target systems would not have prevented the credential theft from Fazio or the subsequent vendor portal login.' },
+          { text: 'Disabling remote vendor access entirely', correct: false, fb: 'Operationally impractical — Target had legitimate reasons for remote vendor access. The issue was not that remote access existed but that it was not appropriately controlled and segmented.' },
+        ]
+      }
+    },
+    {
+      id: 'persist',
+      label: 'Persistence',
+      date: 'November 15–27, 2013',
+      title: 'Installing the Malware',
+      narrative: 'Over approximately twelve days, the attackers installed <strong>BlackPOS malware</strong> (also known as Kaptoxa) on Target point-of-sale systems. BlackPOS was designed to scrape payment card data from POS system memory at the moment cards are swiped — before encryption is applied. The malware was installed on over <strong>1,800 POS terminals</strong> across Target stores. Critically, Target had a security monitoring system — <strong>FireEye</strong> — which detected the malware and generated alerts. The alerts were reviewed by Target security staff in Bangalore, who escalated to the Minneapolis security team. <strong>The Minneapolis team did not act on the alerts.</strong>',
+      failed: ['Security alerts were generated but not actioned', 'No automated response to detected malware — human review was the only gate', 'Alert fatigue or unclear escalation procedures meant critical alerts were deprioritised', 'Malware installed across 1,800 terminals over 12 days without detection triggering response'],
+      wouldve: ['Automated response to malware detection — quarantine or isolation without requiring human decision', 'Clear escalation procedures with defined response times for critical alerts', 'Regular testing of alert-to-response pipeline to verify it actually functions under operational conditions'],
+      technique: 'Memory-scraping POS malware deployed at scale. The technical execution was sophisticated — but the persistence phase also reveals that Target had the capability to detect this attack and did not act on the detection.',
+      quiz: {
+        q: 'Target FireEye system detected the malware and raised alerts. What does this tell us about security controls?',
+        options: [
+          { text: 'Detection tools are sufficient if they are properly deployed', correct: false, fb: 'Detection without response is not a control. The FireEye alerts were generated correctly — the failure was in the human and process layer that should have responded to them.' },
+          { text: 'A detection tool that raises alerts is equivalent to having stopped the attack', correct: false, fb: 'This is a critical misconception. Detection capability and response capability are separate. Target detected the malware and still suffered one of the largest retail breaches in history.' },
+          { text: 'Detection capability is only valuable if paired with a tested response process', correct: true, fb: 'Correct. This is one of the most important lessons from Target. The breach is often cited as a detection failure — but it was a response failure. The detection worked. The process that should have converted detection into action did not.' },
+          { text: 'The FireEye system was misconfigured and should have blocked the malware automatically', correct: false, fb: 'The reporting does not support this. FireEye detected and alerted as designed. The failure was in the response process, not the detection tool configuration.' },
+        ]
+      }
+    },
+    {
+      id: 'impact',
+      label: 'Exfiltration & Impact',
+      date: 'November 27 – December 15, 2013',
+      title: 'The Harvest',
+      narrative: 'BlackPOS collected card data from POS terminal memory and staged it on a <strong>compromised internal server</strong> acting as a collection point. The data was then exfiltrated to external servers, first in the US and then to servers in Russia and eastern Europe. The exfiltration occurred over <strong>eighteen days</strong> during the peak Thanksgiving shopping period — the highest-volume retail period of the year. Approximately <strong>40 million payment card records</strong> and <strong>70 million customer records</strong> were stolen. Target did not discover the breach independently — they were notified by the <strong>US Department of Justice</strong> on December 12, 2013, based on intelligence from financial institutions observing fraudulent card activity.',
+      failed: ['Data exfiltration to external servers not detected for 18 days', 'No egress monitoring or data loss prevention on internal-to-external data flows', 'Breach discovered by external parties — Target had no independent detection capability for the exfiltration phase', 'Staging server on internal network not identified as anomalous'],
+      wouldve: ['Egress filtering and DLP monitoring for unusual outbound data volumes', 'Network traffic analysis identifying connections to known malicious external infrastructure', 'Internal anomaly detection identifying an unknown server acting as a data aggregation point'],
+      technique: 'Staged exfiltration — data collected internally first, then moved out in batches. This technique reduces the signature of exfiltration by avoiding large single transfers.',
+      quiz: {
+        q: 'Target discovered the breach when notified by the US Department of Justice, not through its own monitoring. What does this reveal?',
+        options: [
+          { text: 'Target had no security monitoring whatsoever', correct: false, fb: 'Target had FireEye, security operations staff, and monitoring tools — as established in the persistence phase. The issue was not absence of monitoring but absence of effective monitoring at the exfiltration layer.' },
+          { text: 'The breach was too sophisticated for any organisation to detect independently', correct: false, fb: 'BlackPOS was not a novel zero-day. The techniques used were known. Other organisations had detected similar attacks. The issue was specific gaps in Target detection coverage, not the sophistication of the attack.' },
+          { text: 'Detection capability did not extend to egress monitoring, leaving exfiltration invisible despite other monitoring being in place', correct: true, fb: 'Correct. This illustrates a coverage gap — monitoring existed, but not at the layer where exfiltration was occurring. Comprehensive security monitoring must cover not just endpoint and network intrusion but also data leaving the organisation.' },
+          { text: 'External notification is a normal and acceptable way to discover breaches', correct: false, fb: 'While external notification is common — financial institutions detecting fraudulent card activity is a frequent discovery mechanism — relying on it as a primary detection method represents a significant gap in organisational security capability.' },
+        ]
+      }
+    }
+  ]
+},
+
+// ── UBER 2022 ──────────────────────────────────────────────────────────────
+{
+  id: 'uber',
+  name: 'Uber',
+  year: '2022',
+  subtitle: 'The breach that made MFA fatigue a household term',
+  tags: ['MFA Fatigue', 'Social Engineering', 'Privilege Escalation', 'Internal Access'],
+  mitre: ['T1621 - MFA Request Generation', 'T1566 - Phishing', 'T1078 - Valid Accounts', 'T1552 - Unsecured Credentials'],
+  impact: { stat1: { num: '<18', label: 'Hours to full access' }, stat2: { num: '1', label: 'Attacker' }, stat3: { num: '18', label: 'Years old (claimed)' } },
+  phases: [
+    {
+      id: 'recon',
+      label: 'Reconnaissance',
+      date: 'September 2022',
+      title: 'Finding a Target Employee',
+      narrative: 'The attacker — later identified as an 18-year-old — purchased <strong>leaked Uber employee credentials</strong> from the dark web. The credentials alone were insufficient because Uber used multi-factor authentication. The attacker needed to bypass the MFA layer. They identified a specific Uber contractor whose credentials they had obtained and began a social engineering campaign to manipulate that person into approving an MFA push notification.',
+      failed: ['Employee credentials available in dark web markets — password reuse or prior breach', 'No monitoring for credentials appearing in breach datasets', 'MFA implementation used push notifications — vulnerable to fatigue attacks — rather than phishing-resistant alternatives'],
+      wouldve: ['Regular credential monitoring against breach databases', 'Phishing-resistant MFA — hardware security keys (FIDO2) or number-matching — rather than simple push approval', 'Anomaly detection on authentication attempts from unusual locations or at unusual times'],
+      technique: 'Dark web credential procurement followed by targeted social engineering. The attacker did not hack anything at this stage — they bought access and then manipulated a human.',
+      quiz: {
+        q: 'The attacker used push notification MFA rather than a phishing-resistant alternative. What is the fundamental weakness of push notification MFA?',
+        options: [
+          { text: 'Push notifications can be intercepted in transit', correct: false, fb: 'This is not the primary weakness. Push notifications are encrypted in transit. The weakness is that approval requires only a tap — no verification that the person approving actually initiated the login.' },
+          { text: 'It requires the user to actively approve, which creates a human decision point that can be manipulated through volume or social engineering', correct: true, fb: 'Correct. Push notification MFA is better than no MFA, but it creates a human decision point. Flood the user with approval requests and they may approve one to make it stop. Combine with social engineering and the success rate increases significantly.' },
+          { text: 'Push notifications are too slow for real-time authentication', correct: false, fb: 'Speed is not the issue. The weakness is that a user can approve a push notification they did not initiate — either through fatigue, confusion, or social engineering.' },
+          { text: 'The attacker could generate push notifications without valid credentials', correct: false, fb: 'The attacker had valid credentials — they had purchased them. The push notification was generated legitimately because the credentials were valid. The problem was the approval mechanism, not the credential validation.' },
+        ]
+      }
+    },
+    {
+      id: 'access',
+      label: 'Initial Access',
+      date: 'September 15, 2022',
+      title: 'The MFA Fatigue Attack',
+      narrative: 'The attacker bombarded the contractor with <strong>MFA push notification requests</strong> for over an hour. The contractor repeatedly denied them. The attacker then contacted the contractor via <strong>WhatsApp</strong>, claiming to be from Uber IT security. They told the contractor that the push notifications were being sent by IT as part of a security test and that they needed to approve one to make them stop. The contractor approved. The attacker had valid credentials and an approved MFA request. They were in. The entire social engineering phase took less than two hours.',
+      failed: ['MFA fatigue attack not detected — no alerting on repeated failed push approvals from a single user', 'No out-of-band verification process for IT security communications — contractor had no way to verify the WhatsApp message was legitimate', 'Staff training had not addressed MFA fatigue as a specific attack vector', 'No policy clarifying that IT will never request MFA approval via WhatsApp or personal channels'],
+      wouldve: ['Alerting on multiple sequential MFA push rejections — pattern indicating a fatigue attack in progress', 'Clear staff communication: Uber IT will never contact you via WhatsApp or request you to approve a push notification', 'Number-matching MFA — user must type a number displayed on the login screen into the authenticator app, proving they initiated the request'],
+      technique: 'MFA fatigue combined with social engineering pretext. Volume of requests creates confusion and urgency; the WhatsApp message provides a plausible narrative. The social engineering does not need to be sophisticated — it only needs to work once.',
+      quiz: {
+        q: 'The contractor was doing the right thing by repeatedly denying the push requests. What should also have happened?',
+        options: [
+          { text: 'The contractor should have reported the repeated requests to IT security', correct: true, fb: 'Correct — and this is partly a training failure. Repeated unsolicited MFA push requests are a strong indicator of a credential compromise attempt. Staff should be trained to recognise this pattern and report it immediately, not just deny the requests.' },
+          { text: 'Uber should have disabled MFA for the contractor to stop the requests', correct: false, fb: 'Disabling MFA would have made the situation significantly worse — the attacker already had valid credentials. MFA was the only remaining barrier.' },
+          { text: 'The contractor should have changed their password immediately', correct: false, fb: 'Password change would have been appropriate after the fact, but would not have stopped the attack in progress — the attacker was trying to bypass MFA, not exploit a password.' },
+          { text: 'The contractor should have approved one request to see what would happen', correct: false, fb: 'This is exactly what the attacker wanted and what ultimately happened. Approving an unsolicited MFA request is never the right response.' },
+        ]
+      }
+    },
+    {
+      id: 'persist',
+      label: 'Privilege Escalation',
+      date: 'September 15, 2022',
+      title: 'Finding the Keys',
+      narrative: 'Once inside Uber network, the attacker scanned internal file shares and found a <strong>PowerShell script containing hardcoded admin credentials</strong> for Uber PAM (Privileged Access Management) system — specifically Thycotic. With those credentials, the attacker gained access to Uber entire privileged access infrastructure, including AWS, GCP, Google Drive, Slack, SentinelOne, and Uber internal dashboards. The attacker then used Uber Slack to announce the breach to employees and posted screenshots of internal systems. A 17-year-old helped them access HackerOne, Uber bug bounty platform, where they marked all reports as public.',
+      failed: ['Hardcoded credentials in a PowerShell script on an internal file share — a basic secrets management failure', 'No secrets scanning on internal file systems', 'PAM system credentials insufficiently protected — should not have been accessible from a standard user session', 'No detection of the credential discovery and privilege escalation activity'],
+      wouldve: ['Secrets management — credentials stored in a vault (HashiCorp Vault, AWS Secrets Manager), never hardcoded in scripts', 'Secrets scanning on internal repositories and file shares', 'Behavioural analytics detecting unusual access patterns immediately after initial login', 'Zero trust architecture requiring re-authentication for sensitive system access regardless of network position'],
+      technique: 'Post-compromise credential discovery. The attacker did not need to exploit a technical vulnerability — they found credentials left in a script by developers taking shortcuts. This is one of the most common privilege escalation paths in real-world incidents.',
+      quiz: {
+        q: 'Hardcoded credentials in a script on an internal file share represent what category of security failure?',
+        options: [
+          { text: 'A developer error that could not have been prevented by security controls', correct: false, fb: 'Developer errors are inevitable — the question is whether security controls catch them. Secrets scanning, code review processes, and secrets management platforms exist specifically to catch this pattern before it becomes an incident.' },
+          { text: 'A secrets management failure — credentials should be stored in a dedicated vault, not embedded in scripts', correct: true, fb: 'Correct. This is a foundational secrets management failure. Credentials embedded in scripts are discoverable by anyone with access to the file system — including an attacker who has just obtained a foothold. Secrets management platforms separate credentials from code and control access.' },
+          { text: 'An acceptable risk given the internal nature of the file share', correct: false, fb: 'The Uber breach illustrates exactly why "internal" is not a sufficient security boundary. Once an attacker obtains any foothold — as they did via the MFA fatigue attack — everything on the internal network is potentially accessible.' },
+          { text: 'A failure specific to PowerShell that would not occur in other languages', correct: false, fb: 'Hardcoded credentials are a language-agnostic failure pattern. They appear in Python, JavaScript, Bash, Java, and every other language and environment.' },
+        ]
+      }
+    },
+    {
+      id: 'impact',
+      label: 'Impact',
+      date: 'September 15–16, 2022',
+      title: 'Full Compromise, Announced Publicly',
+      narrative: 'The attacker used Uber Slack to send a message to employees: <strong>"I announce I am a hacker and Uber has suffered a data breach."</strong> They shared screenshots of AWS console, GCP console, Slack, SentinelOne, and internal dashboards. Many employees initially thought it was a joke. The attacker then accessed HackerOne and disclosed active vulnerability reports. Uber was forced to take several internal systems offline. The total time from initial access to full internal access and public announcement was <strong>under 18 hours</strong>. The attacker was later arrested in the UK as part of the Lapsus$ group.',
+      failed: ['No detection of the privilege escalation and lateral movement within the environment', 'No containment triggered by anomalous access to multiple high-value systems in rapid succession', 'HackerOne access not adequately protected despite containing sensitive vulnerability information', 'Internal announcement on Slack went undetected for a period — employees assumed it was a joke'],
+      wouldve: ['Behavioural analytics triggering on rapid sequential access to multiple sensitive platforms', 'Automated containment on detection of anomalous privileged access', 'Separate, more restricted access controls for bug bounty platform and vulnerability database', 'Incident response playbook for insider-equivalent threat — attacker with full credentials'],
+      technique: 'Public announcement via internal communication channels — a Lapsus$ trademark. The announcement served multiple purposes: demonstrated the depth of access, created chaos, and made concealment impossible. The attacker wanted to be seen.',
+      quiz: {
+        q: 'The Uber breach went from initial access to complete internal compromise in under 18 hours. What does this compression of timeline tell us about detection and response?',
+        options: [
+          { text: 'Detection and response within the first hour of access could have contained the breach', correct: true, fb: 'Correct. The attacker moved quickly once inside — credential discovery, privilege escalation, and lateral movement all occurred rapidly. Early detection of anomalous post-login behaviour (unusual access patterns, rapid system enumeration, privilege escalation) and automated response could have interrupted the attack chain before full compromise was achieved.' },
+          { text: 'The breach was too fast to detect or respond to', correct: false, fb: 'The attack was fast, but not undetectable. Each phase — the credential discovery, the PAM access, the lateral movement — left signals that a properly tuned detection system should have flagged. Speed does not make an attack invisible; it makes early detection more important.' },
+          { text: 'Human-speed incident response is adequate for this type of attack', correct: false, fb: 'The 18-hour timeline illustrates that human-speed response — requiring a human to review an alert, escalate, investigate, and decide on action — is too slow for attacks that move at machine speed through an environment. Automated response to specific high-confidence signals is necessary.' },
+          { text: 'Uber should have had better password policies', correct: false, fb: 'Password policies were not the primary failure. The attacker purchased valid credentials and bypassed MFA through social engineering — password complexity would not have changed the outcome.' },
+        ]
+      }
+    }
+  ]
+},
+
+// ── MGM 2023 ──────────────────────────────────────────────────────────────
+{
+  id: 'mgm',
+  name: 'MGM Resorts International',
+  year: '2023',
+  subtitle: 'A 10-minute phone call and a $100M+ breach',
+  tags: ['Vishing', 'LinkedIn OSINT', 'Ransomware', 'Identity Attack'],
+  mitre: ['T1598 - Phishing for Information', 'T1566.004 - Vishing', 'T1078 - Valid Accounts', 'T1486 - Data Encrypted for Impact'],
+  impact: { stat1: { num: '$100M+', label: 'Est. impact' }, stat2: { num: '10', label: 'Min phone call' }, stat3: { num: '9', label: 'Days disruption' } },
+  phases: [
+    {
+      id: 'recon',
+      label: 'Reconnaissance',
+      date: 'September 2023',
+      title: 'LinkedIn as an Intelligence Platform',
+      narrative: 'The attackers — later attributed to Scattered Spider (also known as UNC3944), affiliated with ALPHV/BlackCat ransomware group — identified a target MGM Resorts employee using <strong>LinkedIn</strong>. They found an employee with a role that suggested they would have access to Okta, MGM identity management platform. From LinkedIn, they obtained the employee name, job title, approximate tenure, and enough detail to construct a convincing pretext. The reconnaissance took minutes. This is the attack that the OSINT Human Attack Surface Mapper (Tool 03) in this portfolio is designed to assess against.',
+      failed: ['Employee role and identity visible on LinkedIn with sufficient detail to enable targeted vishing', 'No assessment of what information employees were making publicly available', 'Okta administrator roles identifiable from public sources'],
+      wouldve: ['OSINT self-assessment — understanding what an attacker can learn about your employees before they do', 'LinkedIn hygiene guidance for employees in privileged roles — system administrator titles are high-value targeting information', 'Role-based OSINT awareness training — employees with access to identity platforms are higher-value targets'],
+      technique: 'Passive OSINT — LinkedIn used as a targeting database. No interaction with MGM systems required at this stage. The attackers built their entire pretext from publicly available information in minutes.',
+      quiz: {
+        q: 'The attackers identified their target and built their pretext using only LinkedIn. What does this tell us about OSINT risk?',
+        options: [
+          { text: 'LinkedIn is a security risk and employees should not use it', correct: false, fb: 'This is not a practical or proportionate response. LinkedIn serves legitimate professional purposes. The response is OSINT awareness — understanding what information is visible and whether it creates unacceptable targeting risk for specific roles.' },
+          { text: 'Professional information shared on LinkedIn can be weaponised as targeting intelligence before an attacker makes any contact with the organisation', correct: true, fb: 'Correct. The MGM breach illustrates that the attack begins before any contact is made. By the time the attacker called the helpdesk, they already had a fully constructed pretext based on information the target organisation had made publicly available.' },
+          { text: 'Only senior executives are at risk from LinkedIn-based reconnaissance', correct: false, fb: 'As MGM illustrates, system administrators and IT staff with access to identity platforms are high-value targets — often more so than senior executives who may have less technical access. Technical role visibility on LinkedIn is a specific risk factor.' },
+          { text: 'The attacker needed internal information to identify a useful target', correct: false, fb: 'The entire reconnaissance phase used only public information — LinkedIn profile, job title, implied system access from role description. No internal information was required to identify and profile the target.' },
+        ]
+      }
+    },
+    {
+      id: 'access',
+      label: 'Initial Access',
+      date: 'September 2023',
+      title: 'The 10-Minute Phone Call',
+      narrative: 'Armed with the employee name and job details from LinkedIn, the attacker called <strong>MGM IT helpdesk</strong> and impersonated the employee. The call lasted approximately <strong>ten minutes</strong>. The attacker provided enough personal detail — name, role, some information consistent with the LinkedIn profile — to satisfy the helpdesk verification process. The helpdesk reset the employee Okta MFA. The attacker then used the harvested LinkedIn information, the helpdesk-reset credentials, and Okta access to begin moving through MGM environment. No technical capability was required. The entire initial access was achieved through a phone call.',
+      failed: ['Helpdesk identity verification process did not adequately verify caller identity', 'MFA reset was possible via voice call without additional verification', 'No callback verification — helpdesk did not call the employee back on a known number to confirm the request', 'Vishing as an attack vector not included in security awareness training for helpdesk staff'],
+      wouldve: ['Callback verification — never reset MFA based on an inbound call; call the employee back on a known number', 'Manager approval required for MFA resets on privileged accounts', 'Out-of-band verification for MFA reset requests — email to employee work address, manager confirmation', 'Vishing-specific training for helpdesk staff — the people most targeted by this attack vector'],
+      technique: 'Vishing (voice phishing) combined with LinkedIn-sourced pretext. The attacker did not need technical skill — they needed confidence, the right name and job title, and a helpdesk verification process that could be satisfied with public information.',
+      quiz: {
+        q: 'The helpdesk reset MFA credentials based on an inbound phone call. What is the most important control to prevent this?',
+        options: [
+          { text: 'Train helpdesk staff to ask more questions before resetting credentials', correct: false, fb: 'More questions are easily defeated by a well-prepared attacker. The MGM attacker had the employee name, role, and tenure from LinkedIn — enough to answer typical verification questions. The issue is not the number of questions but the verification method.' },
+          { text: 'Never process sensitive requests (MFA reset, password change) based on inbound calls — always initiate outbound callback to a known number', correct: true, fb: 'Correct. Callback verification fundamentally changes the attack surface. An attacker cannot intercept a callback to the real employee registered number. This single control would have stopped the MGM breach at this phase — the attacker could not have answered a call to the real employee phone.' },
+          { text: 'Require employees to use complex passwords before MFA resets', correct: false, fb: 'Password complexity is not relevant here — the attacker was not exploiting a password. They were manipulating the helpdesk into resetting the MFA credential. No password policy addresses this attack vector.' },
+          { text: 'Disable helpdesk MFA resets entirely', correct: false, fb: 'Operationally impractical — helpdesks need to be able to reset MFA when employees genuinely lose access. The solution is not to remove the capability but to add verification controls that cannot be defeated by an attacker with only public information.' },
+        ]
+      }
+    },
+    {
+      id: 'persist',
+      label: 'Lateral Movement',
+      date: 'September 2023',
+      title: 'From Okta to Everything',
+      narrative: 'Okta is MGM identity management platform — the system that controls access to other systems. With Okta access, the attackers moved through MGM environment, accessing systems including <strong>Azure</strong> and MGM operational infrastructure. Scattered Spider are known for their speed and their familiarity with cloud environments — particularly Azure AD (now Entra ID), Okta, and AWS. They established persistence through multiple mechanisms and began deploying the <strong>ALPHV/BlackCat ransomware</strong>. MGM security team detected the intrusion and attempted to shut down systems to contain it — but the attackers had established sufficient persistence that containment required taking major operational systems offline.',
+      failed: ['Okta access not adequately segmented — access to Okta provided access to downstream systems without additional verification', 'No detection of the rapid lateral movement following Okta compromise', 'Ransomware deployment not prevented despite likely behavioural signals before encryption began', 'Containment required taking operational systems offline — no surgical response available'],
+      wouldve: ['Identity segmentation — Okta access should not automatically provide unrestricted access to all downstream systems', 'Behavioural analytics detecting rapid system access following credential reset', 'Ransomware-specific detection — file system changes, volume shadow copy deletion, encryption behaviour', 'Incident response playbook specifically for identity platform compromise'],
+      technique: 'Identity platform as a master key. Compromising Okta provided access to every system that relied on Okta for authentication — a single point of failure for the entire authentication architecture. Scattered Spider are specialists in this attack pattern.',
+      quiz: {
+        q: 'Compromising Okta gave the attackers access to MGM entire environment. What architectural principle would have limited this?',
+        options: [
+          { text: 'Using a different identity provider instead of Okta', correct: false, fb: 'The identity provider is not the issue — the architecture around it is. Any centralised identity platform, if compromised, creates the same single point of failure. The answer is not which platform to use but how to architect around it.' },
+          { text: 'Defence in depth — requiring additional authentication for sensitive systems even after Okta verification', correct: true, fb: 'Correct. Defence in depth and zero trust principles both argue against treating Okta verification as sufficient for all downstream access. Sensitive systems should require additional verification — step-up authentication, privileged access workstations, just-in-time access — rather than relying entirely on a single identity layer.' },
+          { text: 'Removing Okta and returning to per-system authentication', correct: false, fb: 'Centralised identity management is security best practice — it enables MFA enforcement, SSO, and audit trails across systems. The issue is over-reliance on a single layer, not the existence of centralised identity management.' },
+          { text: 'Better Okta configuration would have prevented lateral movement', correct: false, fb: 'Okta configuration is part of the answer but not sufficient alone. The attackers had legitimately reset credentials — from Okta perspective, this was an authorised user. The architectural issue is that Okta access provided unrestricted downstream access.' },
+        ]
+      }
+    },
+    {
+      id: 'impact',
+      label: 'Impact',
+      date: 'September 10–19, 2023',
+      title: 'Nine Days of Disruption',
+      narrative: 'MGM took major systems offline in an attempt to contain the attack. This included <strong>casino floor operations, hotel check-in systems, digital room keys, slot machines, ATMs, and restaurant payment systems</strong> across MGM properties. The disruption lasted approximately <strong>nine days</strong>. Customers could not check in digitally; slot machines were offline; some guests received physical room keys. MGM estimated the impact at over <strong>$100 million</strong>. Caesars Entertainment, hit by the same group around the same time, reportedly paid a ransom of approximately $15 million. MGM did not pay the ransom. Both decisions were defensible; both had costs.',
+      failed: ['No tested incident response playbook for identity platform compromise with ransomware deployment', 'Containment required operational shutdown — no surgical option available', 'Resilience of operational systems to cybersecurity incident was inadequate — too much dependency on connected systems', 'Recovery time was nine days — business continuity planning had not adequately modelled this scenario'],
+      wouldve: ['Tested incident response playbook specifically for ransomware following identity compromise', 'Offline backups and tested recovery procedures for critical operational systems', 'Business continuity procedures for operating casino and hotel functions during system outage', 'Immutable backup infrastructure not accessible from compromised network segments'],
+      technique: 'Ransomware as the final impact stage of an identity-focused attack. The ransom demand is not the attack — it is the monetisation of a compromise that was achieved through reconnaissance, social engineering, and identity platform exploitation.',
+      quiz: {
+        q: 'MGM did not pay the ransom. Caesars reportedly paid approximately $15 million. From a governance perspective, what factors should inform the ransom payment decision?',
+        options: [
+          { text: 'Always pay — it is the fastest way to restore operations', correct: false, fb: 'This is not a defensible governance position. Paying funds ransomware groups, does not guarantee data recovery or non-publication, may violate OFAC sanctions if the group is sanctioned, and signals that the organisation will pay — potentially attracting future attacks.' },
+          { text: 'Never pay — it funds criminal activity', correct: false, fb: 'While payment has significant downsides, a blanket never-pay policy may not serve the organisation in all circumstances — particularly where human safety, healthcare operations, or critical infrastructure are affected. The decision requires analysis, not a standing policy.' },
+          { text: 'The decision should be informed by backup availability, legal obligations, operational impact, and whether payment is permissible under sanctions law', correct: true, fb: 'Correct. The ransom payment decision is a governance and legal question that should be decided in advance of an incident — ideally in the business continuity and incident response planning process. Factors include: can we recover without paying? Are we legally permitted to pay? What is the operational and reputational cost of non-payment? This decision should never be made for the first time at 2am during an active incident.' },
+          { text: 'Pay only if the ransom is less than the cost of downtime', correct: false, fb: 'Cost alone is an insufficient framework. This analysis ignores legal constraints, the signal sent to attackers, the absence of guarantee that payment will result in recovery, and the ethical and reputational dimensions of funding criminal organisations.' },
+        ]
+      }
+    }
+  ]
+}
+];
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let currentCase = 0;
+let currentPhase = 0;
+const quizAnswered = {};
+let scores = { 0: 0, 1: 0, 2: 0 };
+let quizCounts = { 0: 0, 1: 0, 2: 0 };
+
+// ── CASE SELECTION ─────────────────────────────────────────────────────────
+function selectCase(idx) {
+  currentCase = idx;
+  currentPhase = 0;
+  document.querySelectorAll('.case-card').forEach((c,i) => c.classList.toggle('active', i===idx));
+  renderViewer();
+}
+
+// ── PHASE NAVIGATION ───────────────────────────────────────────────────────
+function goPhase(idx) {
+  currentPhase = idx;
+  document.querySelectorAll('.phase-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  document.querySelectorAll('.attack-panel').forEach((p,i) => p.classList.toggle('active', i===idx));
+  window.scrollTo({top: document.getElementById('case-viewer').offsetTop - 20, behavior:'smooth'});
+}
+
+// ── QUIZ HANDLING ──────────────────────────────────────────────────────────
+function answerQuiz(caseIdx, phaseIdx, optIdx) {
+  const key = caseIdx + '-' + phaseIdx;
+  if (quizAnswered[key]) return;
+  quizAnswered[key] = true;
+
+  const c = cases[caseIdx];
+  const phase = c.phases[phaseIdx];
+  const opt = phase.quiz.options[optIdx];
+
+  quizCounts[caseIdx] = (quizCounts[caseIdx] || 0) + 1;
+  if (opt.correct) scores[caseIdx] = (scores[caseIdx] || 0) + 1;
+
+  const opts = document.querySelectorAll('.quiz-opt[data-case="'+caseIdx+'"][data-phase="'+phaseIdx+'"]');
+  opts.forEach((el, i) => {
+    el.style.cursor = 'default';
+    if (i === optIdx) {
+      el.classList.add(opt.correct ? 'correct' : 'incorrect');
+    } else if (cases[caseIdx].phases[phaseIdx].quiz.options[i].correct) {
+      el.classList.add('reveal-correct');
+    }
+  });
+
+  const fb = document.getElementById('quiz-fb-'+caseIdx+'-'+phaseIdx);
+  if (fb) {
+    fb.textContent = opt.fb;
+    fb.className = 'quiz-feedback show ' + (opt.correct ? 'correct-fb' : 'incorrect-fb');
+  }
+
+  updateScore(caseIdx);
+}
+
+function updateScore(caseIdx) {
+  const el = document.getElementById('score-display-'+caseIdx);
+  if (el) el.textContent = (scores[caseIdx]||0) + ' / ' + (quizCounts[caseIdx]||0);
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+function renderViewer() {
+  const c = cases[currentCase];
+  const phaseNav = c.phases.map((p,i) => 
+    `<button class="phase-btn ${i===0?'active':''}" onclick="goPhase(${i})" id="phase-btn-${currentCase}-${i}">${p.label}</button>`
+  ).join('');
+
+  const panels = c.phases.map((p,i) => {
+    const quizKey = currentCase + '-' + i;
+    const answered = quizAnswered[quizKey];
+
+    const optionsHtml = p.quiz.options.map((opt,oi) => 
+      `<div class="quiz-opt ${answered && opt.correct ? 'reveal-correct' : ''}" 
+        data-case="${currentCase}" data-phase="${i}"
+        onclick="answerQuiz(${currentCase},${i},${oi})"
+        style="${answered ? 'cursor:default' : ''}">${opt.text}</div>`
+    ).join('');
+
+    return `<div class="attack-panel ${i===0?'active':''}" id="panel-${currentCase}-${i}">
+      <div class="phase-header">
+        <div class="phase-tag">${p.label}</div>
+        <div class="phase-title">${p.title}</div>
+        <div class="phase-date">${p.date}</div>
+      </div>
+
+      <div class="narrative-block">${p.narrative}</div>
+
+      <div class="analysis-grid">
+        <div class="analysis-card">
+          <div class="analysis-card-label failed">What failed</div>
+          <ul>${p.failed.map(f=>`<li>${f}</li>`).join('')}</ul>
+        </div>
+        <div class="analysis-card">
+          <div class="analysis-card-label wouldve">What would have stopped it</div>
+          <ul>${p.wouldve.map(w=>`<li>${w}</li>`).join('')}</ul>
+        </div>
+        <div class="analysis-card" style="grid-column:1/-1">
+          <div class="analysis-card-label technique">Attacker perspective</div>
+          <p>${p.technique}</p>
+        </div>
+      </div>
+
+      <div class="quiz-block">
+        <div class="quiz-question">${p.quiz.q}</div>
+        <div class="quiz-options">${optionsHtml}</div>
+        <div class="quiz-feedback" id="quiz-fb-${currentCase}-${i}"></div>
+      </div>
+
+      <div class="btn-row">
+        ${i < c.phases.length - 1 
+          ? `<button class="btn-primary" onclick="goPhase(${i+1})">Next Phase →</button>` 
+          : `<button class="btn-primary" onclick="showSummary()">Case Summary →</button>`}
+        ${i > 0 ? `<button class="btn-secondary" onclick="goPhase(${i-1})">← Previous</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('case-viewer').innerHTML = `
+    <div class="overview-header" data-year="${c.year}">
+      <div class="overview-org">${c.name}</div>
+      <div class="overview-sub">${c.subtitle}</div>
+      <div class="overview-tags">${c.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    </div>
+
+    <div class="impact-box">
+      <div class="impact-box-label">Breach impact</div>
+      <div class="impact-stats">
+        <div class="impact-stat"><div class="impact-num">${c.impact.stat1.num}</div><div class="impact-label">${c.impact.stat1.label}</div></div>
+        <div class="impact-stat"><div class="impact-num">${c.impact.stat2.num}</div><div class="impact-label">${c.impact.stat2.label}</div></div>
+        <div class="impact-stat"><div class="impact-num">${c.impact.stat3.num}</div><div class="impact-label">${c.impact.stat3.label}</div></div>
+      </div>
+    </div>
+
+    <div class="framework-map">
+      <div class="framework-map-label">MITRE ATT&CK techniques</div>
+      <div class="mitre-tags">${c.mitre.map(m=>`<span class="mitre-tag">${m}</span>`).join('')}</div>
+    </div>
+
+    <div class="score-bar">
+      <div class="score-label-text">Analysis score — this case</div>
+      <div class="score-display" id="score-display-${currentCase}">${scores[currentCase]||0} / ${quizCounts[currentCase]||0}</div>
+    </div>
+
+    <div class="phase-nav">${phaseNav}</div>
+    ${panels}
+  `;
+}
+
+function showSummary() {
+  const c = cases[currentCase];
+  const s = scores[currentCase] || 0;
+  const q = quizCounts[currentCase] || 0;
+  const pct = q > 0 ? Math.round(s/q*100) : 0;
+
+  const summaryHtml = `
+    <div class="overview-header" data-year="${c.year}" style="margin-bottom:20px;">
+      <div class="overview-org">Case Summary: ${c.name}</div>
+      <div class="overview-sub">Key lessons and framework connections</div>
+    </div>
+
+    <div class="score-bar" style="margin-bottom:20px;">
+      <div>
+        <div class="score-label-text">Your analysis score</div>
+        <div style="font-size:12px;color:var(--text-faint);font-family:var(--mono);margin-top:2px;">${s} correct of ${q} questions</div>
+      </div>
+      <div class="score-display">${pct}%</div>
+    </div>
+
+    <div class="analysis-grid" style="margin-bottom:20px;">
+      <div class="analysis-card">
+        <div class="analysis-card-label lesson">Root cause</div>
+        <p>${c.id === 'target' ? 'Third-party risk: a small vendor with privileged access and weak security controls provided the initial foothold. The breach was not technically sophisticated — it exploited a governance gap in how Target managed supplier network access.' : c.id === 'uber' ? 'Human layer: every stage of this breach exploited human behaviour rather than technical vulnerability. Credential purchase, MFA fatigue, social engineering, hardcoded credentials left by developers. Technical controls were present; the attacker went around them.' : 'Identity as the attack surface: the entire breach was achieved through identity manipulation — LinkedIn reconnaissance, helpdesk vishing, Okta compromise. No technical exploitation required at any stage until ransomware deployment.'}</p>
+      </div>
+      <div class="analysis-card">
+        <div class="analysis-card-label lesson">The failure that mattered most</div>
+        <p>${c.id === 'target' ? 'Detection without response. Target had FireEye alerts. The security team received them. Nobody acted. A technical control that generates alerts nobody acts on is not a control.' : c.id === 'uber' ? 'Hardcoded credentials in a PowerShell script. The MFA fatigue attack gave access to one account. The hardcoded PAM credentials gave access to everything. Secrets management failure turned a limited breach into a total compromise.' : 'Helpdesk verification process. A 10-minute phone call using LinkedIn-sourced information defeated the verification process and enabled MFA reset. The helpdesk was the weakest point in a security architecture that was otherwise technically capable.'}</p>
+      </div>
+    </div>
+
+    <div class="framework-map" style="margin-bottom:20px;">
+      <div class="framework-map-label">MITRE ATT&CK techniques observed</div>
+      <div class="mitre-tags">${c.mitre.map(m=>`<span class="mitre-tag">${m}</span>`).join('')}</div>
+    </div>
+
+    <div class="analysis-card" style="margin-bottom:20px;">
+      <div class="analysis-card-label lesson">If you were advising the CISO the week before this attack</div>
+      <p>${c.id === 'target' ? 'Conduct a vendor access audit. For every supplier with network access: what can they reach, is that access necessary, what security controls do they have, and is there network segmentation between their access zone and sensitive systems? This audit, conducted one week before the breach, would have identified Fazio HVAC access and the absence of segmentation from POS systems.' : c.id === 'uber' ? 'Review your MFA implementation. Push notification MFA is better than no MFA but is vulnerable to fatigue attacks. Move privileged accounts to phishing-resistant MFA (hardware keys or number-matching). Run a secrets scanning exercise across internal repositories and file shares. These two actions address the two failure modes that turned an MFA fatigue attack into a total compromise.' : 'Conduct a vishing simulation targeting your IT helpdesk. Call your own helpdesk, impersonate an employee whose details you found on LinkedIn, and attempt to get MFA reset. If you succeed, you have identified the exact vulnerability that Scattered Spider exploited. Then implement callback verification: no MFA resets on inbound calls, always call back on a registered number.'}</p>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-primary" onclick="renderViewer()">← Back to Phases</button>
+      <button class="btn-secondary" onclick="selectCase(${(currentCase+1)%3})">Next Case: ${cases[(currentCase+1)%3].name} →</button>
+    </div>`;
+
+  document.getElementById('case-viewer').innerHTML = summaryHtml;
+  window.scrollTo({top: document.getElementById('case-viewer').offsetTop - 20, behavior:'smooth'});
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+renderViewer();
+</script>
+</body>
+</html>
