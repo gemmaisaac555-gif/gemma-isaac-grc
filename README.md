@@ -24,8 +24,7 @@ Risk trade-offs, acceptance decisions, and escalation under pressure.
 
 - [Artefact A — Risk Acceptance With Teeth](how-i-decide/artefact-a-risk-acceptance.md) — Documented risk acceptance for a third-party supplier certification gap at a Series B UK fintech. Includes compensating controls, named ownership, review triggers, and a formal acceptance statement.
 - 🔗 [Tool 01 — Third-Party Risk Auto-Scorer](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-autoscorer.html) — Weighted scoring tool for vendor risk assessment with full methodology.
-- Tool 03 — Human Attack Surface OSINT Risk Mapper *(coming soon)*
----
+- 🔗 [Tool 03 — Human Attack Surface OSINT Mapper](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-osint-mapper.html) — Structured OSINT assessment framework mapping people-layer, organisational, and digital footprint exposure. Scored output with prioritised findings and recommendations.
 
 ## 📁 How Things Fail
 Failure mode analysis, root cause thinking, and attack reconstruction.
