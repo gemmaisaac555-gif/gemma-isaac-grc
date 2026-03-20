@@ -52,9 +52,8 @@ Regulatory intuition, ICO/FCA/DORA lens, and compliance under uncertainty.
 
 ## 🏢 Arken Systems
 The fictional organisation underpinning this portfolio. All tools and artefacts are built around Arken Systems and its clients.
-
-- [Company Charter](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/arken-systems/arken-company-charter.md) — Who Arken Systems is, what they do, and the governance principles they apply to themselves.
-- [Risk Appetite Statement](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/arken-systems/arken-risk-appetite-statement.md) — Arken Systems' documented appetite across six risk categories, including client confidentiality, AI tool use, and professional quality.
+- [Company Charter](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/arken-systems/arken-company-charter.md)
+- [Risk Appetite Statement](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/arken-systems/arken-risk-appetite-statement.md)
 
 ## 🤖 AI Governance
 
