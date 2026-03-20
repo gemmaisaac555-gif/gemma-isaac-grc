@@ -40,7 +40,7 @@ These tools simulate real GRC workflows — vendor risk assessment, OSINT analys
 - 🔗 [Tool 01 — Third-Party Risk Auto-Scorer](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-autoscorer.html) — Weighted vendor risk scoring engine with structured domains, follow-up questions, and prioritised remediation output.
 - 🔗 [Tool 02 — BEC / Invoice Fraud Risk Simulation & Control Assessment](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-bec-simulator.html) — Six progressive social engineering scenarios with control gap report, framework mapping, and residual risk decision.
 - 🔗 [Tool 03 — Human Attack Surface OSINT Mapper](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-osint-mapper.html) — Structured OSINT assessment across people, organisational, and digital exposure layers with scored findings.
-- 🔗 [Tool 04 — Small Business Security Kit](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-small-business-kit.html) — Practical security prioritisation tool for small UK businesses. Built around NorthWest Heating & Gas: £474 cost, 31× ROI.
+- 🔗 [Tool 04 — Small Business Security Kit](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-small-business-kit.html) — Practical security prioritisation tool for small UK businesses. Built around NorthWest Heating & Gas: £474 cost, 31× ROI.Not part of the Arken Systems scenario.
 - 🔗 [Tool 05 — Rebuild Famous Attacks](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-rebuild-attacks.html) — Target (2013), Uber (2022), MGM (2023) reconstructed phase by phase. What failed, what would have stopped it, what the attacker was thinking.
 
 ---
