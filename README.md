@@ -8,6 +8,12 @@ I am a career changer with an MSc in Computer Science and Cybersecurity (Univers
 
 All artefacts use clearly defined fictional scenarios. They are thinking exercises designed to show judgement — not templates, not compliance theatre.
 
+
+## 🏢 Arken Systems
+The fictional organisation underpinning this portfolio. All tools and artefacts are built around Arken Systems and its clients.
+- [Company Charter](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/arken-systems/arken-company-charter.md)
+- [Risk Appetite Statement](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/arken-systems/arken-risk-appetite-statement.md)
+
 ---
 
 ## 📁 How I Think
@@ -49,11 +55,6 @@ Board briefs, non-technical risk communication, and practical security guidance.
 Regulatory intuition, ICO/FCA/DORA lens, and compliance under uncertainty.
 
 - [Artefact E — Regulatory Intuition Memo: EU AI Act](regulatory-judgement/artefact-e-regulatory-intuition-memo.md) — What financial services deployers should be doing now, seventeen months before the August 2026 compliance deadline. Five common mistakes, a phased action framework, and a direct reading of what the Act is actually trying to achieve.
-
-## 🏢 Arken Systems
-The fictional organisation underpinning this portfolio. All tools and artefacts are built around Arken Systems and its clients.
-- [Company Charter](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/arken-systems/arken-company-charter.md)
-- [Risk Appetite Statement](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/arken-systems/arken-risk-appetite-statement.md)
 
 ## 🤖 AI Governance
 
