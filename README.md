@@ -56,6 +56,7 @@ The fictional organisation underpinning this portfolio. All tools and artefacts 
 
 - [Company Charter](arken-systems/arken-company-charter.md) — Who Arken Systems is, what they do, and the governance principles they apply to themselves.
 - [Risk Appetite Statement](arken-systems/arken-risk-appetite-statement.md) — Arken Systems' documented appetite across six risk categories, including client confidentiality, AI tool use, and professional quality.
+
 ## 🤖 AI Governance
 
 AI risk, algorithmic accountability, and regulatory compliance under the EU AI Act and UK AI framework.
