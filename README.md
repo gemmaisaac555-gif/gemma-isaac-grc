@@ -39,7 +39,7 @@ Failure mode analysis, root cause thinking, and attack reconstruction.
 
 Board briefs, non-technical risk communication, and practical security guidance.
 
-- Artefact D — One-Page Board Brief *(coming soon)*
+- - [Artefact F — Board Brief: Third-Party Security Incident](how-i-communicate/artefact-f-board-brief.md) — One-page post-incident brief to the Veriflow board following the Databridge security notification. Names three governance failures, requests two board decisions, and proposes a structural fix for the pattern the incident exposed.
 - 🔗 [**Tool 02 — BEC / Invoice Fraud Control Simulator**](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-bec-simulator.html) — Interactive simulator for testing BEC and invoice fraud controls across email, finance, and process layers.
 - 🔗 [**Tool 04 — Small Business Security Kit**](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-small-business-kit.html) — Practical security starter kit for small UK businesses. Built around a real NorthWest Heating & Gas case study: £474 cost, 31× ROI.
 
