@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Small Business Security Starter Kit</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #faf8f4;
+  --white: #ffffff;
+  --ink: #1c1a17;
+  --ink-mid: #4a4540;
+  --ink-dim: #8c857c;
+  --ink-faint: #c9c2b8;
+  --border: #e4ddd5;
+  --border2: #ede8e2;
+  --green: #1a6b3c;
+  --green-bg: #f0f9f4;
+  --green-border: #a8d8bc;
+  --amber: #8a5a00;
+  --amber-bg: #fdf6e3;
+  --amber-border: #e8c96a;
+  --red: #9b2020;
+  --red-bg: #fdf2f2;
+  --red-border: #e8aaaa;
+  --blue: #1a4a8a;
+  --blue-bg: #f0f5fd;
+  --blue-border: #b0c8f0;
+  --accent: #2f6a3f;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cream);color:var(--ink);font-family:'Inter',sans-serif;font-weight:400;min-height:100vh;font-size:15px;line-height:1.6;}
+
+.page-wrap{max-width:800px;margin:0 auto;padding:0 24px 80px;}
+
+/* HEADER */
+.site-header{padding:32px 0 28px;border-bottom:2px solid var(--ink);margin-bottom:40px;}
+.site-header-inner{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;}
+.header-left .kicker{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px;font-weight:500;}
+.header-left h1{font-family:'Fraunces',serif;font-size:clamp(22px,4vw,34px);font-weight:700;line-height:1.1;color:var(--ink);}
+.header-left h1 em{font-style:italic;color:var(--accent);}
+.header-right{text-align:right;font-size:12px;color:var(--ink-dim);line-height:1.9;}
+.header-right strong{display:block;color:var(--ink);font-size:13px;font-weight:600;}
+.header-desc{margin-top:16px;font-size:14px;color:var(--ink-mid);line-height:1.7;max-width:560px;border-left:3px solid var(--accent);padding-left:14px;}
+
+/* STEPS NAV */
+.steps-nav{display:flex;gap:0;margin-bottom:40px;overflow-x:auto;border-bottom:1px solid var(--border);}
+.step-btn{font-size:12px;font-weight:500;padding:10px 20px;cursor:pointer;color:var(--ink-dim);border:none;background:none;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all 0.15s;display:flex;align-items:center;gap:8px;}
+.step-btn:hover{color:var(--ink);}
+.step-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+.step-btn .step-num{width:20px;height:20px;border-radius:50%;background:var(--border);font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-btn.active .step-num{background:var(--accent);color:white;}
+.step-btn.done .step-num{background:var(--green);color:white;}
+
+/* PANELS */
+.panel{display:none;animation:fadeIn 0.25s ease;}
+.panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.panel-title{font-family:'Fraunces',serif;font-size:22px;font-weight:700;margin-bottom:6px;}
+.panel-subtitle{font-size:13px;color:var(--ink-dim);margin-bottom:28px;}
+
+/* FORM ELEMENTS */
+.field-group{margin-bottom:20px;}
+.field-label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--ink);}
+.field-hint{font-size:12px;color:var(--ink-dim);margin-bottom:6px;}
+.field-input{width:100%;border:1px solid var(--border);background:var(--white);padding:10px 14px;font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);outline:none;transition:border-color 0.15s;border-radius:0;}
+.field-input:focus{border-color:var(--accent);}
+.field-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M0 0l6 8 6-8z' fill='%238c857c'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;}
+
+.radio-group{display:flex;flex-direction:column;gap:8px;}
+.radio-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--border);background:var(--white);cursor:pointer;transition:all 0.15s;}
+.radio-item:hover{border-color:var(--ink-dim);}
+.radio-item.selected{border-color:var(--accent);background:var(--green-bg);}
+.radio-item input[type=radio]{margin-top:2px;flex-shrink:0;accent-color:var(--accent);}
+.radio-label{font-size:13px;color:var(--ink);}
+.radio-hint{font-size:12px;color:var(--ink-dim);margin-top:2px;}
+
+.checkbox-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+@media(max-width:520px){.checkbox-grid{grid-template-columns:1fr;}}
+.checkbox-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--border);background:var(--white);cursor:pointer;transition:all 0.15s;}
+.checkbox-item:hover{border-color:var(--ink-dim);}
+.checkbox-item.checked{border-color:var(--accent);background:var(--green-bg);}
+.checkbox-item input[type=checkbox]{margin-top:2px;accent-color:var(--accent);}
+.checkbox-label{font-size:13px;color:var(--ink);}
+
+/* CALL-OUT BOXES */
+.info-box{background:var(--blue-bg);border:1px solid var(--blue-border);border-left:3px solid var(--blue);padding:14px 18px;margin-bottom:20px;font-size:13px;color:var(--ink-mid);line-height:1.7;}
+.info-box strong{color:var(--blue);display:block;margin-bottom:4px;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;}
+.example-box{background:var(--amber-bg);border:1px solid var(--amber-border);border-left:3px solid var(--amber);padding:14px 18px;margin-bottom:20px;font-size:13px;color:var(--ink-mid);line-height:1.7;}
+.example-box strong{color:var(--amber);display:block;margin-bottom:4px;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;}
+
+/* BUTTONS */
+.btn-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px;}
+.btn-primary{background:var(--accent);color:white;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;padding:12px 28px;border:none;cursor:pointer;transition:background 0.15s;letter-spacing:0.02em;}
+.btn-primary:hover{background:#245530;}
+.btn-secondary{background:var(--white);color:var(--ink-mid);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;padding:12px 24px;border:1px solid var(--border);cursor:pointer;transition:all 0.15s;}
+.btn-secondary:hover{border-color:var(--ink-mid);color:var(--ink);}
+.btn-ghost{background:none;border:none;font-size:13px;color:var(--ink-dim);cursor:pointer;padding:12px 0;text-decoration:underline;text-underline-offset:3px;}
+.btn-ghost:hover{color:var(--ink);}
+
+/* SECTION DIVIDER */
+.section-divider{border:none;border-top:1px solid var(--border2);margin:24px 0;}
+
+/* PROGRESS BAR */
+.progress-wrap{height:4px;background:var(--border);margin-bottom:32px;border-radius:2px;}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.4s ease;}
+
+/* RESULTS */
+.result-header{background:var(--white);border:1px solid var(--border);padding:24px 28px;margin-bottom:24px;}
+.result-score-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:16px;}
+.score-label{font-family:'Fraunces',serif;font-size:13px;color:var(--ink-dim);}
+.score-big{font-family:'Fraunces',serif;font-size:48px;font-weight:700;line-height:1;color:var(--ink);}
+.score-big span{font-size:20px;color:var(--ink-dim);}
+.risk-badge{font-size:12px;font-weight:600;padding:6px 16px;border:2px solid;letter-spacing:0.08em;text-transform:uppercase;}
+.risk-badge.low{color:var(--green);border-color:var(--green);background:var(--green-bg);}
+.risk-badge.medium{color:var(--amber);border-color:var(--amber);background:var(--amber-bg);}
+.risk-badge.high{color:var(--red);border-color:var(--red);background:var(--red-bg);}
+.result-name{font-family:'Fraunces',serif;font-size:18px;font-weight:700;margin-bottom:4px;}
+.result-meta{font-size:12px;color:var(--ink-dim);}
+
+.priority-list{margin-bottom:24px;}
+.priority-section-title{font-size:11px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.priority-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border2);align-items:flex-start;}
+.priority-item:last-child{border-bottom:none;}
+.priority-flag{font-size:11px;font-weight:600;padding:3px 10px;border:1px solid;white-space:nowrap;flex-shrink:0;margin-top:2px;letter-spacing:0.06em;text-transform:uppercase;}
+.priority-flag.do-now{color:var(--red);border-color:var(--red);background:var(--red-bg);}
+.priority-flag.this-week{color:var(--amber);border-color:var(--amber);background:var(--amber-bg);}
+.priority-flag.this-month{color:var(--blue);border-color:var(--blue);background:var(--blue-bg);}
+.priority-title{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.priority-detail{font-size:13px;color:var(--ink-mid);line-height:1.6;}
+.priority-tool{font-size:12px;color:var(--ink-dim);margin-top:4px;}
+
+.checklist-section{background:var(--white);border:1px solid var(--border);padding:22px 26px;margin-bottom:16px;}
+.checklist-section h3{font-family:'Fraunces',serif;font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.checklist-item{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border2);font-size:13px;}
+.checklist-item:last-child{border-bottom:none;}
+.checklist-cb{margin-top:2px;flex-shrink:0;width:16px;height:16px;accent-color:var(--accent);}
+.checklist-text{}
+.checklist-why{font-size:12px;color:var(--ink-dim);margin-top:2px;}
+
+.email-preview{background:var(--white);border:1px solid var(--border);overflow:hidden;margin-bottom:24px;}
+.email-chrome{background:var(--cream);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;gap:8px;align-items:center;}
+.email-dot{width:10px;height:10px;border-radius:50%;}
+.email-fields{padding:16px 22px;border-bottom:1px solid var(--border2);}
+.email-field-row{display:grid;grid-template-columns:50px 1fr;gap:8px;font-size:12px;margin-bottom:5px;}
+.email-field-label{color:var(--ink-dim);font-weight:500;}
+.email-body-content{padding:20px 22px;font-size:13px;color:var(--ink-mid);line-height:1.8;white-space:pre-wrap;}
+
+.cost-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+.cost-table th{text-align:left;padding:8px 12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-dim);border-bottom:2px solid var(--border);}
+.cost-table td{padding:10px 12px;border-bottom:1px solid var(--border2);color:var(--ink-mid);}
+.cost-table td:first-child{color:var(--ink);font-weight:500;}
+.cost-table td.free{color:var(--green);font-weight:600;}
+.cost-table tr:last-child td{border-bottom:none;}
+
+/* ABOUT/METHODOLOGY */
+.method-block{background:var(--white);border:1px solid var(--border);padding:22px 26px;margin-bottom:16px;}
+.method-block h3{font-family:'Fraunces',serif;font-size:15px;font-weight:700;margin-bottom:10px;}
+.method-block p{font-size:13px;color:var(--ink-mid);line-height:1.8;margin-bottom:10px;}
+.method-block p:last-child{margin-bottom:0;}
+
+.disclaimer{margin-top:48px;padding:14px 18px;border:1px solid var(--border);font-size:12px;color:var(--ink-dim);line-height:1.7;}
+.disclaimer strong{color:var(--ink-mid);}
+
+@media print{
+  .steps-nav,.btn-row,.site-header,.disclaimer{display:none !important;}
+  .page-wrap{padding:0;}
+  .panel{display:block !important;}
+  #panel-checklist,#panel-email{page-break-before:always;}
+}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <div class="header-left">
+      <div class="kicker">NCSC Cyber Essentials · UK GDPR · ICO</div>
+      <h1>Small Business<br><em>Security Starter Kit</em></h1>
+    </div>
+    <div class="header-right">
+      <strong>NorthWest Heating &amp; Gas</strong>
+      Worked example<br>Greater Manchester<br>8 employees
+    </div>
+  </div>
+  <p class="header-desc">Answer a few questions and get a prioritised security action plan — plain English, no IT jargon. Based on exactly how NorthWest Heating &amp; Gas went from zero security to Cyber Essentials certified in 90 days, at a total cost of &pound;474 and 64 hours of staff time.</p>
+  <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:16px;">
+    <div style="font-size:12px;color:var(--ink-dim);"><strong style="display:block;color:var(--ink);font-size:13px;">£474</strong>total cost including certification</div>
+    <div style="font-size:12px;color:var(--ink-dim);"><strong style="display:block;color:var(--ink);font-size:13px;">64 hours</strong>over 90 days (~5hrs/week)</div>
+    <div style="font-size:12px;color:var(--ink-dim);"><strong style="display:block;color:var(--ink);font-size:13px;">£15k</strong>first contract won within 4 weeks</div>
+    <div style="font-size:12px;color:var(--ink-dim);"><strong style="display:block;color:var(--ink);font-size:13px;">31×</strong>return on investment</div>
+  </div>
+</header>
+
+<div class="progress-wrap"><div class="progress-fill" id="progress-bar" style="width:16.6%"></div></div>
+
+<div class="steps-nav" id="steps-nav">
+  <button class="step-btn active" onclick="goTo(0)" id="step-btn-0"><span class="step-num">1</span>Your Business</button>
+  <button class="step-btn" onclick="goTo(1)" id="step-btn-1"><span class="step-num">2</span>Your Devices</button>
+  <button class="step-btn" onclick="goTo(2)" id="step-btn-2"><span class="step-num">3</span>Your Data</button>
+  <button class="step-btn" onclick="goTo(3)" id="step-btn-3"><span class="step-num">4</span>Your Risks</button>
+  <button class="step-btn" onclick="goTo(4)" id="step-btn-4"><span class="step-num">5</span>Results</button>
+  <button class="step-btn" onclick="goTo(5)" id="step-btn-5"><span class="step-num">6</span>Checklist</button>
+  <button class="step-btn" onclick="goTo(6)" id="step-btn-6"><span class="step-num">7</span>Email Summary</button>
+  <button class="step-btn" onclick="goTo(7)" id="step-btn-7"><span class="step-num">8</span>About</button>
+</div>
+
+<!-- PANEL 0: YOUR BUSINESS -->
+<div class="panel active" id="panel-0">
+  <div class="panel-title">Tell us about your business</div>
+  <div class="panel-subtitle">This helps us give you relevant recommendations — no data is stored or sent anywhere.</div>
+
+  <div class="example-box"><strong>Following along: NorthWest Heating &amp; Gas Ltd</strong>Greater Manchester plumbing &amp; heating company. 8 staff (1 director, 1 office admin, 6 field engineers). £750k turnover. They lost a £25k council contract in December 2024 because they had no Cyber Essentials certification. That was their trigger. Starting point: no policies, no password manager, no MFA, phones with no PIN locks. We show you their decisions throughout.</div>
+
+  <div class="field-group">
+    <label class="field-label">Business name (or just "My Business")</label>
+    <input class="field-input" id="biz-name" type="text" placeholder="e.g. NorthWest Heating &amp; Gas Ltd" value="">
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">What type of business are you?</label>
+    <div class="radio-group" id="biz-type-group">
+      <label class="radio-item" onclick="selectRadio('biz-type','trades')"><input type="radio" name="biz-type" value="trades"> <div><div class="radio-label">Trades / field service (plumber, electrician, HVAC, etc.)</div><div class="radio-hint">Like NorthWest Heating — engineers out on jobs, customer homes, mobile phones</div></div></label>
+      <label class="radio-item" onclick="selectRadio('biz-type','office')"><input type="radio" name="biz-type" value="office"> <div><div class="radio-label">Office-based service business</div><div class="radio-hint">Accountant, solicitor, consultant, letting agent, etc.</div></div></label>
+      <label class="radio-item" onclick="selectRadio('biz-type','retail')"><input type="radio" name="biz-type" value="retail"> <div><div class="radio-label">Retail / hospitality</div><div class="radio-hint">Shop, café, restaurant, takeaway</div></div></label>
+      <label class="radio-item" onclick="selectRadio('biz-type','other')"><input type="radio" name="biz-type" value="other"> <div><div class="radio-label">Other small business</div></div></label>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">How many people work in your business?</label>
+    <div class="radio-group" id="staff-size-group">
+      <label class="radio-item" onclick="selectRadio('staff-size','1-3')"><input type="radio" name="staff-size" value="1-3"> <div class="radio-label">Just me, or 2–3 people</div></label>
+      <label class="radio-item" onclick="selectRadio('staff-size','4-10')"><input type="radio" name="staff-size" value="4-10"> <div class="radio-label">4–10 people</div></label>
+      <label class="radio-item" onclick="selectRadio('staff-size','11-25')"><input type="radio" name="staff-size" value="11-25"> <div class="radio-label">11–25 people</div></label>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">What email and office system do you use?</label>
+    <select class="field-input field-select" id="email-system">
+      <option value="">— Select —</option>
+      <option value="m365">Microsoft 365 (Outlook, OneDrive, Teams)</option>
+      <option value="google">Google Workspace (Gmail, Drive)</option>
+      <option value="free">Free personal Gmail or Outlook</option>
+      <option value="other">Something else</option>
+      <option value="none">No formal email system</option>
+    </select>
+  </div>
+
+  <div class="btn-row"><button class="btn-primary" onclick="goTo(1)">Next: Your Devices &rarr;</button></div>
+</div>
+
+<!-- PANEL 1: YOUR DEVICES -->
+<div class="panel" id="panel-1">
+  <div class="panel-title">Your devices</div>
+  <div class="panel-subtitle">Tick everything that applies to your business.</div>
+
+  <div class="info-box"><strong>Why this matters</strong>Every device that touches your business data is a potential entry point. NorthWest Heating found 3 of their 6 company phones had no screen lock at all. That discovery took Sarah one afternoon to find and fix — and zero pounds.</div>
+
+  <div class="field-group">
+    <label class="field-label">Which devices does your business use? (tick all that apply)</label>
+    <div class="checkbox-grid" id="devices-group">
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="laptops"> <span class="checkbox-label">Laptops or desktop computers</span></label>
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="company-phones"> <span class="checkbox-label">Company-issued mobile phones</span></label>
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="personal-phones"> <span class="checkbox-label">Personal phones used for work (BYOD)</span></label>
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="tablets"> <span class="checkbox-label">Tablets (iPad or Android)</span></label>
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="router"> <span class="checkbox-label">Business broadband / WiFi router</span></label>
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="cloud"> <span class="checkbox-label">Cloud software (accounts, job management, etc.)</span></label>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">Do your staff use phones for work outside the office or workshop?</label>
+    <div class="radio-group" id="mobile-workers-group">
+      <label class="radio-item" onclick="selectRadio('mobile-workers','yes')"><input type="radio" name="mobile-workers" value="yes"> <div><div class="radio-label">Yes — we have field staff, engineers, or delivery drivers</div><div class="radio-hint">Like NorthWest Heating's engineers out on job sites all day</div></div></label>
+      <label class="radio-item" onclick="selectRadio('mobile-workers','some')"><input type="radio" name="mobile-workers" value="some"> <div class="radio-label">Sometimes — a few people occasionally work out of the office</div></label>
+      <label class="radio-item" onclick="selectRadio('mobile-workers','no')"><input type="radio" name="mobile-workers" value="no"> <div class="radio-label">No — everyone works in one place</div></label>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">Does your business currently use a password manager?</label>
+    <div class="radio-group" id="password-mgr-group">
+      <label class="radio-item" onclick="selectRadio('password-mgr','yes')"><input type="radio" name="password-mgr" value="yes"> <div class="radio-label">Yes — we use one (Bitwarden, 1Password, etc.)</div></label>
+      <label class="radio-item" onclick="selectRadio('password-mgr','browser')"><input type="radio" name="password-mgr" value="browser"> <div><div class="radio-label">Sort of — we just save passwords in the browser</div><div class="radio-hint">Better than nothing, but not as secure as a proper password manager</div></div></label>
+      <label class="radio-item" onclick="selectRadio('password-mgr','no')"><input type="radio" name="password-mgr" value="no"> <div class="radio-label">No — everyone remembers their own passwords</div></label>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-primary" onclick="goTo(2)">Next: Your Data &rarr;</button>
+    <button class="btn-secondary" onclick="goTo(0)">&larr; Back</button>
+  </div>
+</div>
+
+<!-- PANEL 2: YOUR DATA -->
+<div class="panel" id="panel-2">
+  <div class="panel-title">Your data</div>
+  <div class="panel-subtitle">What customer and business information does your business hold?</div>
+
+  <div class="example-box"><strong>NorthWest Heating example</strong>They hold customer names and addresses, job histories, gas safety certificates, invoices, and employee payroll data. The problem they found: one engineer had 400+ job site photos in his camera roll going back 18 months — customer homes, visible addresses, boiler details. If that phone was lost, that would have been a reportable GDPR breach. The fix was a new habit: upload to Tradify, delete from the camera roll within 24 hours. Free. 5 minutes to explain. Done.</div>
+
+  <div class="field-group">
+    <label class="field-label">What customer data does your business hold? (tick all that apply)</label>
+    <div class="checkbox-grid" id="data-types-group">
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="names-addresses"> <span class="checkbox-label">Customer names and addresses</span></label>
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="payment"> <span class="checkbox-label">Payment or banking details</span></label>
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="health"> <span class="checkbox-label">Health, medical, or sensitive personal data</span></label>
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="employee"> <span class="checkbox-label">Employee personal data (payroll, contracts)</span></label>
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="photos"> <span class="checkbox-label">Photos of customer homes or properties</span></label>
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="financial"> <span class="checkbox-label">Business financial records</span></label>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">Does your business use cloud software to store customer data? (Xero, QuickBooks, Tradify, etc.)</label>
+    <div class="radio-group" id="cloud-data-group">
+      <label class="radio-item" onclick="selectRadio('cloud-data','yes')"><input type="radio" name="cloud-data" value="yes"> <div class="radio-label">Yes — customer data is mainly in cloud apps</div></label>
+      <label class="radio-item" onclick="selectRadio('cloud-data','mixed')"><input type="radio" name="cloud-data" value="mixed"> <div class="radio-label">Mixed — some in cloud, some in spreadsheets or paper</div></label>
+      <label class="radio-item" onclick="selectRadio('cloud-data','local')"><input type="radio" name="cloud-data" value="local"> <div class="radio-label">Mainly spreadsheets, local files, or paper</div></label>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-primary" onclick="goTo(3)">Next: Your Risks &rarr;</button>
+    <button class="btn-secondary" onclick="goTo(1)">&larr; Back</button>
+  </div>
+</div>
+
+<!-- PANEL 3: YOUR RISKS -->
+<div class="panel" id="panel-3">
+  <div class="panel-title">Your current setup</div>
+  <div class="panel-subtitle">A few quick questions about where you are right now. Be honest — this only helps you.</div>
+
+  <div class="field-group">
+    <label class="field-label">Do all work devices (phones, laptops) have a PIN or password lock?</label>
+    <div class="radio-group" id="screen-lock-group">
+      <label class="radio-item" onclick="selectRadio('screen-lock','yes')"><input type="radio" name="screen-lock" value="yes"> <div class="radio-label">Yes — all devices are locked</div></label>
+      <label class="radio-item" onclick="selectRadio('screen-lock','some')"><input type="radio" name="screen-lock" value="some"> <div><div class="radio-label">Some of them</div><div class="radio-hint">NorthWest Heating found 3 of 6 company phones had no screen lock. Sarah fixed them all before the team meeting — so when James announced the policy, it was already done. No drama.</div></div></label>
+      <label class="radio-item" onclick="selectRadio('screen-lock','no')"><input type="radio" name="screen-lock" value="no"> <div class="radio-label">Not sure, or probably not</div></label>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">Do your cloud accounts (email, accounts software) use two-factor authentication (2FA)?</label>
+    <div class="radio-group" id="mfa-group">
+      <label class="radio-item" onclick="selectRadio('mfa','yes')"><input type="radio" name="mfa" value="yes"> <div class="radio-label">Yes — we use 2FA or MFA on our accounts</div></label>
+      <label class="radio-item" onclick="selectRadio('mfa','some')"><input type="radio" name="mfa" value="some"> <div class="radio-label">On some accounts, not all</div></label>
+      <label class="radio-item" onclick="selectRadio('mfa','no')"><input type="radio" name="mfa" value="no"> <div><div class="radio-label">No — just username and password</div><div class="radio-hint">James enabled MFA on Microsoft 365 on a Saturday morning. Took 20 minutes including Xero and online banking. He describes it as "the most useful 20 minutes I've spent on the business."</div></div></label>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">Has your business ever had a security problem? (lost device, phishing email, dodgy invoice, suspicious login)</label>
+    <div class="radio-group" id="incident-group">
+      <label class="radio-item" onclick="selectRadio('incident','yes')"><input type="radio" name="incident" value="yes"> <div class="radio-label">Yes — we've had something happen</div></label>
+      <label class="radio-item" onclick="selectRadio('incident','almost')"><input type="radio" name="incident" value="almost"> <div><div class="radio-label">Nearly — we've had suspicious emails or a close call</div><div class="radio-hint">NorthWest Heating had an engineer leave a phone on a job site — recovered safely because they had remote lock set up</div></div></label>
+      <label class="radio-item" onclick="selectRadio('incident','no')"><input type="radio" name="incident" value="no"> <div class="radio-label">Not as far as we know</div></label>
+    </div>
+  </div>
+
+  <div class="field-group">
+    <label class="field-label">Is any of this driven by a specific need? (tick if relevant)</label>
+    <div class="checkbox-grid" id="drivers-group">
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="cyber-essentials"> <span class="checkbox-label">Applying for Cyber Essentials certification</span></label>
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="contract"> <span class="checkbox-label">A customer or contract is asking about security</span></label>
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="gdpr"> <span class="checkbox-label">Worried about GDPR / ICO obligations</span></label>
+      <label class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox" value="insurance"> <span class="checkbox-label">Cyber insurance requirement</span></label>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-primary" onclick="generateResults()">Generate My Action Plan &rarr;</button>
+    <button class="btn-secondary" onclick="goTo(2)">&larr; Back</button>
+  </div>
+</div>
+
+<!-- PANEL 4: RESULTS -->
+<div class="panel" id="panel-4">
+  <div class="panel-title">Your Security Action Plan</div>
+  <div class="panel-subtitle" id="results-subtitle">Based on your answers</div>
+  <div id="results-content"></div>
+  <div class="btn-row">
+    <button class="btn-primary" onclick="goTo(5)">Get Printable Checklist &rarr;</button>
+    <button class="btn-secondary" onclick="goTo(6)">Generate Staff Email &rarr;</button>
+  </div>
+</div>
+
+<!-- PANEL 5: CHECKLIST -->
+<div class="panel" id="panel-5">
+  <div class="panel-title">Your Printable Checklist</div>
+  <div class="panel-subtitle">Print this out, tick things off as you go. NorthWest Heating completed theirs in 2 weeks.</div>
+  <div id="checklist-content"></div>
+  <div class="btn-row">
+    <button class="btn-primary" onclick="window.print()">Print Checklist</button>
+    <button class="btn-secondary" onclick="goTo(6)">Generate Staff Email &rarr;</button>
+    <button class="btn-ghost" onclick="goTo(4)">&larr; Back to results</button>
+  </div>
+</div>
+
+<!-- PANEL 6: EMAIL -->
+<div class="panel" id="panel-6">
+  <div class="panel-title">Staff Briefing Email</div>
+  <div class="panel-subtitle">Copy this email to brief your team. Edit the parts in [brackets] before sending.</div>
+  <div id="email-content"></div>
+  <div class="btn-row">
+    <button class="btn-primary" onclick="copyEmail()">Copy Email Text</button>
+    <button class="btn-secondary" onclick="window.print()">Print</button>
+    <button class="btn-ghost" onclick="goTo(5)">&larr; Back to checklist</button>
+  </div>
+  <div id="copy-confirm" style="display:none;margin-top:12px;font-size:13px;color:var(--green);font-weight:500;">&#10003; Copied to clipboard</div>
+</div>
+
+<!-- PANEL 7: ABOUT -->
+<div class="panel" id="panel-7">
+  <div class="panel-title">About This Tool</div>
+  <div class="panel-subtitle">What this is, how it works, and why it's built this way.</div>
+
+  <div class="method-block">
+    <h3>What this tool is</h3>
+    <p>A web-based security assessment and action planning tool for small UK trades businesses, built around the case study of NorthWest Heating &amp; Gas Ltd — a Greater Manchester plumbing and heating company. It generates prioritised recommendations, a printable checklist, and a staff briefing email based on a short assessment of the user's business.</p>
+    <p>Part of a wider UK Trades Cybersecurity Kit aligned to NCSC Cyber Essentials, NCSC Small Business Guidance, and UK GDPR (ICO). This web version exists because the intended audience — small business owners and office managers — are not running Python scripts. A tool only works if it reaches the person who needs it.</p>
+  </div>
+
+  <div class="method-block">
+    <h3>Why plain English throughout</h3>
+    <p>James at NorthWest Heating tested an early draft of their mobile policy on Dave, one of the engineers. Dave said he'd "probably skim it and sign it." That was the signal to rewrite everything from scratch.</p>
+    <p>The final policy uses phrases like "use common sense" and language James would actually use in a team meeting. It is not legally weaker for this — it is more likely to be read, understood, and followed. A policy nobody reads is not a control. Readability is a security property.</p>
+  </div>
+
+  <div class="method-block">
+    <h3>How recommendations are prioritised</h3>
+    <p>Recommendations are generated from five scored inputs: MFA status, screen lock status, password manager status, email system, and data handling practices. The "Do This Week" tier maps directly to the controls whose absence most frequently precedes real incidents in small business breach data: no MFA, no screen locks, reused passwords.</p>
+    <p>Priority logic reflects NorthWest Heating's actual implementation order — they fixed MFA and phone locks in week one because those were the fastest wins with the highest impact. The checklist follows the same sequence.</p>
+  </div>
+
+  <div class="method-block">
+    <h3>The NorthWest Heating numbers</h3>
+    <p>Everything in this tool is grounded in real implementation data from the NorthWest Heating case study:</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+      <div style="background:var(--cream);border:1px solid var(--border);padding:12px;"><div style="font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Total implementation cost</div><div style="font-size:18px;font-weight:700;font-family:'Fraunces',serif;">£474</div><div style="font-size:11px;color:var(--ink-dim);">Cyber Essentials cert: £300. Staff time implied salary: ~£174. Software: £0.</div></div>
+      <div style="background:var(--cream);border:1px solid var(--border);padding:12px;"><div style="font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Staff time</div><div style="font-size:18px;font-weight:700;font-family:'Fraunces',serif;">64 hours</div><div style="font-size:11px;color:var(--ink-dim);">Over 90 days. ~5 hours per week. Mainly Sarah (office admin).</div></div>
+      <div style="background:var(--cream);border:1px solid var(--border);padding:12px;"><div style="font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Phone setup (8 devices)</div><div style="font-size:18px;font-weight:700;font-family:'Fraunces',serif;">5.5 hrs</div><div style="font-size:11px;color:var(--ink-dim);">One afternoon for Sarah. PINs, Find My Device, Bitwarden, Android updates.</div></div>
+      <div style="background:var(--cream);border:1px solid var(--border);padding:12px;"><div style="font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Monthly maintenance</div><div style="font-size:18px;font-weight:700;font-family:'Fraunces',serif;">20 mins</div><div style="font-size:11px;color:var(--ink-dim);">Sarah checks all phones on first Monday of each month. Phone updates, Bitwarden, Find My Device.</div></div>
+    </div>
+  </div>
+
+  <div class="method-block">
+    <h3>Key decisions NorthWest Heating made</h3>
+    <p><strong>Company phones not BYOD for engineers:</strong> Phones get dropped and lost on job sites. Company-owned means Sarah can lock or wipe without complication. 6 × Samsung Galaxy A34 refurbished cost ~£900 total.</p>
+    <p><strong>Technical setup before the announcement:</strong> Sarah set up Find My Device and Bitwarden on all phones before James said anything to the team. When he announced the policy at the Friday meeting, he could say "it's already done — here's your Bitwarden login." This removed the fear of hassle. People comply with things that are already easy.</p>
+    <p><strong>Fingerprint not PIN as primary lock:</strong> Engineers unlock phones constantly on job sites. A complex password would be abandoned in practice. Fingerprint is fast; 6-digit PIN as backup. Auto-lock at 5 minutes (one exception documented for an engineer who needed 10 minutes for reading job sheets on site).</p>
+    <p><strong>Bitwarden free tier, not paid:</strong> Sarah evaluated it against 1Password. Bitwarden free covers everything they need. LastPass was explicitly ruled out after their 2022 breach. The open-source audit trail matters for a security tool.</p>
+  </div>
+
+  <div class="method-block">
+    <h3>Assumptions and limitations</h3>
+    <p>Calibrated for small UK trades and field-service businesses (2–25 employees). Recommendations are based on NCSC Cyber Essentials and ICO guidance. Businesses in regulated sectors (financial services, healthcare, legal) will have additional obligations this tool does not address. NorthWest Heating is a realistic composite case study; all names are fictional.</p>
+  </div>
+
+  <div class="method-block" style="border-left:3px solid var(--accent);background:var(--green-bg);">
+    <h3 style="color:var(--accent);">Governance note</h3>
+    <p>This tool is a portfolio thinking exercise demonstrating GRC tooling for non-technical audiences. The design decisions — plain English, real cost data, worked examples throughout, printable outputs, staff email generator — reflect how security guidance actually reaches the people who need to act on it. The most important question about any security tool is not whether it is comprehensive. It is whether the person who needs to use it will open it.</p>
+    <p style="font-size:12px;color:var(--ink-dim);margin-top:8px;">Aligned to: NCSC Cyber Essentials &middot; NCSC Small Business Guidance &middot; UK GDPR / ICO &middot; NCSC 10 Steps to Cyber Security</p>
+  </div>
+
+  <div class="btn-row"><button class="btn-primary" onclick="goTo(0)">Start the assessment</button></div>
+</div>
+
+<div class="disclaimer">
+  <strong>Notice:</strong> This tool is a portfolio thinking exercise. NorthWest Heating &amp; Gas Ltd is a fictional organisation. All staff names, costs, and scenarios are illustrative only. This tool does not constitute legal, compliance, or professional security advice. For formal Cyber Essentials certification, contact an NCSC-approved certification body.
+</div>
+
+</div><!-- /page-wrap -->
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+const state = {
+  bizName: '',
+  bizType: '',
+  staffSize: '',
+  emailSystem: '',
+  devices: [],
+  mobileWorkers: '',
+  passwordMgr: '',
+  dataTypes: [],
+  cloudData: '',
+  screenLock: '',
+  mfa: '',
+  incident: '',
+  drivers: [],
+};
+
+let currentPanel = 0;
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────────
+function goTo(n) {
+  if (n === 4 && currentPanel < 4) { generateResults(); return; }
+  document.querySelectorAll('.panel').forEach((p, i) => p.classList.toggle('active', i === n));
+  document.querySelectorAll('.step-btn').forEach((b, i) => b.classList.toggle('active', i === n));
+  currentPanel = n;
+  document.getElementById('progress-bar').style.width = ((n + 1) / 8 * 100) + '%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (n === 5) buildChecklist();
+  if (n === 6) buildEmail();
+}
+
+// ── FORM HELPERS ───────────────────────────────────────────────────────────
+function selectRadio(name, value) {
+  document.querySelectorAll(`[name="${name}"]`).forEach(r => {
+    r.checked = r.value === value;
+    r.closest('.radio-item').classList.toggle('selected', r.value === value);
+  });
+}
+
+function toggleCheck(label) {
+  const cb = label.querySelector('input[type=checkbox]');
+  cb.checked = !cb.checked;
+  label.classList.toggle('checked', cb.checked);
+}
+
+function getRadio(name) {
+  const el = document.querySelector(`[name="${name}"]:checked`);
+  return el ? el.value : '';
+}
+
+function getChecked(groupId) {
+  return Array.from(document.querySelectorAll(`#${groupId} input[type=checkbox]:checked`)).map(c => c.value);
+}
+
+// ── SCORING ────────────────────────────────────────────────────────────────
+function collectState() {
+  state.bizName = document.getElementById('biz-name').value || 'Your Business';
+  state.bizType = getRadio('biz-type');
+  state.staffSize = getRadio('staff-size');
+  state.emailSystem = document.getElementById('email-system').value;
+  state.devices = getChecked('devices-group');
+  state.mobileWorkers = getRadio('mobile-workers');
+  state.passwordMgr = getRadio('password-mgr');
+  state.dataTypes = getChecked('data-types-group');
+  state.cloudData = getRadio('cloud-data');
+  state.screenLock = getRadio('screen-lock');
+  state.mfa = getRadio('mfa');
+  state.incident = getRadio('incident');
+  state.drivers = getChecked('drivers-group');
+}
+
+function calcScore() {
+  let score = 100;
+  const issues = [];
+
+  if (state.mfa === 'no') { score -= 30; issues.push('no-mfa'); }
+  else if (state.mfa === 'some') { score -= 15; issues.push('partial-mfa'); }
+
+  if (state.screenLock === 'no') { score -= 20; issues.push('no-lock'); }
+  else if (state.screenLock === 'some') { score -= 10; issues.push('partial-lock'); }
+
+  if (state.passwordMgr === 'no') { score -= 15; issues.push('no-pwmgr'); }
+  else if (state.passwordMgr === 'browser') { score -= 8; issues.push('browser-pw'); }
+
+  if (state.emailSystem === 'free') { score -= 10; issues.push('free-email'); }
+  if (state.emailSystem === 'none') { score -= 15; issues.push('no-email'); }
+
+  if (state.cloudData === 'local') { score -= 8; issues.push('local-data'); }
+
+  if (state.incident === 'yes') { score -= 5; issues.push('had-incident'); }
+
+  return { score: Math.max(score, 10), issues };
+}
+
+function getRating(score) {
+  if (score >= 75) return { label: 'Good Start', cls: 'low', summary: 'You have the basics in place. These recommendations will help you strengthen further.' };
+  if (score >= 50) return { label: 'Some Gaps', cls: 'medium', summary: 'A few important things need attention. The good news: most of these are quick fixes.' };
+  return { label: 'Action Needed', cls: 'high', summary: 'There are some significant gaps. Don\'t be discouraged — NorthWest Heating started here too. Most of these take a few hours to fix.' };
+}
+
+function buildPriorities(issues) {
+  const all = [];
+
+  if (issues.includes('no-mfa') || issues.includes('partial-mfa')) {
+    all.push({ flag: 'do-now', flagLabel: 'Do this week', title: 'Turn on two-factor authentication (2FA)', detail: 'Your cloud accounts — email, accounts software, job management — need 2FA. Without it, a stolen password is all someone needs to access everything. Takes about 10 minutes per account.', tool: 'Tool: Microsoft Authenticator (free) — works with Microsoft 365, Google, Xero, and most other apps' });
+  }
+  if (issues.includes('no-lock') || issues.includes('partial-lock')) {
+    all.push({ flag: 'do-now', flagLabel: 'Do this week', title: 'Set screen locks on all work devices', detail: 'Every phone and laptop used for work needs a PIN or fingerprint lock with auto-lock after 5 minutes. NorthWest Heating found 2 phones with no lock — fixed in an afternoon by their office manager.', tool: 'Minimum: 6-digit PIN or fingerprint. Android: Settings → Lock Screen. iPhone: Settings → Face ID & Passcode.' });
+  }
+  if (issues.includes('no-pwmgr')) {
+    all.push({ flag: 'do-now', flagLabel: 'Do this week', title: 'Set up a password manager', detail: 'If your team reuses passwords or keeps them in a spreadsheet, you\'re one breach away from losing access to everything. A password manager generates and remembers strong passwords for you.', tool: 'Recommended: Bitwarden (free for small teams) — open source, works on all phones and browsers. NorthWest Heating use the free tier for 8 staff.' });
+  }
+  if (issues.includes('browser-pw')) {
+    all.push({ flag: 'this-week', flagLabel: 'This week', title: 'Move from browser passwords to a proper password manager', detail: 'Browser-saved passwords aren\'t encrypted the same way and don\'t work across all apps. Moving to a dedicated password manager takes an afternoon — install Bitwarden, import your saved passwords, done.', tool: 'Bitwarden (free) can import directly from Chrome or Edge.' });
+  }
+  if (issues.includes('free-email')) {
+    all.push({ flag: 'this-week', flagLabel: 'This week', title: 'Switch to a business email account', detail: 'A personal Gmail or Outlook account doesn\'t meet GDPR requirements for business data and looks unprofessional. Microsoft 365 Business Basic costs £4.60/user/month and includes 1TB storage, Teams, and proper security controls.', tool: 'Microsoft 365 Business Basic or Google Workspace — both around £4–5/user/month' });
+  }
+
+  if (state.mobileWorkers !== 'no' && (state.devices.includes('company-phones') || state.devices.includes('personal-phones'))) {
+    all.push({ flag: 'this-week', flagLabel: 'This week', title: 'Enable remote locate and wipe on all work phones', detail: 'If a phone is lost or stolen, you need to be able to lock or wipe it remotely. NorthWest Heating used this when an engineer left his phone on a job site — locked it within minutes, recovered the next day.', tool: 'Android: Turn on Find My Device in Settings → Google. iPhone: Settings → [Your Name] → Find My.' });
+  }
+
+  if (state.dataTypes.includes('photos')) {
+    all.push({ flag: 'this-week', flagLabel: 'This week', title: 'Clear job site photos from phones into your job management system', detail: 'Photos of customer homes in a phone\'s camera roll are personal data under GDPR. If the phone is lost, that\'s a data breach. Upload to your job management system (Tradify, ServiceM8, etc.) and delete from the camera roll within 24 hours of each job.', tool: 'NorthWest Heating found 400+ photos in one engineer\'s camera roll going back 18 months. Now a weekly habit.' });
+  }
+
+  if (state.dataTypes.includes('payment')) {
+    all.push({ flag: 'this-week', flagLabel: 'This week', title: 'Review where payment data is stored', detail: 'Payment details stored in emails, spreadsheets, or WhatsApp messages are both a security risk and potentially non-compliant. Use a proper payments platform (Stripe, GoCardless) rather than storing card details yourself.', tool: 'Never store card numbers. Use Stripe or GoCardless to process payments.' });
+  }
+
+  all.push({ flag: 'this-month', flagLabel: 'This month', title: 'Write a simple mobile device policy', detail: 'You need a short document covering: what devices are used for work, what\'s allowed and not allowed, and what to do if a phone is lost. It doesn\'t need to be formal — NorthWest Heating\'s is two pages of plain English.', tool: 'Template available in the Checklist section. NorthWest Heating\'s took Sarah 2 hours to customise.' });
+
+  if (state.drivers.includes('cyber-essentials')) {
+    all.push({ flag: 'this-month', flagLabel: 'This month', title: 'Start your Cyber Essentials application', detail: 'Cyber Essentials covers five technical areas: firewalls, secure configuration, access control, malware protection, and patch management. Your MFA and screen lock work already covers access control. Cost: £300 for self-assessment (Cyber Essentials basic).', tool: 'Apply via an NCSC-approved certification body. IASME is popular for small businesses.' });
+  }
+
+  all.push({ flag: 'this-month', flagLabel: 'This month', title: 'Brief your team in a 15-minute meeting', detail: 'Security only works if everyone knows the rules. James at NorthWest Heating did a 15-minute Friday afternoon briefing — explained why they were doing it, walked through the key points, answered questions. No jargon. No slides. Done.', tool: 'Use the Email Summary tab to generate a staff briefing you can send before or after the meeting.' });
+
+  return all;
+}
+
+// ── GENERATE RESULTS ───────────────────────────────────────────────────────
+function generateResults() {
+  collectState();
+  const { score, issues } = calcScore();
+  const { label, cls, summary } = getRating(score);
+  const priorities = buildPriorities(issues);
+
+  const doNow = priorities.filter(p => p.flag === 'do-now');
+  const thisWeek = priorities.filter(p => p.flag === 'this-week');
+  const thisMonth = priorities.filter(p => p.flag === 'this-month');
+
+  const now = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+
+  document.getElementById('results-subtitle').textContent = `${state.bizName} · ${now}`;
+
+  // ── Risk baseline model ──────────────────────────────────────────────────
+  const noMfa = issues.includes('no-mfa') || issues.includes('partial-mfa');
+  const noLock = issues.includes('no-lock') || issues.includes('partial-lock');
+  const noPw = issues.includes('no-pwmgr') || issues.includes('browser-pw');
+  const hasPhotos = state.dataTypes.includes('photos');
+  const hasPayment = state.dataTypes.includes('payment');
+  const hasMobile = state.mobileWorkers !== 'no';
+
+  const inherentLikelihood = (noMfa || noPw) ? 'High' : 'Medium';
+  const inherentImpact = (state.dataTypes.includes('payment') || state.dataTypes.includes('health')) ? 'High' : 'Medium';
+  const inherentRisk = (inherentLikelihood === 'High' && inherentImpact === 'High') ? 'High' : (inherentLikelihood === 'High' || inherentImpact === 'High') ? 'Medium' : 'Low';
+
+  const residualLikelihood = score >= 70 ? 'Low' : score >= 50 ? 'Medium' : 'Medium';
+  const residualRisk = score >= 70 ? 'Low' : 'Medium';
+  const likelyReduction = score >= 70 ? '60-70%' : score >= 50 ? '40-60%' : '20-40%';
+
+  // ── Attack paths ─────────────────────────────────────────────────────────
+  const attackPaths = [];
+  if (noMfa) attackPaths.push({ before: 'Phishing email captures staff credentials → attacker accesses email and cloud systems', after: 'MFA blocks account access even with stolen credentials' });
+  if (hasMobile && noLock) attackPaths.push({ before: 'Lost or stolen phone gives attacker direct access to customer data and work accounts', after: 'Screen lock and remote wipe limit data exposure to minutes, not months' });
+  if (hasPhotos) attackPaths.push({ before: 'Phone with 400+ job site photos is lost → customer home addresses and property details exposed', after: 'Photos cleared to job management system within 24 hours — no exposure on lost device' });
+  if (hasPayment) attackPaths.push({ before: 'Supplier impersonation email requests payment to new bank account → invoice fraud succeeds', after: 'Verification process flags unusual requests before payment is made' });
+  if (noPw) attackPaths.push({ before: 'Reused password from a data breach gives attacker access to business accounts', after: 'Unique passwords via password manager mean one breach does not cascade' });
+
+  // ── Control → risk mapping ────────────────────────────────────────────────
+  const controlMap = [];
+  if (noMfa) controlMap.push({ control: 'Multi-Factor Authentication (MFA)', reduces: 'Credential compromise from phishing or password breach', residual: 'MFA fatigue attacks still possible — mitigated by number-matching MFA' });
+  if (noLock || (hasMobile && noLock)) controlMap.push({ control: 'Screen lock + Find My Device on all phones', reduces: 'Data exposure from lost or stolen devices', residual: 'Data already synced to cloud before loss is not affected' });
+  if (noPw) controlMap.push({ control: 'Password manager (Bitwarden)', reduces: 'Password reuse and weak password risk', residual: 'Master password compromise — mitigated by MFA on password manager' });
+  if (hasPhotos) controlMap.push({ control: 'Photo upload and deletion workflow', reduces: 'Personal data exposure from device loss', residual: 'Human adherence — requires habit formation and periodic checks' });
+
+  function renderItems(items) {
+    return items.map(p => `
+      <div class="priority-item">
+        <div class="priority-flag ${p.flag}">${p.flagLabel}</div>
+        <div>
+          <div class="priority-title">${p.title}</div>
+          <div class="priority-detail">${p.detail}</div>
+          <div class="priority-tool">${p.tool}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  // ── Consultant summary ────────────────────────────────────────────────────
+  const bizType = state.bizType === 'trades' ? 'trades and field service business' : state.bizType === 'office' ? 'office-based service business' : 'small business';
+  const consultantSummary = `${state.bizName} faces ${inherentRisk.toLowerCase()} exposure to low-complexity, high-impact attacks — particularly ${noMfa ? 'phishing-led credential compromise' : 'social engineering'} and ${hasPayment ? 'invoice fraud' : 'data exposure from mobile devices'}. A small number of low-cost controls significantly reduce this exposure without operational disruption. However, residual risk remains in the human layer — these controls reduce likelihood but do not eliminate the possibility of a successful attack. Staff behaviour and process adherence remain the final line of defence.`;
+
+  const driverMap = { 'cyber-essentials': 'Cyber Essentials', 'contract': 'contract requirement', 'gdpr': 'GDPR / ICO compliance', 'insurance': 'cyber insurance' };
+
+  let html = `
+    <div class="result-header">
+      <div class="result-score-row">
+        <div>
+          <div class="result-name">${state.bizName}</div>
+          <div class="result-meta">${now} · Based on your answers</div>
+        </div>
+        <div style="text-align:right">
+          <div class="score-label">Security readiness score</div>
+          <div class="score-big">${score}<span>/100</span></div>
+        </div>
+        <div><span class="risk-badge ${cls}">${label}</span></div>
+      </div>
+      <p style="font-size:14px;color:var(--ink-mid);line-height:1.7;">${summary}</p>
+    </div>
+
+    <!-- RISK BASELINE MODEL -->
+    <div style="background:var(--white);border:1px solid var(--border);padding:20px 24px;margin-bottom:16px;">
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:14px;">Risk Assessment</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;">
+        <div style="background:var(--cream);border:1px solid var(--border);padding:12px;">
+          <div style="font-size:10px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Before controls</div>
+          <div style="font-size:13px;font-weight:600;color:var(--red-bg) ? var(--red) : var(--ink);">
+            <div>Likelihood: <strong style="color:${inherentLikelihood === 'High' ? 'var(--red)' : 'var(--amber)'}">${inherentLikelihood}</strong></div>
+            <div>Impact: <strong style="color:${inherentImpact === 'High' ? 'var(--red)' : 'var(--amber)'}">${inherentImpact}</strong></div>
+            <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border2);">Overall: <strong style="color:${inherentRisk === 'High' ? 'var(--red)' : 'var(--amber)'}">${inherentRisk}</strong></div>
+          </div>
+        </div>
+        <div style="background:var(--cream);border:1px solid var(--border);padding:12px;">
+          <div style="font-size:10px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">After controls</div>
+          <div style="font-size:13px;font-weight:600;">
+            <div>Likelihood: <strong style="color:var(--amber)">${residualLikelihood}</strong></div>
+            <div>Impact: <strong style="color:${inherentImpact === 'High' ? 'var(--red)' : 'var(--amber)'}">${inherentImpact}</strong></div>
+            <div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border2);">Residual: <strong style="color:${residualRisk === 'Low' ? 'var(--green)' : 'var(--amber)'}">${residualRisk}</strong></div>
+          </div>
+        </div>
+        <div style="background:var(--cream);border:1px solid var(--border);padding:12px;">
+          <div style="font-size:10px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Risk treatment</div>
+          <div style="font-size:13px;font-weight:600;color:var(--green);">Reduce</div>
+          <div style="font-size:12px;color:var(--ink-mid);margin-top:4px;">Est. likelihood reduction: ${likelyReduction}</div>
+          <div style="font-size:11px;color:var(--ink-dim);margin-top:4px;">Residual accepted at management level</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--ink-dim);padding-top:10px;border-top:1px solid var(--border2);">
+        <strong style="color:var(--ink-mid);">Review trigger:</strong> Reassess in 6 months, or after any security incident or change to key systems
+      </div>
+    </div>
+
+    <!-- PRIORITY ACTIONS -->
+    <div class="priority-list">`;
+
+  if (doNow.length) {
+    html += `<div class="priority-section-title">&#128680; Do this week — highest priority</div>${renderItems(doNow)}`;
+  }
+  if (thisWeek.length) {
+    html += `<div class="priority-section-title" style="margin-top:20px;">&#128197; Also this week</div>${renderItems(thisWeek)}`;
+  }
+  if (thisMonth.length) {
+    html += `<div class="priority-section-title" style="margin-top:20px;">&#10003; Within this month</div>${renderItems(thisMonth)}`;
+  }
+  html += `</div>`;
+
+  // ── Attack paths ──────────────────────────────────────────────────────────
+  if (attackPaths.length > 0) {
+    html += `<div style="background:var(--white);border:1px solid var(--border);padding:20px 24px;margin-bottom:16px;">
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:14px;">Likely attack paths — before and after controls</div>
+      ${attackPaths.map(ap => `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border2);">
+          <div style="background:var(--red-bg);border:1px solid var(--red-border);padding:10px 12px;font-size:12px;color:var(--red);line-height:1.6;"><strong style="display:block;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Without controls</strong>${ap.before}</div>
+          <div style="background:var(--green-bg);border:1px solid var(--green-border);padding:10px 12px;font-size:12px;color:var(--green);line-height:1.6;"><strong style="display:block;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">With controls</strong>${ap.after}</div>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  // ── Control → risk mapping ────────────────────────────────────────────────
+  if (controlMap.length > 0) {
+    html += `<div style="background:var(--white);border:1px solid var(--border);padding:20px 24px;margin-bottom:16px;">
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:14px;">Control effectiveness — what each control actually does</div>
+      ${controlMap.map(c => `
+        <div style="padding:12px 0;border-bottom:1px solid var(--border2);">
+          <div style="font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px;">${c.control}</div>
+          <div style="font-size:12px;color:var(--ink-mid);margin-bottom:3px;"><strong>Reduces:</strong> ${c.reduces}</div>
+          <div style="font-size:12px;color:var(--ink-dim);"><strong>Residual risk:</strong> ${c.residual}</div>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  // ── Time estimate ────────────────────────────────────────────────────────
+  const totalTime = doNow.length * 1.5 + thisWeek.length * 1 + thisMonth.length * 2;
+  html += `<div class="info-box" style="margin-top:0;">
+    <strong>Time estimate</strong>
+    Everything above can be done in approximately ${Math.round(totalTime)}–${Math.round(totalTime * 1.5)} hours total. NorthWest Heating did their full implementation in 5.5 hours over two weeks — and their office manager did most of it.
+  </div>`;
+
+  // ── Consultant summary ────────────────────────────────────────────────────
+  html += `<div style="background:var(--white);border:1px solid var(--border);border-left:3px solid var(--accent);padding:20px 24px;margin-bottom:16px;">
+    <div style="font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">Consultant Summary</div>
+    <p style="font-size:13px;color:var(--ink-mid);line-height:1.85;margin-bottom:12px;">${consultantSummary}</p>
+    <div style="font-size:12px;color:var(--ink-dim);padding-top:10px;border-top:1px solid var(--border2);">
+      <strong style="color:var(--ink-mid);">Recommendation:</strong> Proceed with immediate control implementation. Introduce staff awareness training in Phase 2. Reassess risk within 6 months.<br>
+      <strong style="color:var(--ink-mid);">Framework alignment:</strong> NCSC Cyber Essentials (access control, malware protection, patch management) · ICO UK GDPR · NIST CSF PR.AC / PR.AT
+    </div>
+  </div>`;
+
+  if (state.drivers.length > 0) {
+    html += `<div class="example-box"><strong>Your specific drivers</strong>You mentioned: ${state.drivers.map(d => driverMap[d] || d).join(', ')}. The recommendations above directly address these. See the Checklist for framework references.</div>`;
+  }
+
+  document.getElementById('results-content').innerHTML = html;
+  document.getElementById('step-btn-4').classList.add('done');
+  goTo(4);
+}
+
+
+// ── CHECKLIST ──────────────────────────────────────────────────────────────
+function buildChecklist() {
+  const now = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+  let html = `<p style="font-size:12px;color:var(--ink-dim);margin-bottom:20px;">${state.bizName} &middot; Generated ${now} &middot; Based on NCSC Cyber Essentials and UK GDPR</p>`;
+
+  const sections = [
+    {
+      title: '&#128274; Passwords and accounts', icon: '&#128274;',
+      items: [
+        { text: 'Set up a password manager (Bitwarden — free)', why: 'Stops password reuse. Takes 30 minutes to install and set up for the whole team.' },
+        { text: 'Enable two-factor authentication on your email accounts', why: 'Microsoft 365: Admin Centre → Security. Google: myaccount.google.com → Security' },
+        { text: 'Enable 2FA on your accounts software (Xero, QuickBooks, etc.)', why: 'Your financial data is the most sensitive thing you hold.' },
+        { text: 'Enable 2FA on your job management system', why: 'Contains customer names, addresses, and job histories.' },
+        { text: 'Remove or disable accounts for staff who have left', why: 'Old accounts are a common way in for attackers.' },
+      ]
+    },
+    {
+      title: '&#128241; Mobile phones and devices', icon: '&#128241;',
+      items: [
+        { text: 'Check every work phone has a PIN or fingerprint lock', why: 'NorthWest Heating found 2 unlocked phones. Fixed in an afternoon.' },
+        { text: 'Set auto-lock to 5 minutes on all work phones', why: 'Android: Settings → Display → Screen timeout. iPhone: Settings → Display & Brightness' },
+        { text: 'Turn on Find My Device (Android) or Find My iPhone on all work phones', why: 'Means you can lock or wipe a lost phone remotely. Takes 2 minutes per phone.' },
+        { text: 'Make sure all phones are on a supported Android / iOS version', why: 'Unsupported phones no longer get security updates. Android 12+ or iOS 16+ recommended.' },
+        { text: 'Install Bitwarden on all work phones', why: 'Same password manager as desktop — means no writing passwords down.' },
+      ]
+    },
+    {
+      title: '&#128190; Your data', icon: '&#128190;',
+      items: [
+        { text: 'Make sure customer data lives in your cloud apps — not spreadsheets on one laptop', why: 'Cloud apps (Microsoft 365, Xero, Tradify) are backed up automatically. Local files are not.' },
+        { text: 'Clear job site photos from phone camera rolls — upload to job management system', why: 'GDPR requires customer data (including photos of their home) to be stored securely, not in a camera roll.' },
+        { text: 'Make sure work emails use your business domain (not personal Gmail)', why: 'Personal email accounts do not meet GDPR requirements for business data.' },
+        { text: 'Check who has access to your accounts and remove anyone who no longer needs it', why: 'Principle of least privilege — people should only have access to what they need.' },
+      ]
+    },
+    {
+      title: '&#128203; Policies and documentation', icon: '&#128203;',
+      items: [
+        { text: 'Write a simple mobile device policy (1–2 pages, plain English)', why: 'Covers: what devices are used for work, what\'s OK and not OK, what to do if a phone is lost.' },
+        { text: 'Tell your team about the rules in a short meeting', why: 'NorthWest Heating: 15-minute Friday afternoon meeting. James explained the why. Done.' },
+        { text: 'Write down what to do if a phone is lost or someone receives a suspicious email', why: 'A written procedure means anyone can handle it, not just the director.' },
+        { text: 'Add security setup to your new starter induction checklist', why: 'New starters should get Bitwarden set up and the policy explained on day one.' },
+      ]
+    },
+    {
+      title: '&#128296; Ongoing (monthly / annual)', icon: '&#128296;',
+      items: [
+        { text: 'First Monday of each month: check all phones have current security updates', why: 'Takes 20 minutes. Sarah at NorthWest Heating does this while the team is in for the weekly briefing.' },
+        { text: 'Once a year: review your mobile device policy and update if anything changed', why: 'New staff, new apps, new devices — policies need to reflect reality.' },
+        { text: 'Once a year: remind staff of the security rules (quick team briefing)', why: 'Security culture needs reinforcing. New starters especially.' },
+      ]
+    },
+  ];
+
+  sections.forEach(sec => {
+    html += `<div class="checklist-section"><h3>${sec.title}</h3>`;
+    sec.items.forEach(item => {
+      html += `<div class="checklist-item"><input type="checkbox" class="checklist-cb"><div class="checklist-text"><div>${item.text}</div><div class="checklist-why">${item.why}</div></div></div>`;
+    });
+    html += `</div>`;
+  });
+
+  html += `
+    <div class="cost-table" style="margin-top:24px;">
+      <table class="cost-table" style="width:100%;border-collapse:collapse;">
+        <tr><th>Tool</th><th>Cost</th><th>What it does</th></tr>
+        <tr><td>Bitwarden</td><td class="free">Free</td><td>Password manager — works on all phones and browsers</td></tr>
+        <tr><td>Find My Device / Find My iPhone</td><td class="free">Free (built-in)</td><td>Remote lock and wipe for lost phones</td></tr>
+        <tr><td>Microsoft Authenticator</td><td class="free">Free</td><td>Two-factor authentication app</td></tr>
+        <tr><td>Microsoft 365 Business Basic</td><td>£4.60/user/month</td><td>Business email, OneDrive, Teams</td></tr>
+        <tr><td>Windows Defender</td><td class="free">Free (built-in)</td><td>Antivirus — already on your Windows devices</td></tr>
+      </table>
+    </div>
+    <p style="font-size:12px;color:var(--ink-dim);margin-top:12px;">NorthWest Heating implemented everything above at £0 in software and approximately 5.5 hours of staff time. James: <em>"Should've done this years ago. Customer asked about our security on a quote call within three weeks. For the first time I had a proper answer."</em></p>`;
+
+  document.getElementById('checklist-content').innerHTML = html;
+}
+
+// ── EMAIL GENERATOR ────────────────────────────────────────────────────────
+function buildEmail() {
+  const name = state.bizName || 'the business';
+  const hasMobile = state.mobileWorkers !== 'no';
+  const needsMFA = state.mfa === 'no' || state.mfa === 'some';
+  const needsLock = state.screenLock === 'no' || state.screenLock === 'some';
+  const needsPW = state.passwordMgr === 'no';
+
+  const actions = [];
+  if (needsMFA) actions.push('✅ Set up two-factor authentication on your [email / Xero / Tradify] account — takes about 10 minutes, instructions below');
+  if (needsLock) actions.push('✅ Make sure your work phone has a PIN or fingerprint lock, and auto-lock is set to 5 minutes');
+  if (needsPW) actions.push('✅ Install Bitwarden on your phone — Sarah/[office manager] will send you a login link');
+  if (hasMobile) actions.push('✅ Turn on Find My Device (Android) or Find My iPhone — this means we can lock your phone remotely if it goes missing');
+  actions.push('✅ If you think you\'ve received a suspicious email or text — don\'t click anything, let [NAME] know immediately');
+
+  const body = `Hi team,
+
+I want to take 5 minutes to update you on something important — we're making a few small changes to how we handle security across our devices and accounts.
+
+This isn't about not trusting anyone. It's about protecting our customers' data and making sure we're covered if a phone goes missing or someone tries to scam us. [OPTIONAL: We had a customer ask about our security recently / We're working towards Cyber Essentials certification.]
+
+Here's what I'm asking everyone to do:
+
+${actions.join('\n')}
+
+None of this should take more than 20–30 minutes and most of it is probably already set up on your phone.
+
+[OPTIONAL: We'll go through this together at [MEETING TIME] on [DAY] — it won't take long.]
+
+If you have any questions, or if anything isn't working, just ask [NAME] — don't struggle with it alone.
+
+Thanks,
+[YOUR NAME]
+[COMPANY NAME]
+
+---
+Why we're doing this:
+Our customers trust us with their home addresses, job histories, and sometimes payment details. If a phone is lost or an account is hacked, that information could be exposed. Taking these steps puts us in a much stronger position — and means we can answer honestly when customers ask about our security.`;
+
+  document.getElementById('email-content').innerHTML = `
+    <div class="example-box"><strong>How NorthWest Heating used this</strong>James sent a version of this email the Monday before a Friday afternoon team meeting — with pizza. Engineers came knowing what it was about. The questions at the meeting were practical and curious, not defensive: "What happens to my personal stuff if the phone gets wiped?" "Can we use Bitwarden for the office alarm code?" Meeting ran 15 minutes. James: <em>"We should&rsquo;ve done it over lunch with food every time. Same content, better atmosphere."</em></div>
+    <div class="email-preview">
+      <div class="email-chrome">
+        <div class="email-dot" style="background:#ff5f57"></div>
+        <div class="email-dot" style="background:#febc2e"></div>
+        <div class="email-dot" style="background:#28c840"></div>
+        <span style="font-size:11px;color:var(--ink-dim);margin-left:8px;">New Message</span>
+      </div>
+      <div class="email-fields">
+        <div class="email-field-row"><span class="email-field-label">To:</span><span>All staff &lt;[your staff emails]&gt;</span></div>
+        <div class="email-field-row"><span class="email-field-label">Subject:</span><span>A few small security changes — please read (5 minutes)</span></div>
+      </div>
+      <div class="email-body-content" id="email-body-text">${body}</div>
+    </div>
+    <p style="font-size:12px;color:var(--ink-dim);">Edit the parts in [brackets] before sending. The more specific you make it to your business, the more likely people are to act on it.</p>`;
+}
+
+function copyEmail() {
+  const text = document.getElementById('email-body-text')?.innerText || '';
+  navigator.clipboard.writeText(text).then(() => {
+    document.getElementById('copy-confirm').style.display = 'block';
+    setTimeout(() => document.getElementById('copy-confirm').style.display = 'none', 3000);
+  });
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+// Pre-populate with NorthWest Heating demo data for demo purposes
+document.getElementById('biz-name').value = 'NorthWest Heating & Gas Ltd';
+selectRadio('biz-type', 'trades');
+selectRadio('staff-size', '4-10');
+document.getElementById('email-system').value = 'm365';
+['laptops','company-phones','personal-phones','cloud'].forEach(v => {
+  const cb = document.querySelector(`#devices-group input[value="${v}"]`);
+  if (cb) { cb.checked = true; cb.closest('.checkbox-item').classList.add('checked'); }
+});
+selectRadio('mobile-workers', 'yes');
+selectRadio('password-mgr', 'no');
+['names-addresses','photos','employee','financial'].forEach(v => {
+  const cb = document.querySelector(`#data-types-group input[value="${v}"]`);
+  if (cb) { cb.checked = true; cb.closest('.checkbox-item').classList.add('checked'); }
+});
+selectRadio('cloud-data', 'mixed');
+selectRadio('screen-lock', 'some');
+selectRadio('mfa', 'no');
+selectRadio('incident', 'almost');
+['contract'].forEach(v => {
+  const cb = document.querySelector(`#drivers-group input[value="${v}"]`);
+  if (cb) { cb.checked = true; cb.closest('.checkbox-item').classList.add('checked'); }
+});
+</script>
+</body>
+</html>
