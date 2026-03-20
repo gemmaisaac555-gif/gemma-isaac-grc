@@ -43,15 +43,13 @@ Board briefs, non-technical risk communication, and practical security guidance.
 - 🔗 [**Tool 02 — BEC / Invoice Fraud Control Simulator**](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-bec-simulator.html) — Interactive simulator for testing BEC and invoice fraud controls across email, finance, and process layers.
 - 🔗 [**Tool 04 — Small Business Security Kit**](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-small-business-kit.html) — Practical security starter kit for small UK businesses. Built around a real NorthWest Heating & Gas case study: £474 cost, 31× ROI.
 
----
 
 ## 📁 Regulatory Judgement
 
 Regulatory intuition, ICO/FCA/DORA lens, and compliance under uncertainty.
 
 - [Artefact E — Regulatory Intuition Memo: EU AI Act](regulatory-judgement/artefact-e-regulatory-intuition-memo.md) — What financial services deployers should be doing now, seventeen months before the August 2026 compliance deadline. Five common mistakes, a phased action framework, and a direct reading of what the Act is actually trying to achieve.
-- 
----
+
 ## 🏢 Arken Systems
 
 The fictional organisation underpinning this portfolio. All tools and artefacts are built around Arken Systems and its clients.
