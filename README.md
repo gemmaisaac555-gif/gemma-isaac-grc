@@ -26,7 +26,7 @@ If you only review a few pieces, start with these:
 
 ## 🏢 Arken Systems
 
-Arken Systems Ltd is the fictional GRC consultancy that underpins this portfolio. All tools and artefacts are built around Arken Systems and its clients — primarily Veriflow Payments Ltd, a Series B UK fintech. The fictional scenario runs consistently across every piece of work, creating a coherent body of evidence rather than isolated exercises.
+Arken Systems Ltd is the fictional GRC consultancy that underpins this portfolio. Four of the five tools and all written artefacts are built around Arken Systems and its clients — primarily Veriflow Payments Ltd, a Series B UK fintech. Tool 04 (Small Business Security Kit) is a standalone piece aimed at a different audience entirely.
 
 - [Company Charter](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/arken-systems/arken-company-charter.md) — Who Arken Systems is, what they do, and the governance principles they apply to themselves.
 - [Risk Appetite Statement](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/arken-systems/arken-risk-appetite-statement.md) — Arken Systems' documented appetite across six risk categories, including client confidentiality, AI tool use, and professional quality.
