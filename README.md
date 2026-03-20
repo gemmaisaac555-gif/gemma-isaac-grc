@@ -1,13 +1,15 @@
 # Gemma Isaac — GRC Portfolio
 **Cybersecurity GRC · Risk & Governance · Manchester, UK**
 
-This portfolio demonstrates how I assess, prioritise, and communicate cyber risk in realistic business scenarios. It includes interactive tools, risk decisions, failure analyses, and board-level communication — all built around a simulated organisation (Arken Systems) to reflect how GRC work actually happens.
+This portfolio shows how I assess, prioritise, and communicate cyber risk in realistic business scenarios.
+
+It combines interactive tools, risk decisions, failure analyses, and board-level communication — all built within a simulated organisation (Arken Systems) to reflect how GRC work actually happens.
 
 This is not a collection of projects. It is a working GRC environment.
 
-I am a career changer with an MSc in Computer Science and Cybersecurity (University of York, Merit) and a background in information governance, research methodology, and cross-cultural analysis. I am actively seeking GRC roles in the Manchester area and beyond.
+Background in information governance, research methodology, and cross-cultural analysis, with an MSc in Computer Science and Cybersecurity (University of York, Merit). Actively seeking Cyber Risk / GRC roles in the Manchester area and beyond.
 
-All artefacts use clearly defined fictional scenarios. They are thinking exercises designed to show judgement — not templates, not compliance theatre.
+All artefacts use clearly defined fictional scenarios. They are thinking exercises designed to demonstrate judgement — not templates, not compliance theatre.
 
 ---
 
