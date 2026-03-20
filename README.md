@@ -10,6 +10,7 @@ All artefacts use clearly defined fictional scenarios. They are thinking exercis
 
 
 ## 🏢 Arken Systems
+
 The fictional organisation underpinning this portfolio. All tools and artefacts are built around Arken Systems and its clients.
 - [Company Charter](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/arken-systems/arken-company-charter.md)
 - [Risk Appetite Statement](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/arken-systems/arken-risk-appetite-statement.md)
