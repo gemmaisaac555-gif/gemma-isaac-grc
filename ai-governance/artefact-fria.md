@@ -1,211 +1,50 @@
-# Fundamental Rights Impact Assessment
-## AI Credit Scoring System — Veriflow Payments Ltd
+Fundamental Rights Impact Assessment AI Credit Scoring System is Veriflow Payments Ltd This is a hypothetical scenario and not a real company.
 
-*This is a thinking exercise, not a real organisation.*
+Type: Fundamental Rights Impact Assessment (FRIA) Author: Arken Systems GRC Function Recipient: Data Protection Officer and Chief Risk Officer, Veriflow Payments Ltd Completed: March 2025 Handling Instructions: Confidential, Internal Use Only Legal Basis: EU AI Act Article 27, mandatory for users of high-risk AI systems in financial services Cross-references: AI Risk Register, Credit Scoring Model Deployment (March 2025); Document A, Risk Acceptance with Teeth (January 2025)
 
----
+Important: This FRIA is retrospective. Veriflow has already deployed the ClearScore AI credit scoring system (in Q1 2025). EU AI Act Article 27 says that users in financial services must do a FRIA before deploying a high-risk AI system. Veriflow did not complete this FRIA before deploying the system.
 
-**Document type:** Fundamental Rights Impact Assessment (FRIA)  
-**Prepared by:** Arken Systems GRC Function  
-**Addressed to:** Data Protection Officer and Chief Risk Officer, Veriflow Payments Ltd  
-**Date:** March 2025  
-**Classification:** Confidential — Internal Distribution Only  
-**Legal basis:** EU AI Act Article 27 — mandatory for deployers of high-risk AI systems in financial services  
-**Related documents:** AI Risk Register — Credit Scoring Model Deployment (March 2025); Artefact A — Risk Acceptance With Teeth (January 2025)
+Rather than disguising that fact, it is being made explicit. This document is not an attempt to pretend that the requirement has been fulfilled, it is an attempt to retrospectively undertake the impact assessment that should have been done in the first place, and to use that as a basis to understand the current risk position, and to set a baseline for the ongoing management of fundamental rights issues associated with this application.
 
----
+Doing a FRIA after deploying the system is better than not doing one at all. It is not the same as doing a FRIA before deploying the system. That distinction is relevant to the findings.
 
-## Preliminary Note
+1. System Description
 
-This FRIA is retrospective. Veriflow deployed the ClearScore AI credit scoring system in Q1 2025. EU AI Act Article 27 requires deployers in financial services to conduct a FRIA before deployment. This assessment was not completed prior to go-live.
+Name: ClearScore AI Credit Scoring Model (instance deployed: Veriflow Payments Ltd) Type: Automated credit scoring, EU AI Act Annex III, point 5(b), High Risk Supplier: ClearScore AI Ltd User: Veriflow Payments Ltd Context: The system is used for automated creditworthiness assessment for merchant onboarding and credit limit decisions. The system evaluates applications from merchants (small and medium-sized enterprises) applying for payment processing and credit through the Veriflow platform. Outcome: The system generates a credit score, and makes a decision (approve/decline/refer for human evaluation). Decisions with a value of less than £10,000 are automated. Decisions with a value of more than £10,000 are referred for human evaluation. Volume: The system evaluates approximately 400-600 merchant credit applications per month (current volumes). Inputs: Data inputs to the system include: (i) transaction history; (ii) business profile data; (iii) Companies House data; (iv) behavioural data/signals from the use of the Veriflow platform.
 
-That gap is acknowledged directly here rather than obscured. The purpose of this document is not to manufacture retroactive compliance — it is to conduct the assessment that should have been conducted earlier, identify what that omission means for current risk posture, and establish a baseline for ongoing fundamental rights governance of this system.
+2. Purpose of This Assessment
 
-A FRIA completed after deployment is better than no FRIA. It is not equivalent to a FRIA completed before deployment. The difference matters and is noted in the findings.
+This impact assessment considers the impact of Veriflow’s credit scoring system on the fundamental rights of natural persons who are affected by the system. This document is required by EU AI Act Article 27, which says that users of high risk AI systems in financial services must complete a FRIA before the AI system is put into service.
 
----
+This assessment addresses four questions:
 
-## 1. System Description
+What are the fundamental rights at stake in this system?
 
-**System name:** ClearScore AI Credit Scoring Model (deployed instance: Veriflow Payments Ltd)  
-**System type:** Automated credit scoring — EU AI Act Annex III, point 5(b) — High Risk  
-**Provider:** ClearScore AI Ltd  
-**Deployer:** Veriflow Payments Ltd  
-**Deployment context:** Automated creditworthiness assessment for merchant onboarding and credit limit decisions. The system processes applications from SME merchants seeking payment processing services and credit facilities through Veriflow's platform.  
-**Decision type:** The system produces a credit score and a recommendation (approve / decline / refer for human review). Decisions below £10,000 are fully automated. Decisions above £10,000 trigger a human review process.  
-**Scale:** Approximately 400–600 merchant credit assessments per month at current volume.  
-**Data inputs:** Transaction history, business profile data, Companies House records, behavioural signals from Veriflow platform usage.
+Which groups are most likely to experience rights impacts from this system?
 
----
+What is the likelihood and potential severity of the rights impacts?
 
-## 2. Purpose of This Assessment
 
-This assessment examines the impact of Veriflow's credit scoring system on the fundamental rights of individuals and groups affected by its decisions. It is required under EU AI Act Article 27, which mandates that deployers of high-risk AI systems in financial services conduct a FRIA before putting the system into use.
 
-The assessment addresses four questions:
+Are existing mitigations adequate, and if not, what more is needed?
 
-1. Which fundamental rights are engaged by this system?
-2. Which populations are most exposed to rights impacts?
-3. What is the likelihood and severity of those impacts?
-4. Are current safeguards adequate, and what gaps remain?
+3. Fundamental Rights at Stake
 
----
+The following fundamental rights are engaged by an automated credit scoring application in this context. This does not mean that they are all equally at risk, this assessment distinguishes between those rights that are directly engaged, and those that provide the background conditions against which the system operates.
 
-## 3. Fundamental Rights Engaged
+Directly engaged:
 
-The following rights are engaged by an automated credit scoring system in this context. Not all are equally at risk — the assessment below distinguishes between rights that are directly implicated and those that are engaged as background conditions.
+Right to equal treatment (Equality Act 2010; EU Charter Article 21) Automated credit scoring applications that incorporate proxy variables (such as geographic location, business sector, transaction history) may result in different outcomes for applicants that share particular protected characteristics, even if those protected characteristics are not directly used as inputs to the system. This is the right that is most directly engaged by the system.
 
-**Directly implicated:**
+Right to explanation and contest automated decisions (UK GDPR Article 22; EU AI Act Article 86) Individuals have the right to an explanation of automated decisions that have a substantial effect on them, and the right to contest those decisions. An automated credit decision has a substantial effect on a merchant, it determines whether or not they are able to access payment services (which in practice means whether or not they can trade).
 
-**Right to equal treatment and non-discrimination (Equality Act 2010; EU Charter Art. 21)**
-Credit scoring systems that use proxy variables — postcode, business sector, transaction patterns — may produce systematically different outcomes for applicants sharing protected characteristics, even where those characteristics are not explicit inputs. The right to equal treatment is the most directly implicated right in this system.
+Right to the protection of personal data (UK GDPR; EU Charter Article 8) The system processes the personal data of individual owners and directors of merchants as part of the creditworthiness assessment. This includes the right to accuracy, proportionality, and the right not to be subject to automated decisions made on the basis of inaccurate or out-of-date data.
 
-**Right to an explanation and to contest automated decisions (UK GDPR Art. 22; EU AI Act Art. 86)**
-Applicants have a right to meaningful explanation of decisions that significantly affect them and a right to contest those decisions. An automated credit decline affects a merchant's ability to access payment services, which in practice affects their ability to trade. This is a significant effect.
+Background conditions:
 
-**Right to data protection and privacy (UK GDPR; EU Charter Art. 8)**
-The system processes personal data about merchant owners and directors as part of the credit assessment. The right to data protection encompasses accuracy, proportionality, and the right not to be subject to decisions based on inaccurate or outdated information.
+Right to work and engage in work (EU Charter Article 15) For some individuals (sole traders, and the owners of the smallest businesses), access to payment services is a practical prerequisite for trading. An automated credit decision that is wrong (i.e. one that inappropriately declines a credit application) does not directly infringe the right to work, but may in practice make it much harder to exercise.
 
-**Engaged as background conditions:**
-
-**Right to work and to engage in work (EU Charter Art. 15)**
-For sole traders and small business owners, access to payment processing is a practical precondition for trading. A wrongful credit decline does not directly violate the right to work but can materially constrain its exercise.
-
-**Right to an effective remedy (EU Charter Art. 47)**
-Applicants who believe a credit decision was wrong or discriminatory must have access to a meaningful complaints and appeals process. This right is engaged by the design of Veriflow's review and escalation procedures.
-
----
-
-## 4. Affected Populations
-
-The following populations face elevated exposure to rights impacts from this system. This analysis is based on known patterns in automated credit decision systems and on Veriflow's merchant base profile.
-
-### 4.1 New and Early-Stage Businesses
-
-**Exposure:** High  
-Merchants with limited trading history have thin data profiles. The model was trained on historical credit data that may underrepresent early-stage businesses. Applicants with fewer data points receive less reliable scores, and the system may default to conservative (declining) recommendations in the absence of signal. This disproportionately affects new market entrants, including those from communities where business formation has historically been lower.
-
-**Rights engaged:** Equal treatment, right to contest  
-**Current safeguard:** Human review for applications above £10,000. No specific safeguard for lower-value applications.  
-**Gap:** No mechanism to flag thin-data profiles for additional scrutiny regardless of decision value.
-
-### 4.2 Merchants in Sectors Underrepresented in Training Data
-
-**Exposure:** Medium-High  
-Merchants in sectors that grew significantly post-2020 — gig economy platforms, creator economy businesses, certain care sector providers — may be systematically underscored if their sector is underrepresented in the model's training data. This is not deliberate discrimination but produces discriminatory-equivalent outcomes.
-
-**Rights engaged:** Equal treatment, data protection (accuracy)  
-**Current safeguard:** Quarterly monitoring disaggregated by merchant sector.  
-**Gap:** Monitoring detects underperformance but does not trigger automatic remediation or additional human review.
-
-### 4.3 Sole Traders and Micro-Businesses
-
-**Exposure:** Medium-High  
-For sole traders, the boundary between personal and business financial data is blurred. The model may incorporate signals that reflect personal financial circumstances rather than business creditworthiness. This raises proportionality concerns under UK GDPR and creates potential for indirect discrimination given the demographic profile of sole trader applicants.
-
-**Rights engaged:** Data protection (proportionality), equal treatment  
-**Current safeguard:** Data Protection Impact Assessment requested from ClearScore AI (pending — see AI Risk Register RISK-AI-001).  
-**Gap:** DPIA has not been completed. Proportionality of personal data use has not been independently assessed.
-
-### 4.4 Applicants with Limited Digital Footprint
-
-**Exposure:** Medium  
-The model incorporates behavioural signals from Veriflow platform usage. Applicants who are new to the platform or who use it differently from the training population — including those who are less digitally active — may be systematically disadvantaged by the absence of behavioural signal, independent of their actual creditworthiness.
-
-**Rights engaged:** Equal treatment, right to contest  
-**Current safeguard:** None specifically addressing this population.  
-**Gap:** No documented assessment of how the model handles low-signal applicant profiles.
-
----
-
-## 5. Impact Assessment
-
-For each identified rights impact, the following scale applies:
-
-**Severity:** 1 (Negligible) — 2 (Minor) — 3 (Moderate) — 4 (Significant) — 5 (Severe)  
-**Likelihood:** 1 (Rare) — 2 (Unlikely) — 3 (Possible) — 4 (Likely) — 5 (Almost certain)
-
-| Rights Impact | Affected Population | Severity | Likelihood | Overall | Current Safeguard Adequacy |
-|---|---|---|---|---|---|
-| Discriminatory outcome via proxy variable | Protected characteristic groups | 5 | 3 | High | Partial — fairness audit not independent |
-| Wrongful decline due to thin data profile | New businesses | 4 | 3 | High | Partial — human review threshold too high |
-| Inaccurate scoring due to sector bias | Underrepresented sectors | 3 | 3 | Medium | Partial — monitoring without remediation trigger |
-| Disproportionate personal data use | Sole traders | 3 | 3 | Medium | Inadequate — DPIA not completed |
-| Inadequate explanation of decline | All declined applicants | 3 | 2 | Medium | Partial — factor-based explanation may not be meaningful |
-| No effective remedy for contested decisions | All applicants | 4 | 2 | Medium | Inadequate — escalation process not documented |
-
----
-
-## 6. Consultation
-
-EU AI Act Article 27 and supporting guidance indicate that FRIAs should, where appropriate, involve consultation with representatives of affected groups or civil society organisations with relevant expertise.
-
-**Consultation conducted prior to deployment:** None.
-
-This is a significant gap. Veriflow did not consult with any of the following before deploying the system:
-
-- Organisations representing small business owners from minority ethnic communities
-- Consumer or SME advocacy groups with expertise in algorithmic credit decisions
-- The ICO or FCA, despite both having published relevant guidance on automated decision-making in financial services
-
-The absence of consultation does not mean rights impacts were not considered — Veriflow conducted internal fairness testing and legal review. It means that the perspectives of people most likely to be adversely affected were not sought before the system went live. That is a meaningful omission, both as a matter of regulatory good practice and as a matter of governance integrity.
-
-**Recommended remediation:**
-Veriflow should establish a standing advisory relationship with at least one organisation representing SME owners from communities with protected characteristics. This does not require formal consultation on every model change — it requires that affected community perspectives are available to inform governance decisions about the system on an ongoing basis.
-
----
-
-## 7. Existing Safeguards — Assessment
-
-| Safeguard | Status | Assessment |
-|---|---|---|
-| Human review for decisions above £10,000 | In place | Partial — threshold excludes majority of applications |
-| Factor-based explanation for declined applicants | In place | Partial — adequacy of explanation not independently validated |
-| Quarterly outcome monitoring by segment | In place | Adequate for detection, not for remediation |
-| Contractual fairness testing by ClearScore AI | In place | Partial — not independently verified by Veriflow |
-| Subject Access Request process | In place | Adequate |
-| Complaints and appeals process | Not documented | Inadequate |
-| Pre-deployment FRIA | Not conducted | Gap — this document is retrospective |
-| Consultation with affected communities | Not conducted | Gap |
-| AI literacy training for staff | Not conducted | Gap — required under EU AI Act Art. 26(6) |
-
-The overall picture is a system with genuine monitoring controls in place but significant gaps in remediation, escalation, and the governance processes that should surround deployment of a high-risk AI system. The controls that exist were designed to detect problems. The gaps are predominantly in what happens after a problem is detected.
-
----
-
-## 8. Residual Concerns
-
-After accounting for existing safeguards, the following concerns remain open and are not adequately addressed by current controls:
-
-**1. The human review threshold is set at the wrong level.**
-Reviewing decisions above £10,000 means that the majority of credit decisions — lower-value merchant applications — are fully automated with no human review option. Rights impacts do not scale with decision value. A £2,000 credit decline can have as significant an effect on a sole trader's ability to operate as a £15,000 decline. The threshold should be reviewed against the actual distribution of affected applicants, not against operational convenience.
-
-**2. There is no documented appeals process.**
-An applicant who believes their credit decision was wrong, discriminatory, or based on inaccurate data has no documented route to appeal within Veriflow's systems. The SAR process allows them to access their data. The explanation process tells them why they were declined. Neither provides a mechanism for contesting the decision itself. This is a gap in the right to an effective remedy and a potential Consumer Duty failure.
-
-**3. The retrospective nature of this assessment has a specific consequence.**
-Any merchants who were declined during the period between deployment and this FRIA were assessed by a system whose fundamental rights impacts had not been formally evaluated. If discriminatory patterns exist in that period's decisions, they cannot now be remediated prospectively — only identified and learned from. Veriflow should conduct a retrospective outcome analysis covering the deployment period to date, specifically looking for evidence of the impacts identified in Section 5.
-
----
-
-## 9. Recommendations
-
-**Immediate (within 30 days):**
-- Document and publish an internal appeals process for contested credit decisions
-- Commission retrospective outcome analysis covering decisions from deployment to date
-- Begin AI literacy training for all staff who operate, monitor, or make decisions based on the credit scoring system
-
-**Short-term (within 90 days):**
-- Review human review threshold against actual applicant distribution — consider lowering to £5,000 or introducing risk-based triggers independent of decision value
-- Complete DPIA for ClearScore AI processing activities (see AI Risk Register RISK-AI-001)
-- Identify and establish an advisory relationship with at least one organisation representing affected SME communities
-
-**Ongoing:**
-- Incorporate fundamental rights lens into quarterly outcome monitoring — not just performance metrics but distributional fairness analysis
-- Review this FRIA annually and upon any material change to the model, its inputs, or its deployment context
-- Include FRIA findings in annual AI governance report to Risk Committee
-
----
+Right to an effective remedy (EU Charter Article 47) Individuals who believe that an automated credit decision was wrong or discriminatory must have access to effective complaints and appeals processes. This right is engaged by the design of Veriflow’s review and escalation processes.
 
 ## 10. Sign-Off and Review
 
