@@ -150,7 +150,7 @@ This section examines why the response was harder than it needed to be, and what
 
 **The failure mode:** Risk registers and gap analyses are only governance documents if someone is responsible for acting on them. A recommendation without an owner, a deadline, and a follow-up mechanism is a documented risk, not a managed one.
 
-**What this looks like at 2am:** Marcus is making decisions without the anonymisation documentation that Veriflow requested two months ago and never received. Every difficulty in this incident traces back to that single unactioned recommendation.
+**What this looks like at 2am:** Marcus is making decisions without the anonymisation documentation that Veriflow requested two months ago and never received. Every difficulty in this incident traces back to that single unactioned recommendation.This is the point where the process should have worked, and it didn’t.
 
 ---
 
