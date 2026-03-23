@@ -58,6 +58,7 @@ My underlying principles around risk, uncertainty, and governance. Start here to
 Risk trade-offs, acceptance decisions, and escalation under pressure.
 
 - [Artefact A — Risk Acceptance With Teeth](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/how-i-decide/artefact-a-risk-acceptance.md) — Documented risk acceptance for a third-party supplier certification gap at a Series B UK fintech. Includes compensating controls, named ownership, review triggers, and a formal acceptance statement.
+- - [Risk Action Tracker — With Escalation Logic](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/how-i-decide/risk-action-tracker.md) — Ensures risk actions are completed, not just identified. Defines ownership, deadlines, and automatic escalation when actions are not delivered.
 - 🔗 [Tool 01 — Third-Party Risk Auto-Scorer](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-autoscorer.html) — Weighted scoring tool for vendor risk assessment with full methodology.
 - 🔗 [Tool 03 — Human Attack Surface OSINT Mapper](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-osint-mapper.html) — Structured OSINT assessment framework mapping people-layer, organisational, and digital footprint exposure.
 
