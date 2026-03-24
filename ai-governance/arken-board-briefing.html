@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Credit Scoring — Board Risk Briefing | Arken Systems</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --text-primary: #1a1a18;
+  --text-secondary: #4a4a47;
+  --text-tertiary: #888780;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f4f0;
+  --border-light: rgba(0,0,0,0.12);
+  --border-mid: rgba(0,0,0,0.25);
+  --blue-accent: #378ADD;
+  --green-accent: #639922;
+  --blue-header-bg: #E6F1FB;
+  --blue-header-text: #0C447C;
+  --green-header-bg: #EAF3DE;
+  --green-header-text: #3B6D11;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-primary: #e8e7e3;
+    --text-secondary: #b0afa8;
+    --text-tertiary: #6b6a65;
+    --bg-primary: #1e1e1c;
+    --bg-secondary: #2a2a27;
+    --border-light: rgba(255,255,255,0.1);
+    --border-mid: rgba(255,255,255,0.2);
+    --blue-accent: #85B7EB;
+    --green-accent: #97C459;
+    --blue-header-bg: #0C447C;
+    --blue-header-text: #B5D4F4;
+    --green-header-bg: #3B6D11;
+    --green-header-text: #C0DD97;
+  }
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  line-height: 1.7;
+  padding: 3rem 2rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.company-badge {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--bg-secondary);
+  border: 0.5px solid var(--border-light);
+  border-radius: 4px;
+  padding: 3px 8px;
+  color: var(--text-tertiary);
+  margin-bottom: 14px;
+}
+
+.doc-header {
+  border-bottom: 0.5px solid var(--border-mid);
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.doc-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.doc-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.doc-meta {
+  display: flex;
+  gap: 24px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.meta-item span {
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.col-headers {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.col-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+
+.col-label.technical {
+  background: var(--blue-header-bg);
+  color: var(--blue-header-text);
+}
+
+.col-label.executive {
+  background: var(--green-header-bg);
+  color: var(--green-header-text);
+}
+
+.risk-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  padding: 12px 0 6px;
+  border-top: 0.5px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.risk-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 0.5px solid var(--border-light);
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+.risk-row {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.cell {
+  background: var(--bg-primary);
+  border: 0.5px solid var(--border-light);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.cell.technical { border-left: 2px solid var(--blue-accent); }
+.cell.executive { border-left: 2px solid var(--green-accent); }
+
+.cell-subhead {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+
+.cell.technical .cell-subhead { color: #185FA5; }
+.cell.executive .cell-subhead { color: #3B6D11; }
+
+@media (prefers-color-scheme: dark) {
+  .cell.technical .cell-subhead { color: #85B7EB; }
+  .cell.executive .cell-subhead { color: #97C459; }
+}
+
+.cell p {
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.cell p:last-of-type { margin-bottom: 0; }
+
+.tags { margin-top: 12px; }
+
+.tag {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin: 4px 4px 0 0;
+}
+
+.tag.high { background: #FCEBEB; color: #791F1F; }
+.tag.medium { background: #FAEEDA; color: #633806; }
+.tag.reg { background: #EEEDFE; color: #3C3489; }
+
+@media (prefers-color-scheme: dark) {
+  .tag.high { background: #501313; color: #F7C1C1; }
+  .tag.medium { background: #412402; color: #FAC775; }
+  .tag.reg { background: #26215C; color: #CECBF6; }
+}
+
+.actions-section {
+  margin-top: 24px;
+  border-top: 0.5px solid var(--border-mid);
+  padding-top: 18px;
+}
+
+.actions-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 14px;
+}
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 10px;
+}
+
+.action-card {
+  background: var(--bg-secondary);
+  border: 0.5px solid var(--border-light);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.action-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  color: var(--text-tertiary);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.action-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.action-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+
+.action-output {
+  font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+.action-output strong {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.footer-note {
+  margin-top: 18px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  body { padding: 2rem 1rem; }
+  .col-headers,
+  .risk-row { grid-template-columns: 1fr; }
+  .actions-grid { grid-template-columns: 1fr; }
+  .col-label.executive { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="doc-header">
+  <div class="company-badge">Arken Systems — Internal document</div>
+  <h1 class="doc-title">AI credit scoring: risk briefing for board</h1>
+  <p class="doc-subtitle">ArkenScore v2.1 — automated lending decisions, retail credit division</p>
+  <div class="doc-meta">
+    <div class="meta-item">Classification: <span>Confidential</span></div>
+    <div class="meta-item">Author: <span>GRC function</span></div>
+    <div class="meta-item">Audience: <span>Board / ExCo</span></div>
+    <div class="meta-item">Status: <span>For decision</span></div>
+  </div>
+</div>
+
+<div class="col-headers">
+  <div class="col-label technical">Technical risk register</div>
+  <div class="col-label executive">What this means for the business</div>
+</div>
+
+<div class="risk-label"><span class="risk-number">1</span> Bias and discriminatory outcomes</div>
+<div class="risk-row">
+  <div class="cell technical">
+    <div class="cell-subhead">Risk detail</div>
+    <p>The model is trained on historical lending data that reflects past approval patterns. Some of these patterns are likely to correlate with protected characteristics under the Equality Act 2010.</p>
+    <p>There is a particular risk around proxy variables such as postcode and employment type. These may be influencing outcomes in ways that create indirect discrimination, even though protected characteristics are not used explicitly.</p>
+    <p>No formal bias audit has been completed since the model was retrained in Q2. This means we do not currently have a clear view of how the model is performing across different customer groups.</p>
+    <div class="tags">
+      <span class="tag reg">FCA PRIN 12</span>
+      <span class="tag reg">Consumer Duty</span>
+      <span class="tag high">Inherent: Critical</span>
+      <span class="tag medium">Residual: High</span>
+    </div>
+  </div>
+  <div class="cell executive">
+    <div class="cell-subhead">Board translation</div>
+    <p>There is a risk that customers are being declined credit, or offered less favourable terms, for reasons that do not reflect their actual creditworthiness.</p>
+    <p>From a regulatory perspective, we may not be able to demonstrate that outcomes are fair, as required under Consumer Duty. From a customer perspective, this raises a straightforward question about whether similar applicants are being treated consistently.</p>
+    <p>At present, we do not have enough evidence to show that the model is operating fairly across different groups.</p>
+  </div>
+</div>
+
+<div class="risk-label"><span class="risk-number">2</span> Model drift</div>
+<div class="risk-row">
+  <div class="cell technical">
+    <div class="cell-subhead">Risk detail</div>
+    <p>There are signs of statistical drift in the model inputs over the past 90 days. The Population Stability Index (PSI) is currently 0.28, which is above the 0.2 threshold typically used to indicate meaningful change.</p>
+    <p>The model was trained on pre-2022 data. Since then, economic conditions have shifted significantly. As a result, the relationships the model learned during training may no longer hold.</p>
+    <p>There is currently no automated trigger for retraining or recalibration when drift reaches this level.</p>
+    <div class="tags">
+      <span class="tag reg">EU AI Act Art. 9</span>
+      <span class="tag reg">PRA SS1/23</span>
+      <span class="tag high">Inherent: High</span>
+      <span class="tag high">Residual: High</span>
+    </div>
+  </div>
+  <div class="cell executive">
+    <div class="cell-subhead">Board translation</div>
+    <p>The model is operating on assumptions that may no longer reflect current customer behaviour.</p>
+    <p>In practical terms, this creates two risks. We may be approving credit that carries higher risk than expected, or declining customers who would in fact be able to repay. Both outcomes have financial and conduct implications.</p>
+    <p>The issue here is less about a single failure point and more about gradual degradation in model performance over time.</p>
+  </div>
+</div>
+
+<div class="risk-label"><span class="risk-number">3</span> Regulatory exposure</div>
+<div class="risk-row">
+  <div class="cell technical">
+    <div class="cell-subhead">Risk detail</div>
+    <p>The ArkenScore system falls within the definition of a high-risk AI system under Annex III of the EU AI Act (credit scoring). This brings a number of obligations: conformity assessment prior to deployment, technical documentation and auditability, logging of decisions, defined human oversight mechanisms, and registration in the EU AI database.</p>
+    <p>Current position: logging is partial, no formal conformity assessment has been completed, and human oversight processes are not formally documented. UK expectations are also moving in a similar direction, although requirements are currently less prescriptive.</p>
+    <div class="tags">
+      <span class="tag reg">EU AI Act Annex III</span>
+      <span class="tag reg">FCA SYSC</span>
+      <span class="tag high">Compliance gap: Significant</span>
+    </div>
+  </div>
+  <div class="cell executive">
+    <div class="cell-subhead">Board translation</div>
+    <p>We are likely to fall within scope of EU AI Act requirements for this system, and at present we would struggle to demonstrate full compliance.</p>
+    <p>The financial exposure is material, but the more immediate concern is supervisory scrutiny. If asked to explain how the model works, how decisions are made, and how risks are controlled, our current documentation would be incomplete.</p>
+    <p>At this stage, the issue is not only technical. It is whether governance around the system is sufficiently robust and clearly evidenced.</p>
+  </div>
+</div>
+
+<div class="actions-section">
+  <div class="actions-label">Recommended board decisions</div>
+  <div class="actions-grid">
+    <div class="action-card">
+      <div class="action-number">01</div>
+      <div class="action-title">Commission bias audit</div>
+      <p class="action-desc">Approve an independent review of ArkenScore against Equality Act and Consumer Duty expectations.</p>
+      <div class="action-output"><strong>Output:</strong> clear view of outcome fairness across customer groups within 60 days.</div>
+    </div>
+    <div class="action-card">
+      <div class="action-number">02</div>
+      <div class="action-title">Mandate model review</div>
+      <p class="action-desc">Request a joint plan from the CTO and Chief Risk Officer covering model refresh, retraining approach, and drift monitoring controls.</p>
+      <div class="action-output"><strong>Output:</strong> proposed remediation and monitoring framework within 30 days.</div>
+    </div>
+    <div class="action-card">
+      <div class="action-number">03</div>
+      <div class="action-title">Approve compliance programme</div>
+      <p class="action-desc">Fund a structured programme to address EU AI Act requirements, including conformity assessment and documentation.</p>
+      <div class="action-output"><strong>Output:</strong> defined compliance roadmap and accountable executive ownership.</div>
+    </div>
+  </div>
+  <p class="footer-note">This briefing is derived from the ArkenScore GRC risk register (ref: ARK-RISK-2024-014). A full technical annex is available on request. Arken Systems is a fictional company created for portfolio purposes.</p>
+</div>
+
+</body>
+</html>
