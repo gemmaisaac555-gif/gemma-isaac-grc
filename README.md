@@ -93,13 +93,16 @@ Applying regulatory frameworks under uncertainty. ICO, FCA, DORA, and EU AI Act 
 
 ---
 
-## 🤖 AI Governance
+## AI Governance
 
-AI risk, algorithmic accountability, and regulatory compliance under the EU AI Act and UK AI framework.
+AI risk, algorithmic accountability, and regulatory compliance under the EU AI Act and UK AI framework. This section applies GRC thinking specifically to AI systems — covering risk registers, impact assessments, policy design, and independent audit.
 
-- [AI Risk Register — Credit Scoring Model Deployment](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/ai-governance/artefact-ai-risk-register.md) — Risk register for Veriflow Payments' deployment of a third-party AI credit scoring system. Six risks across bias, model drift, explainability, vendor dependency, and EU AI Act compliance. Includes regulatory hook mapping to EU AI Act, FCA Consumer Duty, Equality Act, and UK GDPR.
-- [Fundamental Rights Impact Assessment — AI Credit Scoring](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/ai-governance/artefact-fria.md) — Retrospective FRIA for Veriflow's deployment of a third-party AI credit scoring system. Covers six rights impacts, four affected populations, consultation gaps, and residual concerns under EU AI Act Article 27.
-- [Internal AI Use Policy — Arken Systems](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/ai-governance/artefact-ai-use-policy.md) — Governing Arken Systems' own use of AI tools. Covers model approval, data handling, human oversight requirements, disclosure obligations, and incident response.
+- [**AI Risk Register — Credit Scoring Model Deployment**](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/ai-governance/artefact-ai-risk-register.md) — Risk register for Veriflow Payments' deployment of a third-party AI credit scoring system. Six risks across bias, model drift, explainability, vendor dependency, and EU AI Act compliance. Regulatory hooks mapped to EU AI Act, FCA Consumer Duty, Equality Act, and UK GDPR.
+- [**Fundamental Rights Impact Assessment — EU AI Act high-risk system**](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/ai-governance/artefact-fria.md) — Pre-deployment FRIA for Veriflow Payments under EU AI Act Article 27. Assesses impact on equality, privacy, access to financial services, and human oversight rights. Includes risk ratings, mitigations, and a conditional deployment recommendation.
+- [**Board Briefing — AI Emotional Dependency Risk**](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-board-briefing.html) — Board-level briefing on the governance risks of emotional dependency in AI companion systems. Written for a non-technical audience. Covers regulatory exposure, reputational risk, and recommended board decisions.
+- [**Comparative AI Ethics Audit**](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/comparative-ai-ethics-audit-v2.html) — Ethics and governance audit of a personally used AI tool, structured as a case study. Applies EU AI Act, NIST AI RMF, and ICO ADM guidance to assess transparency, human oversight, and bias risk in practice.
+- [**Shadow Audit — DWP Automated Decision-Making**](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/ai-governance/dwp_shadow_audit_final.pdf) — Independent governance assessment of two DWP AI systems: the UC Advance Payment Fraud Detection ML Model and the ESA Online Medical Matching Tool. Evaluated against EU AI Act Annex III, NIST AI RMF, UK GDPR, and the Equality Act 2010. Identifies five governance gaps including ATRS non-compliance, incomplete bias testing, and covert deployment.
+- Internal AI Use Policy — model approval, human oversight, incident response *(coming soon)*
 
 ---
 
