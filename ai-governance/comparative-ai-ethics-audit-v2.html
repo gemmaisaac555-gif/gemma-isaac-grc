@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparative AI Ethics Audit — EU AI Act vs UK AI Code of Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0b0f1a;
+    --navy-mid: #141928;
+    --navy-light: #1e2640;
+    --navy-border: #2a3350;
+    --navy-muted: #3d4d6e;
+
+    --white: #f0f2f7;
+    --white-mid: #c8cedd;
+    --white-faint: #7a8399;
+
+    --eu-gold: #e8c84a;
+    --eu-gold-dim: #9c8630;
+    --eu-gold-bg: rgba(232,200,74,0.07);
+    --eu-gold-border: rgba(232,200,74,0.2);
+
+    --uk-teal: #3ecfb2;
+    --uk-teal-dim: #1f8a77;
+    --uk-teal-bg: rgba(62,207,178,0.07);
+    --uk-teal-border: rgba(62,207,178,0.2);
+
+    --red: #e85555;
+    --red-bg: rgba(232,85,85,0.08);
+    --amber: #e8a83a;
+    --amber-bg: rgba(232,168,58,0.08);
+    --green: #4ecb85;
+    --green-bg: rgba(78,203,133,0.08);
+    --purple: #9b7fe8;
+    --purple-bg: rgba(155,127,232,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 56px 44px 120px;
+  }
+
+  /* ── HEADER ── */
+  .masthead {
+    margin-bottom: 64px;
+    animation: fadeIn 0.6s ease both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .masthead-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .eyebrow-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--white-faint);
+    white-space: nowrap;
+  }
+
+  .eyebrow-line {
+    flex: 1;
+    height: 1px;
+    background: var(--navy-border);
+  }
+
+  .masthead h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(26px, 4vw, 48px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .masthead h1 .highlight-eu { color: var(--eu-gold); }
+  .masthead h1 .highlight-uk { color: var(--uk-teal); }
+
+  .masthead-sub {
+    font-size: 16px;
+    color: var(--white-mid);
+    font-style: italic;
+    margin-bottom: 32px;
+  }
+
+  .masthead-meta-row {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--navy-border);
+  }
+
+  .meta-cell {
+    flex: 1;
+    padding: 12px 18px;
+    border-right: 1px solid var(--navy-border);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  .meta-cell:last-child { border-right: none; }
+  .meta-cell .meta-key { color: var(--white-faint); text-transform: uppercase; display: block; margin-bottom: 3px; }
+  .meta-cell .meta-val { color: var(--white-mid); }
+
+  /* ── FRAMEWORK LEGEND ── */
+  .framework-legend {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 56px;
+    animation: fadeIn 0.6s ease 0.1s both;
+  }
+
+  .framework-card {
+    padding: 24px 26px;
+    border: 1px solid;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .framework-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .framework-card.eu { border-color: var(--eu-gold-border); background: var(--eu-gold-bg); }
+  .framework-card.eu::before { background: var(--eu-gold); }
+  .framework-card.uk { border-color: var(--uk-teal-border); background: var(--uk-teal-bg); }
+  .framework-card.uk::before { background: var(--uk-teal); }
+
+  .framework-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .framework-card.eu .framework-tag { color: var(--eu-gold); }
+  .framework-card.uk .framework-tag { color: var(--uk-teal); }
+
+  .framework-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--white);
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .framework-card p {
+    font-size: 13.5px;
+    color: var(--white-mid);
+    line-height: 1.65;
+  }
+
+  /* ── SECTION ── */
+  .section {
+    margin-bottom: 72px;
+    animation: fadeIn 0.5s ease both;
+  }
+
+  .section:nth-child(3) { animation-delay: 0.1s; }
+  .section:nth-child(4) { animation-delay: 0.15s; }
+  .section:nth-child(5) { animation-delay: 0.2s; }
+  .section:nth-child(6) { animation-delay: 0.25s; }
+  .section:nth-child(7) { animation-delay: 0.3s; }
+  .section:nth-child(8) { animation-delay: 0.35s; }
+  .section:nth-child(9) { animation-delay: 0.4s; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  .section-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--white-faint);
+    letter-spacing: 0.1em;
+    min-width: 32px;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(16px, 2.2vw, 21px);
+    color: var(--white);
+    letter-spacing: -0.01em;
+    flex: 1;
+  }
+
+  .section-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--navy-border);
+    max-width: 80px;
+  }
+
+  .section-body p {
+    color: var(--white-mid);
+    margin-bottom: 18px;
+    font-size: 16.5px;
+    line-height: 1.8;
+  }
+
+  .section-body p:last-child { margin-bottom: 0; }
+
+  /* ── SCENARIO BOX ── */
+  .scenario-box {
+    border: 1px solid var(--navy-border);
+    background: var(--navy-mid);
+    margin: 28px 0;
+    padding: 26px 28px;
+  }
+
+  .scenario-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--white-faint);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .scenario-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--white);
+    margin-bottom: 14px;
+  }
+
+  .scenario-body p {
+    font-size: 14.5px;
+    color: var(--white-mid);
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+
+  .scenario-body p:last-child { margin-bottom: 0; }
+
+  /* ── PULL QUOTE ── */
+  .pull-quote {
+    margin: 28px 0;
+    padding: 20px 26px;
+    border-left: 3px solid var(--eu-gold);
+    background: rgba(232,200,74,0.04);
+    font-style: italic;
+    font-size: 17px;
+    color: var(--white);
+    line-height: 1.65;
+  }
+
+  .pull-quote.teal {
+    border-left-color: var(--uk-teal);
+    background: rgba(62,207,178,0.04);
+  }
+
+  /* ── TWO-COLUMN CONTRAST ── */
+  .contrast-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 24px 0;
+  }
+
+  .contrast-card {
+    padding: 20px 22px;
+    border: 1px solid;
+    position: relative;
+  }
+
+  .contrast-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .contrast-card.eu { border-color: var(--eu-gold-border); background: var(--eu-gold-bg); }
+  .contrast-card.eu::before { background: var(--eu-gold); }
+  .contrast-card.uk { border-color: var(--uk-teal-border); background: var(--uk-teal-bg); }
+  .contrast-card.uk::before { background: var(--uk-teal); }
+
+  .contrast-card .cc-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .contrast-card.eu .cc-tag { color: var(--eu-gold); }
+  .contrast-card.uk .cc-tag { color: var(--uk-teal); }
+
+  .contrast-card p {
+    font-size: 14px;
+    color: var(--white-mid);
+    line-height: 1.65;
+    margin-bottom: 10px;
+  }
+
+  .contrast-card p:last-child { margin-bottom: 0; }
+
+  /* ── INLINE LIST ── */
+  .prose-list {
+    margin: 14px 0 18px 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .prose-list li {
+    display: flex;
+    gap: 14px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--navy-border);
+    font-size: 15.5px;
+    color: var(--white-mid);
+    line-height: 1.6;
+  }
+
+  .prose-list li:last-child { border-bottom: none; }
+
+  .prose-list li::before {
+    content: '—';
+    color: var(--white-faint);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    padding-top: 1px;
+    flex-shrink: 0;
+  }
+
+  /* ── VERDICT PILL ── */
+  .verdict {
+    display: inline-block;
+    padding: 3px 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .v-strong { background: var(--green-bg); color: var(--green); border: 1px solid rgba(78,203,133,0.25); }
+  .v-partial { background: var(--amber-bg); color: var(--amber); border: 1px solid rgba(232,168,58,0.25); }
+  .v-weak { background: var(--red-bg); color: var(--red); border: 1px solid rgba(232,85,85,0.25); }
+  .v-open { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(155,127,232,0.25); }
+
+  /* ── SCORECARD ── */
+  .scorecard {
+    border: 1px solid var(--navy-border);
+    overflow: hidden;
+    margin: 24px 0;
+  }
+
+  .scorecard-header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    background: var(--navy-light);
+    border-bottom: 1px solid var(--navy-border);
+  }
+
+  .scorecard-header div {
+    padding: 12px 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white-faint);
+    border-right: 1px solid var(--navy-border);
+  }
+
+  .scorecard-header div:nth-child(2) { color: var(--eu-gold); }
+  .scorecard-header div:nth-child(3) { color: var(--uk-teal); }
+  .scorecard-header div:last-child { border-right: none; }
+
+  .scorecard-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    border-bottom: 1px solid var(--navy-border);
+    transition: background 0.15s;
+  }
+
+  .scorecard-row:last-child { border-bottom: none; }
+  .scorecard-row:hover { background: rgba(255,255,255,0.015); }
+
+  .scorecard-row div {
+    padding: 14px 16px;
+    font-size: 13.5px;
+    color: var(--white-mid);
+    border-right: 1px solid var(--navy-border);
+    display: flex;
+    align-items: center;
+  }
+
+  .scorecard-row div:first-child {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .scorecard-row div:last-child { border-right: none; }
+
+  /* ── CLOSING BOX ── */
+  .closing-box {
+    border: 1px solid var(--navy-border);
+    background: var(--navy-mid);
+    padding: 28px 30px;
+    margin-top: 32px;
+  }
+
+  .closing-box p {
+    font-size: 16px;
+    color: var(--white-mid);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+
+  .closing-box p:last-child { margin-bottom: 0; }
+
+  .closing-box strong { color: var(--white); }
+
+  /* ── FOOTER ── */
+  .doc-footer {
+    margin-top: 80px;
+    padding-top: 20px;
+    border-top: 1px solid var(--navy-border);
+    display: flex;
+    justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    color: var(--white-faint);
+    letter-spacing: 0.1em;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 680px) {
+    .page-wrap { padding: 28px 18px 80px; }
+    .framework-legend { grid-template-columns: 1fr; }
+    .contrast-grid { grid-template-columns: 1fr; }
+    .masthead-meta-row { flex-direction: column; }
+    .meta-cell { border-right: none; border-bottom: 1px solid var(--navy-border); }
+    .scorecard-header, .scorecard-row { grid-template-columns: 1.5fr 1fr 1fr; }
+    .scorecard-header div:last-child, .scorecard-row div:last-child { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- MASTHEAD -->
+  <header class="masthead">
+    <div class="masthead-eyebrow">
+      <span class="eyebrow-label">Arken Systems GRC Portfolio — AI Governance Series</span>
+      <div class="eyebrow-line"></div>
+    </div>
+    <h1>Comparative AI Ethics Audit:<br>
+      <span class="highlight-eu">EU AI Act</span> vs
+      <span class="highlight-uk">UK AI Code of Practice</span>
+    </h1>
+    <p class="masthead-sub">Testing both frameworks against bias and discrimination in high-risk AI systems</p>
+    <div class="masthead-meta-row">
+      <div class="meta-cell">
+        <span class="meta-key">Author</span>
+        <span class="meta-val">Gemma Isaac</span>
+      </div>
+      <div class="meta-cell">
+        <span class="meta-key">Version</span>
+        <span class="meta-val">1.0 — Q1 2025</span>
+      </div>
+      <div class="meta-cell">
+        <span class="meta-key">Frameworks</span>
+        <span class="meta-val">EU AI Act (2024) / UK DSIT AI CoP (2025)</span>
+      </div>
+      <div class="meta-cell">
+        <span class="meta-key">Harm Category</span>
+        <span class="meta-val">Bias &amp; Discrimination — High-Risk AI</span>
+      </div>
+      <div class="meta-cell">
+        <span class="meta-key">Type</span>
+        <span class="meta-val">Comparative Ethics Audit</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- FRAMEWORK LEGEND -->
+  <div class="framework-legend">
+    <div class="framework-card eu">
+      <span class="framework-tag">Framework A</span>
+      <h3>EU Artificial Intelligence Act (2024)</h3>
+      <p>Binding regulation applying across the EU, with extraterritorial reach to any system affecting EU persons. Adopts a risk-tiered approach. High-risk systems — including hiring and credit — face mandatory conformity assessment, bias testing, and human oversight obligations before deployment. Entered into force August 2024; high-risk obligations apply from August 2026.</p>
+    </div>
+    <div class="framework-card uk">
+      <span class="framework-tag">Framework B</span>
+      <h3>UK AI Code of Practice (DSIT, 2025)</h3>
+      <p>Voluntary code developed by DSIT, reflecting the UK's pro-innovation regulatory stance. Sector regulators retain primary oversight. The Code establishes principles — transparency, accountability, fairness, safety — without imposing binding legal obligations or mandatory pre-market conformity assessment. Sits alongside existing sectoral regulation.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Purpose and Method</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="section-body">
+      <p>This audit asks a simple question: if a high-risk AI system produces discriminatory outcomes, which framework is more likely to catch it early and force someone to fix it?</p>
+      <p>Both the EU AI Act and the UK AI Code of Practice say the right things about fairness. The more important question is whether that fairness survives contact with a real deployment scenario — especially where discrimination emerges indirectly rather than through explicit protected characteristics.</p>
+      <p>I have compared the two frameworks across six practical questions: who is in scope, what counts as bias, what organisations must do before deployment, how enforcement works, what remedies exist, and whether the framework is likely to work in practice, not just on paper.</p>
+
+      <div class="scenario-box">
+        <span class="scenario-label">Test Scenario — Used Throughout This Audit</span>
+        <div class="scenario-title">Scenario: NorthBridge Financial — AI-Assisted Candidate Screening</div>
+        <div class="scenario-body">
+          <p>NorthBridge Financial, a UK-based retail bank with operations in Germany and the Netherlands, deploys an AI-assisted CV screening tool.</p>
+          <p>The model is trained on ten years of historical hiring data. Internal analysis later shows that candidates with post-2010 polytechnic education are systematically downgraded. This correlates with lower selection rates for candidates from lower socioeconomic backgrounds.</p>
+          <p>No protected characteristic is explicitly used. The discrimination appears through proxy. This is the kind of case that most often slips through basic fairness checks.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Scope and Applicability</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="section-body">
+      <p>The EU AI Act applies to any system affecting individuals in the EU, regardless of where the organisation is based. In this scenario, NorthBridge's EU operations bring the hiring system clearly within scope.</p>
+      <p>The UK approach is narrower. The Code of Practice itself is voluntary, and legal obligations sit mainly in existing law — particularly the Equality Act 2010 and UK GDPR.</p>
+      <p>There is also a more fundamental difference: the EU explicitly classifies hiring systems as high-risk. That classification triggers a whole set of obligations. The UK framework does not make that kind of upfront categorisation. Instead, responsibility is distributed across regulators, who may interpret risk differently.</p>
+      <p>In practice, this means:</p>
+
+      <ul class="prose-list">
+        <li>under the EU framework, the system is automatically treated as high-risk</li>
+        <li>under the UK framework, that status is less clearly defined and more dependent on interpretation</li>
+      </ul>
+
+      <p>That difference matters later when we look at what organisations are actually required to do.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 3 -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Definitional Precision on Bias</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="section-body">
+      <p>The real issue is not whether a framework says bias is a problem. Both do.</p>
+      <p>The issue is whether the framework can catch the kind of bias that actually happens in practice — especially where discrimination appears through proxies rather than direct features.</p>
+      <p>In the NorthBridge case, there is no explicit use of protected characteristics. The harm emerges through historical data and correlation.</p>
+
+      <div class="contrast-grid">
+        <div class="contrast-card eu">
+          <span class="cc-tag">EU AI Act</span>
+          <p>More explicit on proxy discrimination. Data governance requirements oblige organisations to examine training data for bias, including indirect effects. There is at least an expectation that proxy discrimination will be considered and tested.</p>
+        </div>
+        <div class="contrast-card uk">
+          <span class="cc-tag">UK Code of Practice</span>
+          <p>Relies more heavily on existing equality law. Indirect discrimination is covered in principle, but in practice it often requires a claimant to identify and prove the impact — a very different mechanism from mandatory pre-deployment testing.</p>
+        </div>
+      </div>
+
+      <div class="pull-quote">
+        Both frameworks are weak on intersectional bias. Neither provides a clear method for identifying harms that arise across multiple overlapping characteristics. This is not a minor gap — it is where many real-world harms sit.
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Mandatory Obligations and Pre-Deployment Controls</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="section-body">
+      <p>This is where the gap between the frameworks becomes most obvious.</p>
+      <p>Under the EU AI Act, a high-risk system is expected to demonstrate compliance before it is deployed. That includes documented risk management, bias testing, technical documentation, and human oversight design. The intention is clear: stop problems before they reach users.</p>
+      <p>The UK approach is different. It relies much more on principles and post-deployment monitoring. Organisations are encouraged to assess risk, but there is no equivalent requirement to prove compliance before the system goes live.</p>
+      <p>Applied to NorthBridge, the difference is stark.</p>
+
+      <div class="contrast-grid">
+        <div class="contrast-card eu">
+          <span class="cc-tag">EU AI Act — NorthBridge</span>
+          <p>The hiring tool should not go live until it has been assessed as a high-risk system, including testing for bias. That creates a real chance of identifying the historical bias before it affects candidates.</p>
+        </div>
+        <div class="contrast-card uk">
+          <span class="cc-tag">UK Code — NorthBridge</span>
+          <p>The system could be deployed much earlier. Whether the bias is caught depends heavily on the organisation's internal practices. If missed, the issue may only surface if someone challenges the outcome — a difficult route for candidates without legal support or access to the data needed to demonstrate disparate impact.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5 -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Enforcement, Redress, and Accountability</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="section-body">
+      <div class="pull-quote teal">
+        The UK approach does have strengths. Allowing sector regulators like the ICO, FCA, and EHRC to take the lead means enforcement can be more context-aware. The question is whether those existing tools are sufficient for algorithmic harms.
+      </div>
+
+      <p>The EU model is more centralised and more prescriptive. It includes designated authorities, defined penalties, mandatory documentation and reporting, and formal complaint mechanisms.</p>
+      <p>The UK system is more fragmented. Enforcement depends on data protection law, equality law, and regulator intervention.</p>
+      <p>The difference shows up clearly in the scenario. A rejected candidate in the EU has a clearer path to requesting an explanation, raising a complaint, and escalating the issue. In the UK, similar rights exist, but they are harder to use in practice. Proving indirect discrimination in an employment context often requires statistical evidence that individuals do not have access to.</p>
+      <p>This is where the system starts to look reactive. Harm may need to become visible before action is taken.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 6: SCORECARD -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Consolidated Scorecard</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="section-body">
+      <p>Across all dimensions, the pattern is consistent. The EU AI Act defines high-risk systems explicitly, requires pre-deployment checks, addresses proxy bias more directly, and builds in oversight and documentation. The UK Code sets out sensible principles but leaves more discretion to organisations and relies more heavily on issues being identified after deployment.</p>
+
+      <div class="scorecard">
+        <div class="scorecard-header">
+          <div>Dimension</div>
+          <div>EU AI Act</div>
+          <div>UK Code of Practice</div>
+          <div>Gap</div>
+        </div>
+        <div class="scorecard-row">
+          <div>Hiring AI as high-risk — explicit</div>
+          <div><span class="verdict v-strong">Explicit</span></div>
+          <div><span class="verdict v-weak">Absent</span></div>
+          <div><span class="verdict v-strong">Large</span></div>
+        </div>
+        <div class="scorecard-row">
+          <div>Proxy / disparate impact bias</div>
+          <div><span class="verdict v-strong">Addressed</span></div>
+          <div><span class="verdict v-partial">Partial</span></div>
+          <div><span class="verdict v-strong">Large</span></div>
+        </div>
+        <div class="scorecard-row">
+          <div>Historical / training data bias</div>
+          <div><span class="verdict v-strong">Addressed</span></div>
+          <div><span class="verdict v-weak">Absent</span></div>
+          <div><span class="verdict v-strong">Large</span></div>
+        </div>
+        <div class="scorecard-row">
+          <div>Intersectional bias</div>
+          <div><span class="verdict v-weak">Gap</span></div>
+          <div><span class="verdict v-weak">Gap</span></div>
+          <div><span class="verdict v-open">Shared gap</span></div>
+        </div>
+        <div class="scorecard-row">
+          <div>Pre-deployment conformity check</div>
+          <div><span class="verdict v-strong">Mandatory</span></div>
+          <div><span class="verdict v-weak">None</span></div>
+          <div><span class="verdict v-strong">Large</span></div>
+        </div>
+        <div class="scorecard-row">
+          <div>Mandatory bias testing</div>
+          <div><span class="verdict v-strong">Required</span></div>
+          <div><span class="verdict v-weak">Voluntary</span></div>
+          <div><span class="verdict v-strong">Large</span></div>
+        </div>
+        <div class="scorecard-row">
+          <div>Human oversight — structural</div>
+          <div><span class="verdict v-strong">Mandatory</span></div>
+          <div><span class="verdict v-partial">Partial (GDPR Art. 22)</span></div>
+          <div><span class="verdict v-partial">Moderate</span></div>
+        </div>
+        <div class="scorecard-row">
+          <div>Individual right to explanation</div>
+          <div><span class="verdict v-strong">Explicit</span></div>
+          <div><span class="verdict v-partial">Via UK GDPR</span></div>
+          <div><span class="verdict v-partial">Moderate</span></div>
+        </div>
+        <div class="scorecard-row">
+          <div>Enforcement — proactive</div>
+          <div><span class="verdict v-strong">Structural</span></div>
+          <div><span class="verdict v-weak">Reactive only</span></div>
+          <div><span class="verdict v-strong">Large</span></div>
+        </div>
+        <div class="scorecard-row">
+          <div>AI-specific financial penalties</div>
+          <div><span class="verdict v-strong">Up to 6% turnover</span></div>
+          <div><span class="verdict v-weak">None (Code only)</span></div>
+          <div><span class="verdict v-strong">Large</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 7: CONCLUSIONS -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title">Conclusions and Practitioner Implications</h2>
+      <div class="section-rule"></div>
+    </div>
+    <div class="section-body">
+      <p>My conclusion is fairly straightforward: the EU AI Act is better equipped than the UK Code to identify and prevent discriminatory harms in high-risk AI systems.</p>
+      <p>This is not mainly about stated values. Both frameworks emphasise fairness. The difference is that one translates those values into enforceable requirements, while the other leaves more to interpretation and good practice.</p>
+      <p>The EU model is not perfect. It introduces complexity, and the implementation burden will be significant — especially for smaller organisations. Its effectiveness will ultimately depend on how enforcement works in practice after full implementation.</p>
+      <p>The UK approach is more flexible, but that flexibility comes at a cost. Where harms are subtle, distributed, and difficult to prove — as algorithmic bias often is — a reactive system struggles to catch them early.</p>
+      <p>For UK organisations operating in both jurisdictions, the practical takeaway is clear: <strong>build to the higher standard from the start.</strong> Maintaining separate approaches is likely to create inconsistency and risk.</p>
+
+      <div class="closing-box">
+        <p><strong>The shared gap.</strong> Neither framework adequately addresses intersectional bias. A system may disadvantage individuals not because of one characteristic, but because of a combination — gender, ethnicity, and disability together, for example. Standard testing approaches often miss this. This is not a theoretical issue. It is a real limitation in how fairness is currently operationalised in both jurisdictions.</p>
+        <p><strong>The NorthBridge outcome.</strong> Under the EU AI Act, the bias in the hiring model is likely to be identified during pre-deployment checks and addressed before it affects candidates. Under the UK framework, the same system could be deployed without that level of scrutiny. The harm could persist quietly and at scale, with redress depending on individual complaints.</p>
+        <p>That difference is not accidental. It reflects two different regulatory instincts — one that tries to prevent harm before deployment, and one that is more willing to respond after problems emerge.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="doc-footer">
+    <span>ARKEN SYSTEMS GRC PORTFOLIO — AI GOVERNANCE</span>
+    <span>COMPARATIVE AI ETHICS AUDIT — V1.0</span>
+    <span>GEMMA ISAAC</span>
+  </footer>
+
+</div>
+</body>
+</html>
