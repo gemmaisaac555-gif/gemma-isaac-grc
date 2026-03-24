@@ -22,7 +22,7 @@ If you only review a few pieces, start with these:
 If you only review a few pieces, start with these:
 
 1. 🔗 [Human Attack Surface OSINT Mapper https://gemmaisaac555-gif.github.io/gemma-isaac-grc/osint_human_attack_surface_mapper.html
-2.[Third-Party Risk Auto-Score https://gemmaisaac555-gif.github.io/gemma-isaac-grc/third_party_risk_scoring_tool.html
+2. [Third-Party Risk Auto-Score https://gemmaisaac555-gif.github.io/gemma-isaac-grc/third_party_risk_scoring_tool.html
 3. [Artefact A — Risk Acceptance With Teeth](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/how-i-decide/artefact-a-risk-acceptance.md) — Realistic risk acceptance decision under business pressure
 4. [Artefact F — Board Brief: Third-Party Security Incident](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/how-i-communicate/artefact-f-board-brief.md) — One-page executive communication to senior stakeholders
 
