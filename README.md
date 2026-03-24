@@ -102,7 +102,7 @@ AI risk, algorithmic accountability, and regulatory compliance under the EU AI A
 - [**Board Briefing — AI Emotional Dependency Risk**](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/arken-board-briefing.html) — Board-level briefing on the governance risks of emotional dependency in AI companion systems. Written for a non-technical audience. Covers regulatory exposure, reputational risk, and recommended board decisions.
 - [**Comparative AI Ethics Audit**](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/comparative-ai-ethics-audit-v2.html) — Ethics and governance audit of a personally used AI tool, structured as a case study. Applies EU AI Act, NIST AI RMF, and ICO ADM guidance to assess transparency, human oversight, and bias risk in practice.
 - [**Shadow Audit — DWP Automated Decision-Making**](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/ai-governance/dwp_shadow_audit_final.pdf) — Independent governance assessment of two DWP AI systems: the UC Advance Payment Fraud Detection ML Model and the ESA Online Medical Matching Tool. Evaluated against EU AI Act Annex III, NIST AI RMF, UK GDPR, and the Equality Act 2010. Identifies five governance gaps including ATRS non-compliance, incomplete bias testing, and covert deployment.
-- Internal AI Use Policy — model approval, human oversight, incident response *(coming soon)*
+- [**Internal AI Use Policy — Arken Systems**](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/ai-governance/artefact-ai-use-policy.md) — Internal policy governing AI tool use at a GRC consultancy. Covers model approval, permitted and prohibited uses, data classification, human oversight requirements, disclosure obligations, and incident response.
 
 ---
 
