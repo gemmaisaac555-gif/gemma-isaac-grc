@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arken Systems — Third-Party Risk Auto-Scorer</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #0f1218;
+    --surface2: #161b24;
+    --border: #1e2733;
+    --border2: #2a3545;
+    --accent: #00c2ff;
+    --accent2: #0077aa;
+    --text: #e8edf2;
+    --text-dim: #7a8a9a;
+    --text-muted: #3d4f61;
+    --critical: #ff3b5c;
+    --high: #ff8c42;
+    --medium: #f5c542;
+    --low: #00e676;
+    --grid-line: rgba(0,194,255,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+
+  /* Header */
+  header {
+    padding: 48px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .logo-block {}
+  .logo-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    opacity: 0.8;
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(22px, 3vw, 32px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    line-height: 1.1;
+  }
+  h1 span { color: var(--accent); }
+
+  .header-meta {
+    text-align: right;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.8;
+  }
+  .header-meta strong {
+    color: var(--text);
+    font-weight: 500;
+    display: block;
+    font-size: 12px;
+  }
+
+  /* Scenario banner */
+  .scenario-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 16px 20px;
+    margin-bottom: 40px;
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .scenario-bar .s-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .scenario-bar .s-val {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  /* Tabs */
+  .tab-row {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+  .tab {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    cursor: pointer;
+    color: var(--text-dim);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.2s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* Panels */
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* Section heading */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .section-head h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .section-head .sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* Upload zone */
+  .upload-zone {
+    border: 1px dashed var(--border2);
+    padding: 48px 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--surface);
+    position: relative;
+  }
+  .upload-zone:hover, .upload-zone.dragover {
+    border-color: var(--accent);
+    background: rgba(0,194,255,0.03);
+  }
+  .upload-zone input[type=file] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+  .upload-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+    opacity: 0.4;
+  }
+  .upload-zone h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .upload-zone p {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .csv-template-link {
+    margin-top: 20px;
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    background: none;
+    border: none;
+  }
+
+  /* Divider */
+  .or-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 32px 0;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+  }
+  .or-divider::before, .or-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Manual form */
+  .domain-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .domain-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s;
+  }
+  .domain-header:hover { background: var(--surface2); }
+  .domain-header.open { border-bottom-color: var(--border); }
+  .domain-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .domain-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 3px 8px;
+    border: 1px solid var(--border2);
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+  .domain-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .domain-weight {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+  }
+  .domain-chevron {
+    font-size: 12px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+  }
+  .domain-header.open .domain-chevron { transform: rotate(180deg); }
+  .domain-questions {
+    display: none;
+    padding: 20px;
+    gap: 12px;
+    flex-direction: column;
+  }
+  .domain-questions.open { display: flex; }
+
+  .q-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+  }
+  .q-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .q-text .q-id {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .q-select {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 6px 10px;
+    width: 140px;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .q-select:focus { border-color: var(--accent); }
+  .q-select option { background: var(--surface2); }
+
+  /* Submit button */
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 14px 40px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-block;
+    margin-top: 32px;
+    text-transform: uppercase;
+  }
+  .btn-primary:hover { background: #33d4ff; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-dim);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 10px 24px;
+    border: 1px solid var(--border2);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 32px;
+    margin-left: 16px;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* Results */
+  #results { display: none; }
+  #results.show { display: block; }
+
+  .result-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .result-rating {
+    text-align: center;
+  }
+  .rating-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .rating-badge {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    padding: 12px 32px;
+    border: 2px solid;
+    letter-spacing: 0.05em;
+  }
+  .rating-badge.critical { color: var(--critical); border-color: var(--critical); background: rgba(255,59,92,0.08); }
+  .rating-badge.high { color: var(--high); border-color: var(--high); background: rgba(255,140,66,0.08); }
+  .rating-badge.medium { color: var(--medium); border-color: var(--medium); background: rgba(245,197,66,0.08); }
+  .rating-badge.low { color: var(--low); border-color: var(--low); background: rgba(0,230,118,0.08); }
+
+  .result-score-block { text-align: right; }
+  .score-big {
+    font-family: 'Syne', sans-serif;
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text);
+  }
+  .score-big span { font-size: 24px; color: var(--text-dim); }
+  .score-desc {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .result-meta {
+    flex: 1;
+    min-width: 240px;
+  }
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+  }
+  .meta-row .mk { color: var(--text-muted); }
+  .meta-row .mv { color: var(--text); }
+
+  /* Domain breakdown */
+  .domain-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .dr-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+  }
+  .dr-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .dr-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .dr-weight {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+  .dr-score {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+  }
+  .dr-bar-track {
+    height: 4px;
+    background: var(--border);
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .dr-bar-fill {
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    transition: width 0.6s ease;
+  }
+  .dr-flag {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-family: 'IBM Plex Mono', monospace;
+    line-height: 1.6;
+  }
+  .dr-flag .flag-item {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-bottom: 4px;
+  }
+  .flag-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  /* Follow-up questions */
+  .followup-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 24px 28px;
+    margin-bottom: 40px;
+  }
+  .followup-block h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--accent);
+  }
+  .fq-item {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+  .fq-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(0,194,255,0.1);
+    padding: 4px 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .fq-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .fq-domain {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* Remediation */
+  .remediation-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px 28px;
+    margin-bottom: 40px;
+  }
+  .remediation-block h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  .rem-item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .rem-item:last-child { border-bottom: none; }
+  .rem-severity {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    letter-spacing: 0.1em;
+  }
+  .rem-severity.critical { background: rgba(255,59,92,0.15); color: var(--critical); }
+  .rem-severity.high { background: rgba(255,140,66,0.15); color: var(--high); }
+  .rem-severity.medium { background: rgba(245,197,66,0.15); color: var(--medium); }
+  .rem-content {}
+  .rem-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .rem-detail { font-size: 12px; color: var(--text-dim); font-family: 'IBM Plex Mono', monospace; line-height: 1.5; }
+
+  /* Print/export row */
+  .action-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Disclaimer */
+  .disclaimer {
+    margin-top: 48px;
+    padding: 16px 20px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+  .disclaimer strong { color: var(--text-dim); }
+
+  .fade-in {
+    animation: fadeIn 0.4s ease forwards;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Notification */
+  .notif {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 12px 20px;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .notif.show { opacity: 1; }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 0 16px 60px; }
+    .q-row { grid-template-columns: 1fr; }
+    .q-select { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="logo-block">
+      <div class="logo-tag">Arken Systems Ltd — Vendor Risk Management</div>
+      <h1>Third-Party Risk<br><span>Auto-Scorer</span></h1>
+    </div>
+    <div class="header-meta">
+      <strong>Framework: SIG Lite (adapted)</strong>
+      Version 1.0 · Internal Use<br>
+      Ref: ARKEN-VRM-001<br>
+      Classification: Restricted
+    </div>
+  </header>
+
+  <div class="scenario-bar">
+    <div>
+      <div class="s-label">Assessing Organisation</div>
+      <div class="s-val">Arken Systems Ltd</div>
+    </div>
+    <div>
+      <div class="s-label">Scenario</div>
+      <div class="s-val">Cloud infrastructure vendor — pre-contract assessment</div>
+    </div>
+    <div>
+      <div class="s-label">Sector</div>
+      <div class="s-val">Defence Technology Supply Chain</div>
+    </div>
+    <div>
+      <div class="s-label">Regulatory Drivers</div>
+      <div class="s-val">Cyber Essentials Plus · NIST SP 800-171 · GDPR</div>
+    </div>
+  </div>
+
+  <div class="tab-row">
+    <button class="tab active" onclick="switchTab('manual')">Manual Assessment</button>
+    <button class="tab" onclick="switchTab('upload')">CSV Upload</button>
+    <button class="tab" onclick="switchTab('results-tab')" id="results-tab-btn" style="display:none">View Results</button>
+    <button class="tab" onclick="switchTab('methodology')">Methodology</button>
+  </div>
+
+  <!-- MANUAL PANEL -->
+  <div class="panel active" id="panel-manual">
+    <div class="section-head">
+      <h2>Vendor Assessment Form</h2>
+      <span class="sub">// SIG Lite domains · weighted scoring</span>
+    </div>
+
+    <div id="manual-form"></div>
+
+    <div>
+      <button class="btn-primary" onclick="scoreManual()">Generate Risk Report</button>
+      <button class="btn-secondary" onclick="resetForm()">Clear</button>
+    </div>
+  </div>
+
+  <!-- UPLOAD PANEL -->
+  <div class="panel" id="panel-upload">
+    <div class="section-head">
+      <h2>CSV Upload</h2>
+      <span class="sub">// Download template, complete offline, upload here</span>
+    </div>
+
+    <div class="upload-zone" id="drop-zone">
+      <input type="file" accept=".csv" id="csv-input" onchange="handleCSV(event)">
+      <div class="upload-icon">⬆</div>
+      <h3>Drop CSV file or click to browse</h3>
+      <p>Expected format: question_id, domain, response (Yes/No/Partial/N-A)</p>
+    </div>
+
+    <button class="csv-template-link" onclick="downloadTemplate()">↓ Download blank CSV template</button>
+
+    <div id="csv-preview" style="margin-top:24px;"></div>
+  </div>
+
+  <!-- METHODOLOGY PANEL -->
+  <div class="panel" id="panel-methodology">
+    <div class="section-head"><h2>Methodology</h2><span class="sub">// scoring model &middot; design decisions &middot; assumptions &middot; limitations</span></div>
+    <div style="display:flex;flex-direction:column;gap:24px;">
+      <div style="background:var(--surface);border:1px solid var(--border);padding:24px 28px;">
+        <div style="font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:12px;">Scoring Model</div>
+        <p style="font-size:13px;color:var(--text-dim);line-height:1.8;margin-bottom:14px;">Each question scores Yes=1.0, Partial=0.5, No=0.0. N/A responses are excluded from both numerator and denominator. Each domain produces a raw percentage, multiplied by its weight and summed to produce the overall weighted score.</p>
+        <div style="background:var(--bg);border:1px solid var(--border);padding:14px 18px;font-family:IBM Plex Mono,monospace;font-size:12px;color:var(--text-dim);line-height:2.0;">Domain score = sum(responses) / answered x 100<br>Overall score = sum(domain score x weight)<br>Thresholds: 80+ Low | 60+ Medium | 40+ High | under 40 Critical</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);padding:24px 28px;">
+        <div style="font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:12px;">Domain Weight Rationale</div>
+        <p style="font-size:13px;color:var(--text-dim);line-height:1.8;margin-bottom:14px;">Weights reflect Arken Systems as a defence technology supplier under Cyber Essentials Plus, NIST SP 800-171, and GDPR. A failure in IAM carries different consequences than a failure in Asset Management. Explicit weights make the scoring logic auditable and open to challenge.</p>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;"><tr style="border-bottom:1px solid var(--border);"><th style="text-align:left;padding:8px 12px;font-family:IBM Plex Mono,monospace;font-size:10px;color:var(--text-muted);text-transform:uppercase;">Domain</th><th style="text-align:center;padding:8px 12px;font-family:IBM Plex Mono,monospace;font-size:10px;color:var(--text-muted);text-transform:uppercase;width:70px;">Weight</th><th style="text-align:left;padding:8px 12px;font-family:IBM Plex Mono,monospace;font-size:10px;color:var(--text-muted);text-transform:uppercase;">Rationale</th></tr><tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Data Protection</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">15%</td><td style="padding:9px 12px;color:var(--text-dim);">GDPR obligations; breach consequences in defence context</td></tr><tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Compliance</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">15%</td><td style="padding:9px 12px;color:var(--text-dim);">Cyber Essentials Plus required for MoD supply chain</td></tr><tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Identity &amp; Access</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">14%</td><td style="padding:9px 12px;color:var(--text-dim);">Primary attack vector; privileged access to sensitive systems</td></tr><tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Incident Response</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">14%</td><td style="padding:9px 12px;color:var(--text-dim);">24hr notification obligation; breach impact on Arken</td></tr><tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Supply Chain</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">12%</td><td style="padding:9px 12px;color:var(--text-dim);">Fourth-party risk; known vector in defence supply chains</td></tr><tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Risk Management</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">12%</td><td style="padding:9px 12px;color:var(--text-dim);">Evidence of mature risk posture, not just control existence</td></tr><tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Business Continuity</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">10%</td><td style="padding:9px 12px;color:var(--text-dim);">Service dependency; RTO requirements for critical systems</td></tr><tr><td style="padding:9px 12px;color:var(--text);">Asset Management</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">8%</td><td style="padding:9px 12px;color:var(--text-dim);">Foundation hygiene; lower direct regulatory weight</td></tr></table>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);padding:24px 28px;">
+        <div style="font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:16px;">Design Decisions</div>
+        <div style="margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);"><div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;">Why SIG Lite?</div><div style="font-size:13px;color:var(--text-dim);line-height:1.8;">SIG Lite is a recognised industry standard adapted here to Arken context. Using an established framework rather than bespoke reflects how mature vendor risk programmes operate: the standard provides credibility; the weights and questions reflect specific context.</div></div>
+        <div style="margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);"><div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;">Why weighted domains?</div><div style="font-size:13px;color:var(--text-dim);line-height:1.8;">A flat average treats IAM failure identically to Asset Management failure. For a defence supplier these are not equivalent risks. Explicit weights are auditable and open to challenge, which is a more useful governance conversation than an opaque aggregate.</div></div>
+        <div style="margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);"><div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;">Why follow-up questions?</div><div style="font-size:13px;color:var(--text-dim);line-height:1.8;">A score shows where risk is concentrated. Follow-up questions guide the next conversation, framed for a governance or procurement discussion rather than restating what was answered poorly.</div></div>
+        <div><div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;">Why exclude N/A?</div><div style="font-size:13px;color:var(--text-dim);line-height:1.8;">Treating N/A as failure penalises vendors whose scope does not include certain services. Excluding N/A from the denominator produces a fairer score while flagging scope assumptions that need validation.</div></div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);padding:24px 28px;">
+        <div style="font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;">Assumptions and Limitations</div>
+        <div style="display:flex;gap:12px;font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:10px;"><span style="color:var(--text-muted);font-family:IBM Plex Mono,monospace;min-width:24px;">01</span><span>Fixed question set. A production tool would use a configurable, version-controlled set updated for current threats and regulations.</span></div>
+        <div style="display:flex;gap:12px;font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:10px;"><span style="color:var(--text-muted);font-family:IBM Plex Mono,monospace;min-width:24px;">02</span><span>Domain weights calibrated for Arken context. Not appropriate defaults for other organisations without adjustment.</span></div>
+        <div style="display:flex;gap:12px;font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:10px;"><span style="color:var(--text-muted);font-family:IBM Plex Mono,monospace;min-width:24px;">03</span><span>Remediation flags are pre-authored for highest-risk IDs. A production tool would generate these dynamically across the full response set.</span></div>
+        <div style="display:flex;gap:12px;font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:10px;"><span style="color:var(--text-muted);font-family:IBM Plex Mono,monospace;min-width:24px;">04</span><span>Does not account for compensating controls. A vendor scoring poorly may have alternative mitigations not captured by the questionnaire.</span></div>
+        <div style="display:flex;gap:12px;font-size:13px;color:var(--text-dim);line-height:1.7;"><span style="color:var(--text-muted);font-family:IBM Plex Mono,monospace;min-width:24px;">05</span><span>All scoring is self-reported. Supports initial screening only; does not replace independent assurance.</span></div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);padding:20px 24px;">
+        <div style="font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:10px;">Governance Note</div>
+        <p style="font-size:13px;color:var(--text-dim);line-height:1.85;margin-bottom:10px;">This tool is a portfolio thinking exercise. The scoring model, domain weights, question set, and output logic are documented here to demonstrate that design decisions in risk tooling should be transparent, auditable, and tied to specific regulatory context, not treated as black-box defaults. A vendor risk score is only as meaningful as the assumptions behind it.</p>
+        <p style="font-size:11px;color:var(--text-muted);font-family:IBM Plex Mono,monospace;">Framework refs: SIG Lite | NIST SP 800-171 | GDPR Art.28 | Cyber Essentials Plus | ISO 27001 Annex A</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+    <div class="section-head">
+      <h2>Risk Assessment Report</h2>
+      <span class="sub" id="vendor-name-display">// Vendor assessment</span>
+    </div>
+    <div id="results-inner" class="fade-in"></div>
+  </div>
+
+  <div class="disclaimer">
+    <strong>Notice:</strong> This tool is a thinking exercise using a fictional scenario. Arken Systems Ltd does not exist. All vendor data, scores, and outputs are simulated for portfolio demonstration purposes only. No real organisation, supplier, or individual is assessed or represented. Framework references (SIG Lite, NIST SP 800-171, Cyber Essentials Plus) are used for illustrative purposes.
+  </div>
+
+</div>
+<div class="notif" id="notif"></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+
+const DOMAINS = [
+  {
+    id: 'AM', name: 'Asset Management', weight: 0.08,
+    questions: [
+      { id: 'AM-01', text: 'Does the vendor maintain a documented inventory of all information assets that store, process, or transmit Arken data?' },
+      { id: 'AM-02', text: 'Are assets classified according to sensitivity and criticality, with data handling requirements documented?' },
+      { id: 'AM-03', text: 'Is there a formal process for the disposal or decommissioning of assets that have handled sensitive data?' },
+    ]
+  },
+  {
+    id: 'IAM', name: 'Identity & Access Management', weight: 0.14,
+    questions: [
+      { id: 'IAM-01', text: 'Is Multi-Factor Authentication (MFA) enforced for all privileged and remote access accounts?' },
+      { id: 'IAM-02', text: 'Are access rights reviewed at least quarterly, with a documented process for revoking access upon role change or departure?' },
+      { id: 'IAM-03', text: 'Is there a separation of duties policy preventing any single individual from having end-to-end control over critical processes?' },
+      { id: 'IAM-04', text: 'Are vendor/third-party accounts subject to the same access controls as internal accounts, with time-limited access where possible?' },
+    ]
+  },
+  {
+    id: 'DP', name: 'Data Protection & Privacy', weight: 0.15,
+    questions: [
+      { id: 'DP-01', text: 'Is data encrypted at rest using AES-256 or equivalent, and in transit using TLS 1.2 or above?' },
+      { id: 'DP-02', text: 'Is there a documented data retention and deletion policy, with evidence of periodic enforcement?' },
+      { id: 'DP-03', text: 'Does the vendor have a lawful basis for all personal data processing, with a current Data Processing Agreement (DPA) in place?' },
+      { id: 'DP-04', text: 'Can the vendor demonstrate compliance with Subject Access Request (SAR) obligations within statutory timeframes?' },
+    ]
+  },
+  {
+    id: 'IR', name: 'Incident Response', weight: 0.14,
+    questions: [
+      { id: 'IR-01', text: 'Does the vendor have a documented, tested Incident Response Plan that includes data breach notification procedures?' },
+      { id: 'IR-02', text: 'Can the vendor demonstrate they are able to notify Arken of a security incident within 24 hours of detection?' },
+      { id: 'IR-03', text: 'Has the vendor conducted an incident response tabletop exercise within the last 12 months, with documented outcomes?' },
+    ]
+  },
+  {
+    id: 'RM', name: 'Risk Management', weight: 0.12,
+    questions: [
+      { id: 'RM-01', text: 'Does the vendor maintain a formal information security risk register, reviewed at least annually by senior management?' },
+      { id: 'RM-02', text: 'Is there a documented risk treatment process, with evidence that identified risks are tracked to resolution or formal acceptance?' },
+      { id: 'RM-03', text: 'Does the vendor conduct periodic penetration testing (at minimum annually) and share remediation evidence on request?' },
+    ]
+  },
+  {
+    id: 'BC', name: 'Business Continuity', weight: 0.10,
+    questions: [
+      { id: 'BC-01', text: 'Is there a documented Business Continuity Plan (BCP) and Disaster Recovery Plan (DRP) covering systems used to service Arken?' },
+      { id: 'BC-02', text: 'Has the BCP/DRP been tested within the last 12 months, with documented outcomes and lessons learned?' },
+      { id: 'BC-03', text: 'Can the vendor demonstrate an RTO (Recovery Time Objective) of 24 hours or less for critical services?' },
+    ]
+  },
+  {
+    id: 'SC', name: 'Supply Chain Security', weight: 0.12,
+    questions: [
+      { id: 'SC-01', text: 'Does the vendor maintain an inventory of fourth-party sub-processors who may handle Arken data?' },
+      { id: 'SC-02', text: 'Are sub-processors subject to equivalent security due diligence and contractual obligations as the primary vendor?' },
+      { id: 'SC-03', text: 'Is there a formal process for notifying Arken before onboarding any new sub-processor with access to Arken data?' },
+    ]
+  },
+  {
+    id: 'CM', name: 'Compliance & Certifications', weight: 0.15,
+    questions: [
+      { id: 'CM-01', text: 'Does the vendor hold current Cyber Essentials Plus or equivalent certification (ISO 27001, SOC 2 Type II)?' },
+      { id: 'CM-02', text: 'Has the vendor undergone an independent security audit within the last 18 months, with a summary report available on request?' },
+      { id: 'CM-03', text: 'Does the vendor have documented processes for monitoring and responding to emerging regulatory requirements relevant to Arken\'s sector?' },
+    ]
+  },
+];
+
+const SCORE_MAP = { 'Yes': 1.0, 'Partial': 0.5, 'No': 0.0, 'N-A': null };
+
+const REMEDIATION_MAP = {
+  'IAM-01': { title: 'Implement MFA across all privileged access pathways', severity: 'critical', detail: 'Absence of MFA is a primary attack vector. Immediate enforcement required prior to contract execution. Reference: NIST SP 800-171 3.5.3.' },
+  'IAM-02': { title: 'Establish quarterly access review cadence', severity: 'high', detail: 'Quarterly reviews required as minimum for defence supply chain. Orphaned accounts represent persistent lateral movement risk.' },
+  'DP-01': { title: 'Enforce encryption at rest and in transit to current standards', severity: 'critical', detail: 'AES-256 at rest, TLS 1.2+ in transit. Non-compliance with encryption standards is a breach of contractual baseline.' },
+  'DP-03': { title: 'Execute Data Processing Agreement before data transfer', severity: 'critical', detail: 'GDPR Article 28 requires DPA prior to any processing. No data sharing should occur without this in place.' },
+  'IR-01': { title: 'Obtain and review vendor Incident Response Plan', severity: 'high', detail: 'Untested IR capability represents unquantified exposure for Arken. Request evidence of last test date and outcomes.' },
+  'IR-02': { title: 'Contractually enforce 24-hour breach notification', severity: 'high', detail: 'Insert specific breach notification SLA into contract. Align with GDPR 72-hour regulatory notification window.' },
+  'CM-01': { title: 'Require ISO 27001 / Cyber Essentials Plus as contract condition', severity: 'critical', detail: 'Certification provides independent assurance. Make current certification a pre-condition of contract execution.' },
+  'SC-01': { title: 'Request complete sub-processor register', severity: 'medium', detail: 'Fourth-party risk is a known vector in defence supply chains. Vendor must disclose all sub-processors with data access.' },
+  'RM-03': { title: 'Require annual penetration test evidence', severity: 'high', detail: 'Insert contractual right to request penetration test summary and remediation evidence on an annual basis.' },
+  'BC-02': { title: 'Verify BCP test evidence within last 12 months', severity: 'medium', detail: 'Untested continuity plans frequently fail under real conditions. Request test report and lessons learned document.' },
+};
+
+const FOLLOWUP_POOL = {
+  'IAM': [
+    'Can you provide a sample access review report from the last quarter, with redacted user details, demonstrating your review cadence?',
+    'How are privileged access accounts managed for staff who have recently changed roles or departed the organisation?',
+    'What is your process for detecting and responding to anomalous authentication attempts on accounts with access to Arken data?'
+  ],
+  'DP': [
+    'Can you provide your current Data Protection Impact Assessment (DPIA) for systems that would process Arken data?',
+    'What is your documented process for responding to a Subject Access Request, and what is your average response time?',
+    'How do you handle data deletion requests, and can you evidence secure deletion for previously decommissioned systems?'
+  ],
+  'IR': [
+    'Please walk us through your most recent incident response tabletop exercise: what scenario was used and what were the key findings?',
+    'What criteria determine whether a security event is escalated to a formal incident, and who has authority to make that determination?',
+    'How do you ensure forensic evidence preservation during an active incident response without interrupting service continuity?'
+  ],
+  'SC': [
+    'Can you provide a complete register of fourth-party sub-processors who may have access to data you hold on behalf of Arken?',
+    'What due diligence do you conduct on sub-processors before onboarding, and how is this documented?',
+    'How would you notify us if a sub-processor experienced a security incident that could affect Arken data?'
+  ],
+  'CM': [
+    'Can you share your most recent ISO 27001 or Cyber Essentials Plus certificate, including scope boundaries?',
+    'How do you monitor changes in regulatory requirements relevant to your sector, and what is your process for implementing required changes?',
+    'Have you received any regulatory findings or enforcement notices in the last three years? If so, how were these remediated?'
+  ],
+  'RM': [
+    'Can you summarise the top three risks currently on your information security risk register and their current treatment status?',
+    'What is the approval process for formally accepting a residual risk, and who holds accountability for accepted risks?',
+    'How do findings from penetration tests feed back into your risk register, and what is the typical remediation timeline?'
+  ],
+  'AM': [
+    'How do you ensure your asset inventory remains current as systems are provisioned, modified, or decommissioned?',
+    'What is your documented process for secure data destruction when assets are retired?'
+  ],
+  'BC': [
+    'What was the outcome of your most recent BCP or DR test, and what corrective actions were identified?',
+    'How is your RTO validated in practice — through tabletop exercise, partial test, or full failover simulation?'
+  ],
+};
+
+// ── RENDER FORM ───────────────────────────────────────────────────────────────
+
+function renderForm() {
+  const container = document.getElementById('manual-form');
+  container.innerHTML = '';
+
+  DOMAINS.forEach(domain => {
+    const block = document.createElement('div');
+    block.className = 'domain-block';
+    block.innerHTML = `
+      <div class="domain-header" onclick="toggleDomain(this)">
+        <div class="domain-title">
+          <span class="domain-badge">${domain.id}</span>
+          <span class="domain-name">${domain.name}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px">
+          <span class="domain-weight">Weight: ${Math.round(domain.weight * 100)}%</span>
+          <span class="domain-chevron">▼</span>
+        </div>
+      </div>
+      <div class="domain-questions" id="dq-${domain.id}">
+        ${domain.questions.map(q => `
+          <div class="q-row">
+            <div class="q-text">
+              <div class="q-id">${q.id}</div>
+              ${q.text}
+            </div>
+            <select class="q-select" id="q-${q.id}">
+              <option value="">— Select —</option>
+              <option value="Yes">Yes</option>
+              <option value="Partial">Partial</option>
+              <option value="No">No</option>
+              <option value="N-A">N/A</option>
+            </select>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    container.appendChild(block);
+  });
+}
+
+function toggleDomain(header) {
+  const id = header.querySelector('.domain-badge').textContent;
+  const questions = document.getElementById('dq-' + id);
+  header.classList.toggle('open');
+  questions.classList.toggle('open');
+}
+
+// ── SCORING ───────────────────────────────────────────────────────────────────
+
+function collectResponses() {
+  const responses = {};
+  DOMAINS.forEach(domain => {
+    domain.questions.forEach(q => {
+      const el = document.getElementById('q-' + q.id);
+      if (el) responses[q.id] = el.value || null;
+    });
+  });
+  return responses;
+}
+
+function scoreResponses(responses) {
+  let totalWeightedScore = 0;
+  let totalWeight = 0;
+  const domainScores = {};
+  const flags = {};
+
+  DOMAINS.forEach(domain => {
+    let domainRaw = 0;
+    let domainCount = 0;
+    const domainFlags = [];
+
+    domain.questions.forEach(q => {
+      const resp = responses[q.id];
+      const score = SCORE_MAP[resp];
+      if (score !== null && score !== undefined && resp) {
+        domainRaw += score;
+        domainCount++;
+        if (score < 1.0) {
+          domainFlags.push({ id: q.id, text: q.text, score, resp });
+        }
+      }
+    });
+
+    const domainPct = domainCount > 0 ? (domainRaw / domainCount) * 100 : null;
+    domainScores[domain.id] = { pct: domainPct, name: domain.name, weight: domain.weight, flags: domainFlags, count: domainCount };
+
+    if (domainPct !== null) {
+      totalWeightedScore += domainPct * domain.weight;
+      totalWeight += domain.weight;
+    }
+
+    flags[domain.id] = domainFlags;
+  });
+
+  const overallPct = totalWeight > 0 ? totalWeightedScore / totalWeight : 0;
+
+  let rating, ratingClass;
+  if (overallPct >= 80) { rating = 'LOW RISK'; ratingClass = 'low'; }
+  else if (overallPct >= 60) { rating = 'MEDIUM RISK'; ratingClass = 'medium'; }
+  else if (overallPct >= 40) { rating = 'HIGH RISK'; ratingClass = 'high'; }
+  else { rating = 'CRITICAL RISK'; ratingClass = 'critical'; }
+
+  return { overallPct, rating, ratingClass, domainScores, flags };
+}
+
+function getRatingColor(pct) {
+  if (pct >= 80) return 'var(--low)';
+  if (pct >= 60) return 'var(--medium)';
+  if (pct >= 40) return 'var(--high)';
+  return 'var(--critical)';
+}
+
+function getFollowUps(domainScores) {
+  // Pick top 3 worst-scoring domains with available questions
+  const sorted = Object.entries(domainScores)
+    .filter(([id, d]) => d.pct !== null && FOLLOWUP_POOL[id])
+    .sort((a, b) => a[1].pct - b[1].pct)
+    .slice(0, 3);
+
+  return sorted.map(([id, d]) => ({
+    domain: d.name,
+    domainId: id,
+    question: FOLLOWUP_POOL[id][0],
+    score: d.pct
+  }));
+}
+
+function getRemediations(responses) {
+  const rems = [];
+  Object.entries(responses).forEach(([qid, resp]) => {
+    if ((resp === 'No' || resp === 'Partial') && REMEDIATION_MAP[qid]) {
+      rems.push({ qid, resp, ...REMEDIATION_MAP[qid] });
+    }
+  });
+  rems.sort((a, b) => {
+    const order = { critical: 0, high: 1, medium: 2 };
+    return order[a.severity] - order[b.severity];
+  });
+  return rems.slice(0, 6);
+}
+
+// ── RENDER RESULTS ────────────────────────────────────────────────────────────
+
+function renderResults(result, responses, vendorName) {
+  const { overallPct, rating, ratingClass, domainScores } = result;
+  const followUps = getFollowUps(domainScores);
+  const remediations = getRemediations(responses);
+  const now = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  const answeredCount = Object.values(responses).filter(v => v).length;
+
+  document.getElementById('vendor-name-display').textContent = `// ${vendorName || 'Vendor'} · ${now}`;
+
+  const html = `
+    <div class="result-header">
+      <div class="result-meta">
+        <div class="meta-row"><span class="mk">Vendor</span><span class="mv">${vendorName || '—'}</span></div>
+        <div class="meta-row"><span class="mk">Assessment date</span><span class="mv">${now}</span></div>
+        <div class="meta-row"><span class="mk">Questions answered</span><span class="mv">${answeredCount} of ${DOMAINS.reduce((a,d)=>a+d.questions.length,0)}</span></div>
+        <div class="meta-row"><span class="mk">Framework</span><span class="mv">SIG Lite (adapted)</span></div>
+        <div class="meta-row"><span class="mk">Assessor ref</span><span class="mv">ARKEN-VRM-001</span></div>
+      </div>
+      <div>
+        <div class="rating-label">Overall Rating</div>
+        <div class="rating-badge ${ratingClass}">${rating}</div>
+      </div>
+      <div class="result-score-block">
+        <div class="rating-label">Weighted Score</div>
+        <div class="score-big">${Math.round(overallPct)}<span>/100</span></div>
+        <div class="score-desc">across ${Object.values(domainScores).filter(d=>d.pct!==null).length} domains</div>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-bottom:16px">
+      <h2>Domain Breakdown</h2>
+      <span class="sub">// weighted contribution to overall score</span>
+    </div>
+    <div class="domain-results">
+      ${Object.entries(domainScores).map(([id, d]) => {
+        const pct = d.pct !== null ? Math.round(d.pct) : null;
+        const color = pct !== null ? getRatingColor(pct) : 'var(--text-muted)';
+        return `
+        <div class="dr-card">
+          <div class="dr-top">
+            <div>
+              <div class="dr-name">${d.name}</div>
+              <div class="dr-weight">Weight: ${Math.round(d.weight*100)}% · ${d.count} questions assessed</div>
+            </div>
+            <div class="dr-score" style="color:${color}">${pct !== null ? pct : '—'}</div>
+          </div>
+          <div class="dr-bar-track">
+            <div class="dr-bar-fill" style="width:${pct||0}%;background:${color}"></div>
+          </div>
+          <div class="dr-flag">
+            ${d.flags.length === 0 && pct !== null ? '<span style="color:var(--low)">✓ No flags in this domain</span>' :
+              d.flags.slice(0,2).map(f => `
+              <div class="flag-item">
+                <div class="flag-dot" style="background:${f.score===0?'var(--critical)':'var(--medium)'}"></div>
+                <span>${f.id}: ${f.resp === 'No' ? 'Not implemented' : 'Partially implemented'}</span>
+              </div>`).join('')}
+            ${d.flags.length > 2 ? `<div style="color:var(--text-muted);margin-top:4px">+${d.flags.length-2} further flags</div>` : ''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <div class="followup-block">
+      <h3>↗ Top 3 Follow-Up Questions for Highest-Risk Areas</h3>
+      ${followUps.map((fq, i) => `
+        <div class="fq-item">
+          <div class="fq-num">Q${i+1}</div>
+          <div>
+            <div class="fq-text">${fq.question}</div>
+            <div class="fq-domain">Domain: ${fq.domain} · Score: ${Math.round(fq.score)}%</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    ${remediations.length > 0 ? `
+    <div class="remediation-block">
+      <h3>Remediation Flags</h3>
+      ${remediations.map(r => `
+        <div class="rem-item">
+          <div class="rem-severity ${r.severity}">${r.severity.toUpperCase()}</div>
+          <div class="rem-content">
+            <div class="rem-title">${r.title}</div>
+            <div class="rem-detail">${r.detail}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>` : ''}
+
+    <div class="action-row">
+      <button class="btn-primary" onclick="window.print()">Print / Export PDF</button>
+      <button class="btn-secondary" onclick="resetToForm()">New Assessment</button>
+      <button class="btn-secondary" onclick="copyResults()">Copy Summary</button>
+    </div>
+  `;
+
+  document.getElementById('results-inner').innerHTML = html;
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').classList.add('show');
+  document.getElementById('results-tab-btn').style.display = 'inline-block';
+  switchTab('results-tab');
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────────────────
+
+function scoreManual() {
+  const vendorName = prompt('Enter vendor name for this assessment (or leave blank):') || 'Unknown Vendor';
+  const responses = collectResponses();
+  const answered = Object.values(responses).filter(v => v).length;
+  if (answered < 5) {
+    showNotif('Please answer at least 5 questions before scoring.');
+    return;
+  }
+  const result = scoreResponses(responses);
+  renderResults(result, responses, vendorName);
+}
+
+function resetForm() {
+  DOMAINS.forEach(domain => {
+    domain.questions.forEach(q => {
+      const el = document.getElementById('q-' + q.id);
+      if (el) el.value = '';
+    });
+  });
+  showNotif('Form cleared.');
+}
+
+function resetToForm() {
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('results-tab-btn').style.display = 'none';
+  switchTab('manual');
+}
+
+function handleCSV(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const text = e.target.result;
+    const rows = text.trim().split('\n').slice(1); // skip header
+    const responses = {};
+    let errors = 0;
+
+    rows.forEach(row => {
+      const cols = row.split(',').map(c => c.trim().replace(/"/g,''));
+      if (cols.length >= 3) {
+        const [qid, , resp] = cols;
+        const validResps = ['Yes','No','Partial','N-A'];
+        if (validResps.includes(resp)) {
+          responses[qid] = resp;
+        } else {
+          errors++;
+        }
+      }
+    });
+
+    const answered = Object.keys(responses).length;
+    document.getElementById('csv-preview').innerHTML = `
+      <div style="background:var(--surface);border:1px solid var(--border);padding:16px 20px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim)">
+        ✓ Parsed ${answered} valid responses from ${file.name}${errors ? ` · ${errors} rows skipped (invalid format)` : ''}<br>
+        <button class="btn-primary" style="margin-top:16px;font-size:12px;padding:10px 24px" onclick="scoreCSV(${JSON.stringify(responses).replace(/"/g,'&quot;')})">Score These Responses</button>
+      </div>
+    `;
+  };
+  reader.readAsText(file);
+}
+
+function scoreCSV(responses) {
+  const vendorName = prompt('Enter vendor name for this assessment (or leave blank):') || 'CSV Import';
+  const result = scoreResponses(responses);
+  renderResults(result, responses, vendorName);
+}
+
+function downloadTemplate() {
+  const header = 'question_id,domain,response\n';
+  const rows = DOMAINS.flatMap(d =>
+    d.questions.map(q => `${q.id},${d.id},`)
+  ).join('\n');
+  const blob = new Blob([header + rows], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'arken_vendor_assessment_template.csv';
+  a.click();
+  showNotif('Template downloaded.');
+}
+
+function copyResults() {
+  const el = document.getElementById('results-inner');
+  if (!el) return;
+  const text = el.innerText;
+  navigator.clipboard.writeText(text).then(() => showNotif('Results copied to clipboard.'));
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const ids = ['manual','upload','results-tab','methodology'];
+    t.classList.toggle('active', ids[i] === id);
+  });
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  if (id === 'manual') document.getElementById('panel-manual').classList.add('active');
+  if (id === 'upload') document.getElementById('panel-upload').classList.add('active');
+  if (id === 'methodology') {
+    document.getElementById('panel-methodology').classList.add('active');
+    return;
+  }
+  if (id === 'results-tab') {
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('panel-manual').classList.remove('active');
+    document.getElementById('panel-upload').classList.remove('active');
+  }
+}
+
+function showNotif(msg) {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// ── DRAG & DROP ───────────────────────────────────────────────────────────────
+const dz = document.getElementById('drop-zone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => {
+  e.preventDefault();
+  dz.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.name.endsWith('.csv')) {
+    handleCSV({ target: { files: [file] } });
+  }
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderForm();
+// Open first two domains by default
+document.querySelectorAll('.domain-header')[0]?.click();
+document.querySelectorAll('.domain-header')[1]?.click();
+</script>
+</body>
+</html>
