@@ -153,6 +153,7 @@
     align-items: baseline;
     gap: 16px;
     margin-bottom: 24px;
+    flex-wrap: wrap;
   }
 
   .section-head h2 {
@@ -370,7 +371,7 @@
     justify-content: space-between;
     gap: 24px;
     flex-wrap: wrap;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     padding-bottom: 32px;
     border-bottom: 1px solid var(--border);
   }
@@ -431,10 +432,34 @@
     border-bottom: 1px solid var(--border);
     font-family: 'IBM Plex Mono', monospace;
     font-size: 12px;
+    gap: 12px;
   }
 
   .meta-row .mk { color: var(--text-muted); }
-  .meta-row .mv { color: var(--text); }
+  .meta-row .mv { color: var(--text); text-align: right; }
+
+  .summary-note {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 18px 22px;
+    margin-bottom: 34px;
+  }
+
+  .summary-note .sn-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .summary-note .sn-text {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--text-dim);
+  }
 
   .domain-results {
     display: grid;
@@ -454,6 +479,7 @@
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 12px;
+    gap: 12px;
   }
 
   .dr-name {
@@ -488,6 +514,13 @@
     left: 0;
     top: 0;
     transition: width 0.6s ease;
+  }
+
+  .dr-reading {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.65;
+    margin-bottom: 12px;
   }
 
   .dr-flag {
@@ -651,6 +684,8 @@
     .wrap { padding: 0 16px 60px; }
     .q-row { grid-template-columns: 1fr; }
     .q-select { width: 100%; }
+    .meta-row { flex-direction: column; }
+    .meta-row .mv { text-align: left; }
   }
 </style>
 </head>
@@ -664,7 +699,7 @@
     </div>
     <div class="header-meta">
       <strong>Assessment basis: SIG Lite (adapted)</strong>
-      Version 1.0 · Internal Use<br>
+      Working draft · Internal Use<br>
       Ref: ARKEN-VRM-001<br>
       Classification: Restricted
     </div>
@@ -733,27 +768,27 @@
     <div style="display:flex;flex-direction:column;gap:24px;">
       <div style="background:var(--surface);border:1px solid var(--border);padding:24px 28px;">
         <div style="font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:12px;">Scoring Approach</div>
-        <p style="font-size:13px;color:var(--text-dim);line-height:1.8;margin-bottom:14px;">Each question is scored as follows: Yes = 1.0, Partial = 0.5, No = 0.0. N/A responses are excluded from the calculation. Each domain produces a percentage score, which is then weighted and combined into the overall result.</p>
+        <p style="font-size:13px;color:var(--text-dim);line-height:1.8;margin-bottom:14px;">The model is intentionally plain. Yes scores 1.0, Partial scores 0.5, No scores 0.0, and N/A is removed from the denominator rather than treated as failure. That means the result is easy to follow and easy to challenge. I would rather have a scoring model someone can argue with in ten minutes than a fancier one nobody fully trusts.</p>
         <div style="background:var(--bg);border:1px solid var(--border);padding:14px 18px;font-family:IBM Plex Mono,monospace;font-size:12px;color:var(--text-dim);line-height:2.0;">Domain score = sum(responses) / answered x 100<br>Overall score = sum(domain score x weight)<br>Thresholds: 80+ Low | 60+ Medium | 40+ High | under 40 Critical</div>
       </div>
 
       <div style="background:var(--surface);border:1px solid var(--border);padding:24px 28px;">
         <div style="font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:12px;">Domain Weight Rationale</div>
-        <p style="font-size:13px;color:var(--text-dim);line-height:1.8;margin-bottom:14px;">The weights used here reflect the scenario context: a defence technology supplier operating under Cyber Essentials Plus, NIST SP 800-171, and GDPR expectations. Not all control failures carry the same level of risk. For example, weaknesses in identity and access management are likely to matter more than weaknesses in asset inventory alone. Using explicit weights makes the scoring model easier to review and adjust.</p>
+        <p style="font-size:13px;color:var(--text-dim);line-height:1.8;margin-bottom:14px;">These weights are scenario-led rather than perfectly symmetrical. I built them around the kind of supplier that can become awkward very quickly if identity control is loose, incident response is performative, or privacy obligations are only half-understood. Some areas matter because they are foundational. Others matter because they become the problem you discover too late. Either way, I did not want weak answers in the serious places getting blurred out by a tidy average.</p>
         <table style="width:100%;border-collapse:collapse;font-size:12px;">
           <tr style="border-bottom:1px solid var(--border);">
             <th style="text-align:left;padding:8px 12px;font-family:IBM Plex Mono,monospace;font-size:10px;color:var(--text-muted);text-transform:uppercase;">Domain</th>
             <th style="text-align:center;padding:8px 12px;font-family:IBM Plex Mono,monospace;font-size:10px;color:var(--text-muted);text-transform:uppercase;width:70px;">Weight</th>
             <th style="text-align:left;padding:8px 12px;font-family:IBM Plex Mono,monospace;font-size:10px;color:var(--text-muted);text-transform:uppercase;">Rationale</th>
           </tr>
-          <tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Data Protection</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">15%</td><td style="padding:9px 12px;color:var(--text-dim);">GDPR obligations; breach consequences in defence context</td></tr>
-          <tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Compliance</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">15%</td><td style="padding:9px 12px;color:var(--text-dim);">Cyber Essentials Plus required for supply chain participation</td></tr>
-          <tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Identity &amp; Access</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">14%</td><td style="padding:9px 12px;color:var(--text-dim);">Privileged access to sensitive systems and data</td></tr>
-          <tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Incident Response</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">14%</td><td style="padding:9px 12px;color:var(--text-dim);">Notification expectations and breach management readiness</td></tr>
-          <tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Supply Chain</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">12%</td><td style="padding:9px 12px;color:var(--text-dim);">Fourth-party risk within defence-related supply chains</td></tr>
-          <tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Risk Management</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">12%</td><td style="padding:9px 12px;color:var(--text-dim);">Evidence of ongoing risk review and treatment</td></tr>
-          <tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Business Continuity</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">10%</td><td style="padding:9px 12px;color:var(--text-dim);">Service continuity and recovery expectations</td></tr>
-          <tr><td style="padding:9px 12px;color:var(--text);">Asset Management</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">8%</td><td style="padding:9px 12px;color:var(--text-dim);">Important control area, but lower direct impact in this model</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Data Protection</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">15%</td><td style="padding:9px 12px;color:var(--text-dim);">If personal data is in scope, this can turn from “process question” to “real problem” very fast.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Compliance</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">15%</td><td style="padding:9px 12px;color:var(--text-dim);">Not enough on its own, but in this scenario weak independent assurance would make me slow down.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Identity &amp; Access</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">14%</td><td style="padding:9px 12px;color:var(--text-dim);">Too many ugly outcomes start with access that was broader, older, or looser than anyone realised.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Incident Response</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">14%</td><td style="padding:9px 12px;color:var(--text-dim);">A vendor can sound polished right up until the day something breaks. That is why this stays high.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Supply Chain</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">12%</td><td style="padding:9px 12px;color:var(--text-dim);">Fourth parties have a habit of appearing only after you ask the second uncomfortable question.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Risk Management</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">12%</td><td style="padding:9px 12px;color:var(--text-dim);">I do not need elegant theory here. I want signs that somebody notices problems and owns them.</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:9px 12px;color:var(--text);">Business Continuity</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">10%</td><td style="padding:9px 12px;color:var(--text-dim);">Still important, just not the first place I would probe if confidence is already wobbling elsewhere.</td></tr>
+          <tr><td style="padding:9px 12px;color:var(--text);">Asset Management</td><td style="padding:9px 12px;text-align:center;color:var(--accent);font-family:IBM Plex Mono,monospace;font-weight:500;">8%</td><td style="padding:9px 12px;color:var(--text-dim);">Useful signal, but in this scenario it is more supporting evidence than decisive factor.</td></tr>
         </table>
       </div>
 
@@ -761,34 +796,34 @@
         <div style="font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:16px;">Approach</div>
         <div style="margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);">
           <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;">Why SIG Lite?</div>
-          <div style="font-size:13px;color:var(--text-dim);line-height:1.8;">SIG Lite was used here as a starting point because it is a recognised third-party assurance framework. The question set and weights have then been adjusted to reflect the Arken scenario and its regulatory context.</div>
+          <div style="font-size:13px;color:var(--text-dim);line-height:1.8;">Because it gives a recognisable shape to the review without pretending this is a full procurement platform. I used it as a frame, then bent it toward the scenario.</div>
         </div>
         <div style="margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);">
           <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;">Why weighted domains?</div>
-          <div style="font-size:13px;color:var(--text-dim);line-height:1.8;">A flat average would treat all domains as equally important, which is not appropriate in this scenario. For a defence supplier, weaknesses in IAM or incident response are likely to carry more risk than weaker asset management controls. The use of weights allows that difference to be reflected directly in the score.</div>
+          <div style="font-size:13px;color:var(--text-dim);line-height:1.8;">Because a flat average is often too forgiving. It lets uncomfortable answers hide behind tidier ones.</div>
         </div>
         <div style="margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border);">
           <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;">Why follow-up questions?</div>
-          <div style="font-size:13px;color:var(--text-dim);line-height:1.8;">The follow-up questions are intended to support the next stage of review. Their purpose is to help procurement, security, or risk teams clarify the areas where assurance is weakest.</div>
+          <div style="font-size:13px;color:var(--text-dim);line-height:1.8;">Because the interesting part usually starts after the form comes back. A weak answer matters, but the explanation matters more.</div>
         </div>
         <div>
           <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;">Why exclude N/A?</div>
-          <div style="font-size:13px;color:var(--text-dim);line-height:1.8;">N/A responses are excluded so that vendors are not penalised for controls that genuinely fall outside scope. This produces a more usable score, while still requiring the assessor to check that the scope assumption is reasonable.</div>
+          <div style="font-size:13px;color:var(--text-dim);line-height:1.8;">Because genuinely out-of-scope controls should not distort the number. But I would still inspect N/A answers carefully; they are sometimes genuine, and sometimes convenient.</div>
         </div>
       </div>
 
       <div style="background:var(--surface);border:1px solid var(--border);padding:24px 28px;">
         <div style="font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:14px;">Assumptions and Limitations</div>
-        <div style="display:flex;gap:12px;font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:10px;"><span style="color:var(--text-muted);font-family:IBM Plex Mono,monospace;min-width:24px;">01</span><span>Fixed question set. A production version would use a configurable, version-controlled set updated for current threats and regulations.</span></div>
-        <div style="display:flex;gap:12px;font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:10px;"><span style="color:var(--text-muted);font-family:IBM Plex Mono,monospace;min-width:24px;">02</span><span>Domain weights are calibrated for the Arken scenario and would need adjustment for a different organisation or sector.</span></div>
-        <div style="display:flex;gap:12px;font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:10px;"><span style="color:var(--text-muted);font-family:IBM Plex Mono,monospace;min-width:24px;">03</span><span>Remediation prompts are currently mapped to a limited set of higher-risk questions. A fuller version of the tool would extend this across the full response set.</span></div>
-        <div style="display:flex;gap:12px;font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:10px;"><span style="color:var(--text-muted);font-family:IBM Plex Mono,monospace;min-width:24px;">04</span><span>The model does not account directly for compensating controls that may reduce practical risk despite weaker questionnaire responses.</span></div>
-        <div style="display:flex;gap:12px;font-size:13px;color:var(--text-dim);line-height:1.7;"><span style="color:var(--text-muted);font-family:IBM Plex Mono,monospace;min-width:24px;">05</span><span>The score is based on self-reported responses. It can support initial screening, but it does not replace independent assurance activity.</span></div>
+        <div style="display:flex;gap:12px;font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:10px;"><span style="color:var(--text-muted);font-family:IBM Plex Mono,monospace;min-width:24px;">01</span><span>Fixed question set. In real use I would want the questions reviewed periodically, because controls age and threat context moves.</span></div>
+        <div style="display:flex;gap:12px;font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:10px;"><span style="color:var(--text-muted);font-family:IBM Plex Mono,monospace;min-width:24px;">02</span><span>The weights are judgement calls, not immutable truth. Another organisation could weight the same domains differently and still be sensible.</span></div>
+        <div style="display:flex;gap:12px;font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:10px;"><span style="color:var(--text-muted);font-family:IBM Plex Mono,monospace;min-width:24px;">03</span><span>Remediation prompts only cover selected questions. That was a scope choice, not a claim that the rest are minor.</span></div>
+        <div style="display:flex;gap:12px;font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:10px;"><span style="color:var(--text-muted);font-family:IBM Plex Mono,monospace;min-width:24px;">04</span><span>The score does not do a sophisticated job with compensating controls. Real suppliers are sometimes better or worse than the raw answers suggest.</span></div>
+        <div style="display:flex;gap:12px;font-size:13px;color:var(--text-dim);line-height:1.7;"><span style="color:var(--text-muted);font-family:IBM Plex Mono,monospace;min-width:24px;">05</span><span>This remains self-reported assurance. Useful for screening. Not enough by itself for a genuinely high-consequence supplier.</span></div>
       </div>
 
       <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);padding:20px 24px;">
         <div style="font-family:IBM Plex Mono,monospace;font-size:10px;letter-spacing:0.18em;color:var(--accent);text-transform:uppercase;margin-bottom:10px;">Governance Note</div>
-        <p style="font-size:13px;color:var(--text-dim);line-height:1.85;margin-bottom:10px;">This tool is a portfolio exercise built to show how a third-party risk scoring model can be structured and documented. The scoring logic, domain weights, and output approach are made explicit so they can be reviewed and adjusted rather than treated as fixed. The result should be read in light of the assumptions built into the model.</p>
+        <p style="font-size:13px;color:var(--text-dim);line-height:1.85;margin-bottom:10px;">This is a portfolio tool, not an attempt to reduce vendor risk to one clever number. The point is to make the judgement visible: what was weighted, what was treated as especially serious, where the next challenge would go, and where I would probably stop smiling in the meeting.</p>
         <p style="font-size:11px;color:var(--text-muted);font-family:IBM Plex Mono,monospace;">Framework refs: SIG Lite | NIST SP 800-171 | GDPR Art.28 | Cyber Essentials Plus | ISO 27001 Annex A</p>
       </div>
     </div>
@@ -803,7 +838,7 @@
   </div>
 
   <div class="disclaimer">
-    <strong>Notice:</strong> This tool is a portfolio exercise built around a fictional scenario. Arken Systems Ltd does not exist. All vendor data, scores, and outputs are simulated for portfolio demonstration purposes only. No real organisation, supplier, or individual is assessed or represented. Framework references (SIG Lite, NIST SP 800-171, Cyber Essentials Plus) are used for illustrative purposes.
+    <strong>Notice:</strong> This tool is a portfolio exercise built around a fictional scenario. Arken Systems Ltd does not exist. All vendor data, scores, and outputs are simulated for portfolio demonstration purposes only. No real organisation, supplier, or individual is assessed or represented. Framework references are used to ground the exercise, not to imply formal alignment or certification.
   </div>
 
 </div>
@@ -825,7 +860,7 @@ const DOMAINS = [
       { id: 'IAM-01', text: 'Is Multi-Factor Authentication (MFA) enforced for all privileged and remote access accounts?' },
       { id: 'IAM-02', text: 'Are access rights reviewed at least quarterly, with a documented process for revoking access upon role change or departure?' },
       { id: 'IAM-03', text: 'Is there a separation of duties policy preventing any single individual from having end-to-end control over critical processes?' },
-      { id: 'IAM-04', text: 'Are vendor/third-party accounts subject to the same access controls as internal accounts, with time-limited access where possible?' },
+      { id: 'IAM-04', text: 'Are vendor or third-party accounts subject to the same access controls as internal accounts, with time-limited access where possible?' },
     ]
   },
   {
@@ -834,7 +869,7 @@ const DOMAINS = [
       { id: 'DP-01', text: 'Is data encrypted at rest using AES-256 or equivalent, and in transit using TLS 1.2 or above?' },
       { id: 'DP-02', text: 'Is there a documented data retention and deletion policy, with evidence of periodic enforcement?' },
       { id: 'DP-03', text: 'Does the vendor have a lawful basis for all personal data processing, with a current Data Processing Agreement (DPA) in place?' },
-      { id: 'DP-04', text: 'Can the vendor demonstrate compliance with Subject Access Request (SAR) obligations within statutory timeframes?' },
+      { id: 'DP-04', text: 'Can the vendor demonstrate compliance with Subject Access Request obligations within statutory timeframes?' },
     ]
   },
   {
@@ -850,15 +885,15 @@ const DOMAINS = [
     questions: [
       { id: 'RM-01', text: 'Does the vendor maintain a formal information security risk register, reviewed at least annually by senior management?' },
       { id: 'RM-02', text: 'Is there a documented risk treatment process, with evidence that identified risks are tracked to resolution or formal acceptance?' },
-      { id: 'RM-03', text: 'Does the vendor conduct periodic penetration testing (at minimum annually) and share remediation evidence on request?' },
+      { id: 'RM-03', text: 'Does the vendor conduct periodic penetration testing, at minimum annually, and share remediation evidence on request?' },
     ]
   },
   {
     id: 'BC', name: 'Business Continuity', weight: 0.10,
     questions: [
-      { id: 'BC-01', text: 'Is there a documented Business Continuity Plan (BCP) and Disaster Recovery Plan (DRP) covering systems used to service Arken?' },
-      { id: 'BC-02', text: 'Has the BCP/DRP been tested within the last 12 months, with documented outcomes and lessons learned?' },
-      { id: 'BC-03', text: 'Can the vendor demonstrate an RTO (Recovery Time Objective) of 24 hours or less for critical services?' },
+      { id: 'BC-01', text: 'Is there a documented Business Continuity Plan and Disaster Recovery Plan covering systems used to service Arken?' },
+      { id: 'BC-02', text: 'Has the BCP or DRP been tested within the last 12 months, with documented outcomes and lessons learned?' },
+      { id: 'BC-03', text: 'Can the vendor demonstrate an RTO of 24 hours or less for critical services?' },
     ]
   },
   {
@@ -872,7 +907,7 @@ const DOMAINS = [
   {
     id: 'CM', name: 'Compliance & Certifications', weight: 0.15,
     questions: [
-      { id: 'CM-01', text: 'Does the vendor hold current Cyber Essentials Plus or equivalent certification (ISO 27001, SOC 2 Type II)?' },
+      { id: 'CM-01', text: 'Does the vendor hold current Cyber Essentials Plus or equivalent certification, such as ISO 27001 or SOC 2 Type II?' },
       { id: 'CM-02', text: 'Has the vendor undergone an independent security audit within the last 18 months, with a summary report available on request?' },
       { id: 'CM-03', text: 'Does the vendor have documented processes for monitoring and responding to emerging regulatory requirements relevant to Arken’s sector?' },
     ]
@@ -881,57 +916,140 @@ const DOMAINS = [
 
 const SCORE_MAP = { 'Yes': 1.0, 'Partial': 0.5, 'No': 0.0, 'N-A': null };
 
+const DOMAIN_READINGS = {
+  'AM': {
+    strong: 'Housekeeping is probably under control here. Not exciting, but useful.',
+    middling: 'Not disastrous, though I would want a closer look at how assets are tracked once things start changing quickly.',
+    weak: 'This usually means the basics are less anchored than they should be.'
+  },
+  'IAM': {
+    strong: 'This is where a lot of preventable pain starts, so a strong score here buys real confidence.',
+    middling: 'Some controls are present, but I would not assume access is as tight in practice as it looks on paper.',
+    weak: 'This would worry me early. Access problems tend to age badly.'
+  },
+  'DP': {
+    strong: 'Privacy and data handling look reasonably mature from the questionnaire view.',
+    middling: 'There is enough here to keep talking, but not enough to relax.',
+    weak: 'If personal data is genuinely in scope, this score would change the tone of the review.'
+  },
+  'IR': {
+    strong: 'Good sign, especially if the evidence behind it is recent and real.',
+    middling: 'This can still conceal a lot of improvisation. I would ask what actually happened in the last exercise.',
+    weak: 'A weak score here means I would assume the first bad day will be messier than the vendor expects.'
+  },
+  'RM': {
+    strong: 'Looks like someone is steering rather than just documenting.',
+    middling: 'Some governance exists, but I would want to know whether risks are genuinely owned or just recorded.',
+    weak: 'Usually a sign that issues may be known without being driven to closure.'
+  },
+  'BC': {
+    strong: 'Recovery planning appears credible enough to keep confidence intact.',
+    middling: 'Not a crisis by itself, but I would want evidence that continuity plans have met reality.',
+    weak: 'This is the sort of area that sounds fine until an outage lasts longer than the slides promised.'
+  },
+  'SC': {
+    strong: 'Reasonable sign that supplier dependency is being handled with open eyes.',
+    middling: 'There may be enough here for business-as-usual procurement, but not enough for blind trust.',
+    weak: 'Fourth-party visibility is probably thinner than I would want.'
+  },
+  'CM': {
+    strong: 'Independent assurance is doing some useful work here, even if it is not the whole story.',
+    middling: 'There is something to work with, though I would look closely at scope and recency.',
+    weak: 'This would make me pause. Not necessarily a hard no, but definitely not a shrug.'
+  }
+};
+
 const REMEDIATION_MAP = {
-  'IAM-01': { title: 'Implement MFA across all privileged access pathways', severity: 'critical', detail: 'Absence of MFA materially increases access risk. This should normally be addressed before contract execution.' },
-  'IAM-02': { title: 'Establish quarterly access review cadence', severity: 'high', detail: 'Regular access review is expected for this scenario. Quarterly review provides a reasonable minimum baseline.' },
-  'DP-01': { title: 'Enforce encryption at rest and in transit to current standards', severity: 'critical', detail: 'This would fall below the expected contractual baseline for handling sensitive data.' },
-  'DP-03': { title: 'Execute Data Processing Agreement before data transfer', severity: 'critical', detail: 'GDPR Article 28 requires a DPA before processing begins. Data transfer should not proceed without this in place.' },
-  'IR-01': { title: 'Obtain and review vendor Incident Response Plan', severity: 'high', detail: 'Untested incident response capability creates a material assurance gap for Arken.' },
-  'IR-02': { title: 'Contractually define breach notification timescales', severity: 'high', detail: 'Include a specific notification requirement in the contract and align it with wider regulatory and operational response expectations.' },
-  'CM-01': { title: 'Require ISO 27001 / Cyber Essentials Plus as contract condition', severity: 'critical', detail: 'Current certification provides a useful form of independent assurance. In this scenario, it may be reasonable to treat it as a pre-condition of contract execution.' },
-  'SC-01': { title: 'Request complete sub-processor register', severity: 'medium', detail: 'Fourth-party risk should be visible before contract execution. The vendor should disclose all sub-processors with data access.' },
-  'RM-03': { title: 'Request annual penetration test evidence', severity: 'high', detail: 'Penetration testing evidence provides assurance that technical risks are being reviewed and remediated over time.' },
-  'BC-02': { title: 'Verify continuity test evidence within last 12 months', severity: 'medium', detail: 'Continuity plans that have not been tested provide limited assurance in practice.' },
+  'IAM-01': {
+    title: 'Implement MFA across all privileged access pathways',
+    severity: 'critical',
+    detail: 'No MFA here would be a genuine stop-and-stare issue. In this scenario I would struggle to recommend contract execution until that gap was closed or tightly contained.'
+  },
+  'IAM-02': {
+    title: 'Establish a regular access review cadence',
+    severity: 'high',
+    detail: 'Quarterly review is not magic, but it is a reasonable baseline. Without it, access tends to accumulate quietly until nobody is fully sure who still has what.'
+  },
+  'DP-01': {
+    title: 'Enforce encryption at rest and in transit to current standards',
+    severity: 'critical',
+    detail: 'For a vendor handling sensitive data, this is baseline plumbing rather than a nice-to-have. A weak answer here pulls confidence down fast.'
+  },
+  'DP-03': {
+    title: 'Put a Data Processing Agreement in place before any transfer begins',
+    severity: 'critical',
+    detail: 'This is not paperwork to tidy up later. If personal data is involved, I would want the DPA settled before operational work starts.'
+  },
+  'IR-01': {
+    title: 'Obtain and review the vendor incident response plan',
+    severity: 'high',
+    detail: 'A vendor can say they take incidents seriously and still be improvising when something actually happens. I would want to see the plan and whether it has been exercised recently.'
+  },
+  'IR-02': {
+    title: 'Define breach notification timescales contractually',
+    severity: 'high',
+    detail: 'If notification timing is vague, it usually gets worse under pressure. Spell it out in the contract so there is less room for delay when the incident is inconvenient.'
+  },
+  'CM-01': {
+    title: 'Treat independent assurance as a contract condition',
+    severity: 'critical',
+    detail: 'A certificate is not the whole story, but in this scenario the absence of one would still be a real warning sign. I would want a convincing substitute or I would pause.'
+  },
+  'SC-01': {
+    title: 'Request the sub-processor register before sign-off',
+    severity: 'medium',
+    detail: 'If fourth parties are in play, I want to know who they are before the ink is dry, not halfway through onboarding.'
+  },
+  'RM-03': {
+    title: 'Request current penetration test evidence and remediation status',
+    severity: 'high',
+    detail: 'The test report matters, but the more interesting question is what happened next. Old findings with vague closure notes do not buy much confidence.'
+  },
+  'BC-02': {
+    title: 'Verify continuity testing within the last 12 months',
+    severity: 'medium',
+    detail: 'An untested continuity plan can still look immaculate in PDF form. I would want some sign that it has met reality at least once.'
+  },
 };
 
 const FOLLOWUP_POOL = {
   'IAM': [
-    'Can you provide a sample access review report from the last quarter, with user details redacted, to show how access reviews are being completed?',
-    'How are privileged accounts managed for staff who have recently changed roles or left the organisation?',
-    'What is your process for identifying and responding to unusual authentication activity on accounts with access to Arken data?'
+    'Can you provide a recent access review output, with names redacted, so we can see how leavers, movers, and privileged accounts are actually being checked?',
+    'What happens in practice when an administrator changes role or leaves unexpectedly?',
+    'How do you spot unusual sign-in behaviour on accounts with access to customer or restricted data?'
   ],
   'DP': [
-    'Can you provide your current Data Protection Impact Assessment for systems that would process Arken data?',
-    'What is your documented process for responding to a Subject Access Request, and what is your average response time?',
-    'How do you handle deletion requests, and can you evidence secure deletion for retired systems?'
+    'Can you walk us through your retention and deletion process using a real example rather than the policy summary?',
+    'What is your process for responding to a Subject Access Request, and where does it usually get stuck?',
+    'How do you prove secure deletion when a system is retired or data is moved elsewhere?'
   ],
   'IR': [
-    'Please describe your most recent incident response exercise, including the scenario used and the main findings.',
-    'What criteria determine whether a security event is escalated to a formal incident, and who can make that decision?',
-    'How do you preserve forensic evidence during an incident while maintaining service continuity?'
+    'What happened in your most recent incident exercise, and what did you change afterwards?',
+    'Who decides that an event has crossed the line into a formal incident?',
+    'If an incident affects Arken data, what would the first 24 hours of your response actually look like?'
   ],
   'SC': [
-    'Can you provide a complete register of fourth-party sub-processors who may have access to data held on behalf of Arken?',
-    'What due diligence do you carry out on sub-processors before onboarding, and how is it documented?',
-    'How would you notify us if a sub-processor experienced a security incident that could affect Arken data?'
+    'Can you provide the current list of fourth parties that could touch Arken data or the systems supporting it?',
+    'What due diligence do you do before bringing a new sub-processor into scope?',
+    'How would we hear about a fourth-party incident, and how quickly?'
   ],
   'CM': [
-    'Can you share your most recent ISO 27001 or Cyber Essentials Plus certificate, including the scope?',
-    'How do you monitor changes in regulatory requirements relevant to your sector, and how are required changes implemented?',
-    'Have you received any regulatory findings or notices in the last three years? If so, how were they addressed?'
+    'Can you share the latest certificate or audit summary, including the scope rather than just the logo page?',
+    'How do you track regulatory change that could affect the service you provide to us?',
+    'Have you had any meaningful audit findings or external challenge in the last few years, and what changed because of it?'
   ],
   'RM': [
-    'Can you summarise the top three risks currently on your information security risk register and their current treatment status?',
-    'What is the approval process for formally accepting a residual risk, and who holds accountability for accepted risks?',
-    'How do penetration test findings feed back into your risk register, and what is the usual remediation timeline?'
+    'What are the top risks currently on your security risk register, in plain English?',
+    'Who can accept residual risk, and how is that decision recorded?',
+    'When a penetration test finds something awkward, how does it move from finding to fix?'
   ],
   'AM': [
-    'How do you keep your asset inventory current as systems are provisioned, changed, or retired?',
-    'What is your documented process for secure data destruction when assets are decommissioned?'
+    'How do you keep the asset inventory honest as systems are created, changed, and retired?',
+    'What does secure disposal look like in practice for devices or environments that have held sensitive data?'
   ],
   'BC': [
-    'What was the outcome of your most recent BCP or DR test, and what corrective actions were identified?',
-    'How is your RTO validated in practice — for example through tabletop exercise, partial test, or full failover simulation?'
+    'What did your last continuity or recovery test show, and what was still messy afterwards?',
+    'How is the RTO evidenced in practice: tabletop, partial restoration, or full failover?'
   ],
 };
 
@@ -1017,7 +1135,13 @@ function scoreResponses(responses) {
     });
 
     const domainPct = domainCount > 0 ? (domainRaw / domainCount) * 100 : null;
-    domainScores[domain.id] = { pct: domainPct, name: domain.name, weight: domain.weight, flags: domainFlags, count: domainCount };
+    domainScores[domain.id] = {
+      pct: domainPct,
+      name: domain.name,
+      weight: domain.weight,
+      flags: domainFlags,
+      count: domainCount
+    };
 
     if (domainPct !== null) {
       totalWeightedScore += domainPct * domain.weight;
@@ -1030,10 +1154,19 @@ function scoreResponses(responses) {
   const overallPct = totalWeight > 0 ? totalWeightedScore / totalWeight : 0;
 
   let rating, ratingClass;
-  if (overallPct >= 80) { rating = 'LOW RISK'; ratingClass = 'low'; }
-  else if (overallPct >= 60) { rating = 'MEDIUM RISK'; ratingClass = 'medium'; }
-  else if (overallPct >= 40) { rating = 'HIGH RISK'; ratingClass = 'high'; }
-  else { rating = 'CRITICAL RISK'; ratingClass = 'critical'; }
+  if (overallPct >= 80) {
+    rating = 'LOW RISK';
+    ratingClass = 'low';
+  } else if (overallPct >= 60) {
+    rating = 'MEDIUM RISK';
+    ratingClass = 'medium';
+  } else if (overallPct >= 40) {
+    rating = 'HIGH RISK';
+    ratingClass = 'high';
+  } else {
+    rating = 'CRITICAL RISK';
+    ratingClass = 'critical';
+  }
 
   return { overallPct, rating, ratingClass, domainScores, flags };
 }
@@ -1045,18 +1178,64 @@ function getRatingColor(pct) {
   return 'var(--critical)';
 }
 
+function getDomainReading(domainId, pct) {
+  const reading = DOMAIN_READINGS[domainId];
+  if (!reading || pct === null) return '';
+  if (pct >= 80) return reading.strong;
+  if (pct >= 60) return reading.middling;
+  return reading.weak;
+}
+
+function buildOverallRead(result, answeredCount, totalQuestions) {
+  const { overallPct, ratingClass, domainScores } = result;
+  const scoredDomains = Object.values(domainScores).filter(d => d.pct !== null);
+  const weakest = [...scoredDomains].sort((a, b) => a.pct - b.pct)[0];
+  const strongest = [...scoredDomains].sort((a, b) => b.pct - a.pct)[0];
+
+  const coverageText = answeredCount < totalQuestions * 0.5
+    ? 'The score is based on a relatively thin set of answers, so I would read it cautiously.'
+    : answeredCount < totalQuestions
+      ? 'There is enough here for a directional view, though a few unanswered items still leave some room for ambiguity.'
+      : 'The questionnaire coverage is reasonably complete, so the result feels more dependable as a first-pass view.';
+
+  let tone;
+  if (ratingClass === 'low') {
+    tone = 'Nothing here screams immediate danger, but I would still avoid confusing a good questionnaire return with proof that everything works cleanly in practice.';
+  } else if (ratingClass === 'medium') {
+    tone = 'This looks usable, but not comfortably so. I would keep the conversation moving while pressing on the weaker areas before calling the review done.';
+  } else if (ratingClass === 'high') {
+    tone = 'This is the point where I would stop treating the gaps as minor admin issues. Some of them are likely to matter operationally.';
+  } else {
+    tone = 'At this level I would assume the supplier needs either major clarification, meaningful conditions, or a pause in the process. The burden shifts to them to restore confidence.';
+  }
+
+  const weakestText = weakest
+    ? `The weakest area is ${weakest.name.toLowerCase()} at ${Math.round(weakest.pct)}%.`
+    : '';
+
+  const strongestText = strongest
+    ? `The strongest area is ${strongest.name.toLowerCase()} at ${Math.round(strongest.pct)}%, which helps, but does not cancel out problems elsewhere.`
+    : '';
+
+  return `${tone} ${coverageText} ${weakestText} ${strongestText}`.trim();
+}
+
 function getFollowUps(domainScores) {
   const sorted = Object.entries(domainScores)
     .filter(([id, d]) => d.pct !== null && FOLLOWUP_POOL[id])
     .sort((a, b) => a[1].pct - b[1].pct)
     .slice(0, 3);
 
-  return sorted.map(([id, d]) => ({
-    domain: d.name,
-    domainId: id,
-    question: FOLLOWUP_POOL[id][0],
-    score: d.pct
-  }));
+  return sorted.map(([id, d], index) => {
+    const pool = FOLLOWUP_POOL[id];
+    const question = pool[index] || pool[0];
+    return {
+      domain: d.name,
+      domainId: id,
+      question,
+      score: d.pct
+    };
+  });
 }
 
 function getRemediations(responses) {
@@ -1066,10 +1245,12 @@ function getRemediations(responses) {
       rems.push({ qid, resp, ...REMEDIATION_MAP[qid] });
     }
   });
+
   rems.sort((a, b) => {
     const order = { critical: 0, high: 1, medium: 2 };
     return order[a.severity] - order[b.severity];
   });
+
   return rems.slice(0, 6);
 }
 
@@ -1079,6 +1260,8 @@ function renderResults(result, responses, vendorName) {
   const remediations = getRemediations(responses);
   const now = new Date().toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
   const answeredCount = Object.values(responses).filter(v => v).length;
+  const totalQuestions = DOMAINS.reduce((a, d) => a + d.questions.length, 0);
+  const overallRead = buildOverallRead(result, answeredCount, totalQuestions);
 
   document.getElementById('vendor-name-display').textContent = `// ${vendorName || 'Vendor'} · ${now}`;
 
@@ -1087,7 +1270,7 @@ function renderResults(result, responses, vendorName) {
       <div class="result-meta">
         <div class="meta-row"><span class="mk">Vendor</span><span class="mv">${vendorName || '—'}</span></div>
         <div class="meta-row"><span class="mk">Assessment date</span><span class="mv">${now}</span></div>
-        <div class="meta-row"><span class="mk">Questions answered</span><span class="mv">${answeredCount} of ${DOMAINS.reduce((a,d)=>a+d.questions.length,0)}</span></div>
+        <div class="meta-row"><span class="mk">Questions answered</span><span class="mv">${answeredCount} of ${totalQuestions}</span></div>
         <div class="meta-row"><span class="mk">Assessment basis</span><span class="mv">SIG Lite (adapted)</span></div>
         <div class="meta-row"><span class="mk">Assessor ref</span><span class="mv">ARKEN-VRM-001</span></div>
       </div>
@@ -1098,8 +1281,13 @@ function renderResults(result, responses, vendorName) {
       <div class="result-score-block">
         <div class="rating-label">Weighted Score</div>
         <div class="score-big">${Math.round(overallPct)}<span>/100</span></div>
-        <div class="score-desc">across ${Object.values(domainScores).filter(d=>d.pct!==null).length} domains</div>
+        <div class="score-desc">across ${Object.values(domainScores).filter(d => d.pct !== null).length} scored domains</div>
       </div>
+    </div>
+
+    <div class="summary-note">
+      <div class="sn-label">Overall Read</div>
+      <div class="sn-text">${overallRead}</div>
     </div>
 
     <div class="section-head" style="margin-bottom:16px">
@@ -1110,26 +1298,29 @@ function renderResults(result, responses, vendorName) {
       ${Object.entries(domainScores).map(([id, d]) => {
         const pct = d.pct !== null ? Math.round(d.pct) : null;
         const color = pct !== null ? getRatingColor(pct) : 'var(--text-muted)';
+        const domainRead = getDomainReading(id, pct);
+
         return `
         <div class="dr-card">
           <div class="dr-top">
             <div>
               <div class="dr-name">${d.name}</div>
-              <div class="dr-weight">Weight: ${Math.round(d.weight*100)}% · ${d.count} questions assessed</div>
+              <div class="dr-weight">Weight: ${Math.round(d.weight * 100)}% · ${d.count} questions assessed</div>
             </div>
             <div class="dr-score" style="color:${color}">${pct !== null ? pct : '—'}</div>
           </div>
           <div class="dr-bar-track">
-            <div class="dr-bar-fill" style="width:${pct||0}%;background:${color}"></div>
+            <div class="dr-bar-fill" style="width:${pct || 0}%;background:${color}"></div>
           </div>
+          ${domainRead ? `<div class="dr-reading">${domainRead}</div>` : ''}
           <div class="dr-flag">
-            ${d.flags.length === 0 && pct !== null ? '<span style="color:var(--low)">✓ No flags in this domain</span>' :
-              d.flags.slice(0,2).map(f => `
+            ${d.flags.length === 0 && pct !== null ? '<span style="color:var(--low)">✓ No flagged answers in this domain</span>' :
+              d.flags.slice(0, 2).map(f => `
               <div class="flag-item">
-                <div class="flag-dot" style="background:${f.score===0?'var(--critical)':'var(--medium)'}"></div>
-                <span>${f.id}: ${f.resp === 'No' ? 'Not implemented' : 'Partially implemented'}</span>
+                <div class="flag-dot" style="background:${f.score === 0 ? 'var(--critical)' : 'var(--medium)'}"></div>
+                <span>${f.id}: ${f.resp === 'No' ? 'Not in place' : 'Only partly in place'}</span>
               </div>`).join('')}
-            ${d.flags.length > 2 ? `<div style="color:var(--text-muted);margin-top:4px">+${d.flags.length-2} further flags</div>` : ''}
+            ${d.flags.length > 2 ? `<div style="color:var(--text-muted);margin-top:4px">+${d.flags.length - 2} further flags</div>` : ''}
           </div>
         </div>`;
       }).join('')}
@@ -1139,7 +1330,7 @@ function renderResults(result, responses, vendorName) {
       <h3>Suggested follow-up questions</h3>
       ${followUps.map((fq, i) => `
         <div class="fq-item">
-          <div class="fq-num">Q${i+1}</div>
+          <div class="fq-num">Q${i + 1}</div>
           <div>
             <div class="fq-text">${fq.question}</div>
             <div class="fq-domain">Domain: ${fq.domain} · Score: ${Math.round(fq.score)}%</div>
@@ -1181,10 +1372,12 @@ function scoreManual() {
   const vendorName = prompt('Enter vendor name for this assessment (or leave blank):') || 'Unknown Vendor';
   const responses = collectResponses();
   const answered = Object.values(responses).filter(v => v).length;
+
   if (answered < 5) {
     showNotif('Please answer at least 5 questions before scoring.');
     return;
   }
+
   const result = scoreResponses(responses);
   renderResults(result, responses, vendorName);
 }
@@ -1208,6 +1401,7 @@ function resetToForm() {
 function handleCSV(event) {
   const file = event.target.files[0];
   if (!file) return;
+
   const reader = new FileReader();
   reader.onload = (e) => {
     const text = e.target.result;
@@ -1216,10 +1410,10 @@ function handleCSV(event) {
     let errors = 0;
 
     rows.forEach(row => {
-      const cols = row.split(',').map(c => c.trim().replace(/"/g,''));
+      const cols = row.split(',').map(c => c.trim().replace(/"/g, ''));
       if (cols.length >= 3) {
         const [qid, , resp] = cols;
-        const validResps = ['Yes','No','Partial','N-A'];
+        const validResps = ['Yes', 'No', 'Partial', 'N-A'];
         if (validResps.includes(resp)) {
           responses[qid] = resp;
         } else {
@@ -1229,27 +1423,29 @@ function handleCSV(event) {
     });
 
     const answered = Object.keys(responses).length;
+    const safePayload = encodeURIComponent(JSON.stringify(responses));
+
     document.getElementById('csv-preview').innerHTML = `
       <div style="background:var(--surface);border:1px solid var(--border);padding:16px 20px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text-dim)">
-        ✓ Parsed ${answered} valid responses from ${file.name}${errors ? ` · ${errors} rows skipped (invalid format)` : ''}<br>
-        <button class="btn-primary" style="margin-top:16px;font-size:12px;padding:10px 24px" onclick="scoreCSV(${JSON.stringify(responses).replace(/"/g,'&quot;')})">Score Imported Responses</button>
+        ✓ Parsed ${answered} valid responses from ${file.name}${errors ? ` · ${errors} row${errors === 1 ? '' : 's'} skipped` : ''}<br>
+        <button class="btn-primary" style="margin-top:16px;font-size:12px;padding:10px 24px" onclick="scoreCSV(decodeURIComponent('${safePayload}'))">Score Imported Responses</button>
       </div>
     `;
   };
+
   reader.readAsText(file);
 }
 
-function scoreCSV(responses) {
+function scoreCSV(payload) {
   const vendorName = prompt('Enter vendor name for this assessment (or leave blank):') || 'CSV Import';
+  const responses = typeof payload === 'string' ? JSON.parse(payload) : payload;
   const result = scoreResponses(responses);
   renderResults(result, responses, vendorName);
 }
 
 function downloadTemplate() {
   const header = 'question_id,domain,response\n';
-  const rows = DOMAINS.flatMap(d =>
-    d.questions.map(q => `${q.id},${d.id},`)
-  ).join('\n');
+  const rows = DOMAINS.flatMap(d => d.questions.map(q => `${q.id},${d.id},`)).join('\n');
   const blob = new Blob([header + rows], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -1261,22 +1457,29 @@ function downloadTemplate() {
 function copyResults() {
   const el = document.getElementById('results-inner');
   if (!el) return;
+
   const text = el.innerText;
-  navigator.clipboard.writeText(text).then(() => showNotif('Results copied to clipboard.'));
+  navigator.clipboard.writeText(text).then(() => {
+    showNotif('Results copied to clipboard.');
+  });
 }
 
 function switchTab(id) {
-  document.querySelectorAll('.tab').forEach((t,i) => {
-    const ids = ['manual','upload','results-tab','methodology'];
+  const ids = ['manual', 'upload', 'results-tab', 'methodology'];
+
+  document.querySelectorAll('.tab').forEach((t, i) => {
     t.classList.toggle('active', ids[i] === id);
   });
+
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+
   if (id === 'manual') document.getElementById('panel-manual').classList.add('active');
   if (id === 'upload') document.getElementById('panel-upload').classList.add('active');
   if (id === 'methodology') {
     document.getElementById('panel-methodology').classList.add('active');
     return;
   }
+
   if (id === 'results-tab') {
     document.getElementById('results').style.display = 'block';
     document.getElementById('panel-manual').classList.remove('active');
@@ -1292,11 +1495,15 @@ function showNotif(msg) {
 }
 
 const dz = document.getElementById('drop-zone');
-dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragover', e => {
+  e.preventDefault();
+  dz.classList.add('dragover');
+});
 dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
 dz.addEventListener('drop', e => {
   e.preventDefault();
   dz.classList.remove('dragover');
+
   const file = e.dataTransfer.files[0];
   if (file && file.name.endsWith('.csv')) {
     handleCSV({ target: { files: [file] } });
@@ -1304,8 +1511,10 @@ dz.addEventListener('drop', e => {
 });
 
 renderForm();
-document.querySelectorAll('.domain-header')[0]?.click();
-document.querySelectorAll('.domain-header')[1]?.click();
+
+const firstTwoHeaders = document.querySelectorAll('.domain-header');
+firstTwoHeaders[0]?.click();
+firstTwoHeaders[1]?.click();
 </script>
 </body>
 </html>
