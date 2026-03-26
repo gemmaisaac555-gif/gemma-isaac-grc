@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arken Systems — BEC Risk Simulation & Control Assessment</title>
+<title>Arken Systems — BEC Risk Simulation</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -40,7 +40,6 @@ body {
   min-height: 100vh;
 }
 
-/* Subtle texture overlay */
 body::before {
   content: '';
   position: fixed;
@@ -59,7 +58,6 @@ body::before {
   padding: 0 32px 80px;
 }
 
-/* ── HEADER ── */
 header {
   padding: 48px 0 36px;
   border-bottom: 2px solid var(--ink);
@@ -110,7 +108,6 @@ h1 em {
   padding-left: 16px;
 }
 
-/* ── SCENARIO NAV ── */
 .scenario-nav {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -169,11 +166,9 @@ h1 em {
   margin-top: 4px;
 }
 
-/* ── MAIN SIMULATOR ── */
 #simulator { display: none; }
 #simulator.show { display: block; }
 
-/* Email display */
 .email-frame {
   background: var(--paper2);
   border: 1px solid var(--border);
@@ -262,7 +257,6 @@ h1 em {
   flex-wrap: wrap;
   margin-bottom: 24px;
 }
-.scenario-title-block {}
 .scenario-eyebrow {
   font-family: 'DM Mono', monospace;
   font-size: 10px;
@@ -285,7 +279,6 @@ h1 em {
   line-height: 1.9;
 }
 
-/* Attack chain */
 .attack-chain {
   margin-bottom: 28px;
 }
@@ -335,7 +328,6 @@ h1 em {
   padding: 0 4px;
 }
 
-/* Control checkpoint */
 .checkpoint-block {
   background: var(--paper2);
   border: 1px solid var(--border);
@@ -419,7 +411,6 @@ h1 em {
   min-width: 18px;
 }
 
-/* Feedback block */
 .feedback-block {
   display: none;
   margin-top: 20px;
@@ -472,7 +463,6 @@ h1 em {
 .btn-next:hover { background: var(--accent); }
 .btn-next.show { display: inline-block; }
 
-/* Progress */
 .progress-bar-wrap {
   height: 3px;
   background: var(--border);
@@ -487,7 +477,6 @@ h1 em {
   left: 0; top: 0;
 }
 
-/* Gap report */
 #gap-report { display: none; }
 #gap-report.show { display: block; }
 
@@ -565,7 +554,6 @@ h1 em {
 }
 .gap-item:last-child { border-bottom: none; }
 .gap-icon { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
-.gap-content {}
 .gap-control {
   font-family: 'DM Mono', monospace;
   font-size: 10px;
@@ -728,11 +716,12 @@ h1 em {
       Classification: Internal
     </div>
   </div>
-  <div style="margin-bottom:16px;"><button onclick="showMethodology()" style="background:transparent;color:var(--ink-dim);font-family:'DM Mono',monospace;font-size:11px;padding:8px 16px;border:1px solid var(--border);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink-dim)'">Methodology &amp; Design Decisions &rarr;</button></div>
-  <p class="header-desc">Work through six realistic business email compromise scenarios aimed at Arken Systems. At each point, choose the control response you would actually want people to take in practice, then see where the real gaps sit and how they map to governance frameworks.</p>
+  <div style="margin-bottom:16px;">
+    <button onclick="showMethodology()" style="background:transparent;color:var(--ink-dim);font-family:'DM Mono',monospace;font-size:11px;padding:8px 16px;border:1px solid var(--border);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--ink-dim)'">Methodology &amp; Design Decisions &rarr;</button>
+  </div>
+  <p class="header-desc">Work through six BEC scenarios aimed at Arken Systems. The point is not just to spot that something looks odd. It is to decide what control response would actually interrupt the attack in practice, then see where the governance weaknesses really sit.</p>
 </header>
 
-<!-- SCENARIO CONTEXT -->
 <div style="background:var(--paper2);border:1px solid var(--border);border-left:3px solid var(--accent);padding:20px 28px;margin-bottom:24px;">
   <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:16px;">
     <div>
@@ -756,7 +745,6 @@ h1 em {
   </div>
 </div>
 
-<!-- SCENARIO SELECTOR -->
 <div id="panel-methodology" style="display:none;">
   <div style="max-width:860px;padding:0 0 60px;">
     <div style="border-bottom:2px solid var(--ink);padding-bottom:24px;margin-bottom:32px;">
@@ -767,8 +755,8 @@ h1 em {
 
       <div style="background:var(--paper2);border:1px solid var(--border);padding:24px 28px;">
         <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Scenario Design</div>
-        <p style="font-size:13px;color:var(--ink-mid);line-height:1.8;margin-bottom:12px;">The six scenarios are arranged from more obvious attacks to more convincing ones. SC1 and SC2 include clues like a wrong domain or an unusual sender. SC3 and SC4 lean more heavily on pressure, timing, and authority. SC5 and SC6 are closer to the attacks people often miss: fake IT support and compromise of a real supplier mailbox.</p>
-        <p style="font-size:13px;color:var(--ink-mid);line-height:1.8;">Everything is grounded in one fictional organisation so the situations feel coherent rather than random. The attacker has clearly done some homework. That is deliberate. Better BEC attacks do not rely on nonsense emails. They use familiar names, real suppliers, real processes, and just enough truth to feel plausible.</p>
+        <p style="font-size:13px;color:var(--ink-mid);line-height:1.8;margin-bottom:12px;">The six scenarios are arranged from more obvious attacks to more convincing ones. SC1 and SC2 still give the user a fair chance: a slightly wrong domain, an odd sender, a pressure cue that is a bit too visible. SC3 and SC4 lean more on timing, authority, and the fact that the story sounds plausible enough. SC5 and SC6 are closer to the cases people miss, especially the compromised supplier mailbox where the usual “check the sender” reflex stops being enough.</p>
+        <p style="font-size:13px;color:var(--ink-mid);line-height:1.8;">Everything sits inside one fictional organisation so the scenarios feel connected rather than randomly assembled. The attacker has done some homework. That part matters. Better BEC attacks usually do not look absurd.</p>
       </div>
 
       <div style="background:var(--paper2);border:1px solid var(--border);padding:24px 28px;">
@@ -776,50 +764,50 @@ h1 em {
         <p style="font-size:13px;color:var(--ink-mid);line-height:1.8;margin-bottom:16px;">Each checkpoint gives four response options. These are scored across three tiers:</p>
         <div style="display:flex;gap:14px;align-items:flex-start;font-size:13px;margin-bottom:10px;">
           <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--green);background:var(--green-bg);border:1px solid var(--green-border);padding:3px 8px;flex-shrink:0;">CORRECT</span>
-          <span style="color:var(--ink-mid);">The key control was identified and used properly. Score: 1.0</span>
+          <span style="color:var(--ink-mid);">The main control was identified and actually used properly. Score: 1.0</span>
         </div>
         <div style="display:flex;gap:14px;align-items:flex-start;font-size:13px;margin-bottom:10px;">
           <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-border);padding:3px 8px;flex-shrink:0;">PARTIAL</span>
-          <span style="color:var(--ink-mid);">A sensible instinct, but it misses the main control or leaves too much risk in place. Score: 0.5</span>
+          <span style="color:var(--ink-mid);">A sensible instinct, but it still leaves too much risk in place. Score: 0.5</span>
         </div>
         <div style="display:flex;gap:14px;align-items:flex-start;font-size:13px;margin-bottom:16px;">
           <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--red);background:var(--red-bg);border:1px solid var(--red-border);padding:3px 8px;flex-shrink:0;">INCORRECT</span>
-          <span style="color:var(--ink-mid);">The response would help the attacker, remove evidence, or fail to interrupt the attack. Score: 0</span>
+          <span style="color:var(--ink-mid);">The response would help the attacker, drop evidence, or leave the attack path open. Score: 0</span>
         </div>
-        <p style="font-size:13px;color:var(--ink-mid);line-height:1.8;">The partial answers matter. Real-world mistakes often come from people doing something that sounds reasonable but is not quite enough. That gap between “not terrible” and “actually safe” is where most of the learning sits.</p>
+        <p style="font-size:13px;color:var(--ink-mid);line-height:1.8;">The partial answers matter more than they look. In real organisations, people often do something half-right. That is usually where the real learning is.</p>
       </div>
 
       <div style="background:var(--paper2);border:1px solid var(--border);padding:24px 28px;">
         <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;">Design Decisions</div>
         <div style="margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border2);">
           <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;margin-bottom:8px;">Why use scenarios instead of a policy checklist?</div>
-          <div style="font-size:13px;color:var(--ink-mid);line-height:1.8;">Because people rarely fail in calm, neat policy language. They fail under urgency, authority pressure, and plausible stories. Scenario-based exercises show whether a control still holds when someone feels rushed, embarrassed, or afraid of slowing the business down.</div>
+          <div style="font-size:13px;color:var(--ink-mid);line-height:1.8;">Because people do not usually fail in tidy policy language. They fail when something sounds urgent, when it comes from someone senior, or when slowing things down feels socially awkward.</div>
         </div>
         <div style="margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border2);">
           <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;margin-bottom:8px;">Why include partial responses?</div>
-          <div style="font-size:13px;color:var(--ink-mid);line-height:1.8;">Because many awareness tools make the wrong answers too silly. Real decisions are usually messier than that. A partial option lets the exercise show the difference between a decent instinct and a properly controlled process.</div>
+          <div style="font-size:13px;color:var(--ink-mid);line-height:1.8;">Because a lot of awareness tools make the wrong answers too silly. Real decisions are messier than that. A partial option helps show the gap between “not unreasonable” and “properly controlled.”</div>
         </div>
         <div style="margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border2);">
           <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;margin-bottom:8px;">Why six scenarios in increasing difficulty?</div>
-          <div style="font-size:13px;color:var(--ink-mid);line-height:1.8;">Because BEC is not one thing. The obvious fake-CEO email is only one variant. By the time you reach the compromised supplier mailbox in SC6, the usual “check the sender domain” habit is no longer enough. That progression makes the final gap report more meaningful.</div>
+          <div style="font-size:13px;color:var(--ink-mid);line-height:1.8;">Because BEC is not one neat category. The obvious fake-CEO email is only one version. By SC6, the usual “spot the typo” habit is not enough anymore, which is the point.</div>
         </div>
         <div>
           <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:700;margin-bottom:8px;">Why map to both NIST and ISO 27001?</div>
-          <div style="font-size:13px;color:var(--ink-mid);line-height:1.8;">Because the point is not just “spot the scam.” It is to show how everyday control failures connect back to governance expectations and framework language that risk, audit, and compliance teams actually use.</div>
+          <div style="font-size:13px;color:var(--ink-mid);line-height:1.8;">Because the point is not only to say “this was suspicious.” It is to show how a day-to-day control failure links back to governance language that audit, risk, and compliance teams would actually recognise.</div>
         </div>
       </div>
 
       <div style="background:var(--paper2);border:1px solid var(--border);padding:24px 28px;">
         <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;">Assumptions &amp; Limitations</div>
-        <div style="display:flex;gap:12px;font-size:13px;color:var(--ink-mid);line-height:1.7;margin-bottom:10px;"><span style="color:var(--ink-dim);font-family:'DM Mono',monospace;min-width:24px;">01</span><span>This version focuses on common BEC patterns. It does not cover everything, such as deepfake voice fraud or more complex multi-stage attacks.</span></div>
-        <div style="display:flex;gap:12px;font-size:13px;color:var(--ink-mid);line-height:1.7;margin-bottom:10px;"><span style="color:var(--ink-dim);font-family:'DM Mono',monospace;min-width:24px;">02</span><span>Feedback is pre-written for each response. In a production tool, this would ideally reflect the organisation’s own procedures, language, and control library.</span></div>
-        <div style="display:flex;gap:12px;font-size:13px;color:var(--ink-mid);line-height:1.7;margin-bottom:10px;"><span style="color:var(--ink-dim);font-family:'DM Mono',monospace;min-width:24px;">03</span><span>This exercise highlights procedural control gaps. It is not a technical assessment of email security settings such as DMARC, DKIM, or SPF.</span></div>
-        <div style="display:flex;gap:12px;font-size:13px;color:var(--ink-mid);line-height:1.7;"><span style="color:var(--ink-dim);font-family:'DM Mono',monospace;min-width:24px;">04</span><span>It is written mainly for governance, finance, and operational audiences. A version for technical teams would use different framing and different language.</span></div>
+        <div style="display:flex;gap:12px;font-size:13px;color:var(--ink-mid);line-height:1.7;margin-bottom:10px;"><span style="color:var(--ink-dim);font-family:'DM Mono',monospace;min-width:24px;">01</span><span>This version focuses on common BEC patterns. It does not try to cover everything, such as deepfake voice fraud or more elaborate multi-stage compromise.</span></div>
+        <div style="display:flex;gap:12px;font-size:13px;color:var(--ink-mid);line-height:1.7;margin-bottom:10px;"><span style="color:var(--ink-dim);font-family:'DM Mono',monospace;min-width:24px;">02</span><span>Feedback is pre-written for each response. In a real internal tool, the language and routing would need to reflect the organisation’s own procedures more closely.</span></div>
+        <div style="display:flex;gap:12px;font-size:13px;color:var(--ink-mid);line-height:1.7;margin-bottom:10px;"><span style="color:var(--ink-dim);font-family:'DM Mono',monospace;min-width:24px;">03</span><span>This exercise is mainly about procedural controls. It is not a technical review of DMARC, DKIM, SPF, secure email gateways, or mailbox configuration.</span></div>
+        <div style="display:flex;gap:12px;font-size:13px;color:var(--ink-mid);line-height:1.7;"><span style="color:var(--ink-dim);font-family:'DM Mono',monospace;min-width:24px;">04</span><span>It is written more for governance, finance, and operational audiences than for blue-team or email-security specialists. That was deliberate.</span></div>
       </div>
 
       <div style="background:var(--paper2);border:1px solid var(--border);border-left:3px solid var(--accent);padding:20px 24px;">
         <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;">Governance Note</div>
-        <p style="font-size:13px;color:var(--ink-mid);line-height:1.85;margin-bottom:10px;">This tool is a portfolio exercise, but the logic behind it is still meant to be visible. Security awareness tools should be able to explain what they measure, what they do not measure, and what assumptions sit behind the scoring. Otherwise they risk looking more rigorous than they really are.</p>
+        <p style="font-size:13px;color:var(--ink-mid);line-height:1.85;margin-bottom:10px;">This is a portfolio exercise, but the scoring logic still needs to be visible. Security awareness tools often present a polished score and some clean framework references and leave it at that. That can look more solid than it is.</p>
         <p style="font-size:12px;color:var(--ink-dim);font-family:'DM Mono',monospace;">Framework refs: NIST CSF PR.AT-1, PR.AC-1, PR.AC-4, DE.CM-7, PR.IP-9, RS.CO-2 &middot; ISO 27001 A.6.1.2, A.7.2.2, A.9.2.1, A.15.1.2, A.16.1.2</p>
       </div>
 
@@ -834,19 +822,16 @@ h1 em {
 <div id="home-view">
   <div class="intro-screen">
     <h2>How This Works</h2>
-    <p>You will see a realistic email, then move through the attack chain one checkpoint at a time. The aim is not just to spot that something feels off. It is to choose the control response that would actually stop the attack in a real organisation. At the end, you get a gap report mapped to NIST and ISO 27001.</p>
+    <p>You will see a realistic email, then move through the attack chain one checkpoint at a time. The aim is not simply to notice that something feels off. It is to choose the control response that would actually reduce the chance of loss in a real organisation. Some of the wrong answers are deliberately not ridiculous.</p>
     <button class="btn-start" onclick="startScenario(0)">Begin with Scenario 1</button>
     <div style="margin-top:12px;">
       <a href="https://gemmaisaac555-gif.github.io/gemma-isaac-grc/" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-dim);text-decoration:underline;text-underline-offset:3px;">← Back to Portfolio</a>
     </div>
   </div>
 
-  <div class="scenario-nav" id="scenario-nav">
-    <!-- rendered by JS -->
-  </div>
+  <div class="scenario-nav" id="scenario-nav"></div>
 </div>
 
-<!-- SIMULATOR -->
 <div id="simulator">
   <div class="scenario-header">
     <div class="scenario-title-block">
@@ -871,7 +856,6 @@ h1 em {
   </div>
 </div>
 
-<!-- GAP REPORT -->
 <div id="gap-report">
   <div class="gap-report-header">
     <h2>Control Gap Report</h2>
@@ -890,7 +874,6 @@ h1 em {
   <strong>Notice:</strong> This is a portfolio thinking exercise built around fictional scenarios. Arken Systems Ltd is not a real organisation. All emails, staff names, suppliers, and incidents shown here are invented for demonstration purposes. Framework references are included to show governance reasoning, not to imply formal compliance.
 </div>
 
-<!-- RESIDUAL RISK STATEMENT -->
 <div id="residual-risk-block" style="display:none;margin-top:24px;">
   <div style="background:var(--paper2);border:1px solid var(--border);border-left:3px solid var(--accent);padding:24px 28px;">
     <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;">Residual Risk Decision</div>
@@ -920,13 +903,9 @@ h1 em {
   </div>
 </div>
 
-</div><!-- /wrap -->
+</div>
 
 <script>
-// ─────────────────────────────────────────────────────────────────────────────
-// DATA
-// ─────────────────────────────────────────────────────────────────────────────
-
 const SCENARIOS = [
   {
     id: 'SC1',
@@ -966,10 +945,10 @@ David Hartley | CEO | Arken Systems Ltd`,
         context: 'Sarah receives what looks like an urgent payment request from the CEO. She is the Finance Manager and is authorised to process payments up to £100,000.',
         question: 'Before doing anything else, what is the first control she should apply?',
         choices: [
-          { letter: 'A', text: 'Process the payment straight away — it is urgent, and Sarah has the authority to do it.', outcome: 'wrong', feedback: 'This is exactly what the attacker wants. Urgency and seniority are pressure tactics, not reasons to skip controls. The whole attack depends on Sarah acting before she checks.', control: 'Missing: Sender domain verification, dual-authorisation policy' },
-          { letter: 'B', text: 'Check the sender domain carefully — the email is from arken-systems.co, not the internal domain arkensystems.co.uk.', outcome: 'correct', feedback: 'Correct. The sender is using a lookalike domain. It is only slightly different, but that is enough. That small difference is the main clue that the request is not genuine, and it should stop the payment process immediately until the request is verified another way.', control: 'Control applied: Email domain verification | NIST PR.AT-1' },
-          { letter: 'C', text: 'Reply to the email and ask David to confirm the details.', outcome: 'wrong', feedback: 'That keeps Sarah inside the attacker’s channel. Any reply will go back to the fraudster, and any reassurance they send will be worthless. Verification needs to happen outside the email thread.', control: 'Missing: Out-of-band verification procedure' },
-          { letter: 'D', text: 'Forward the email to a colleague for a second opinion before doing anything.', outcome: 'partial', feedback: 'This is better than acting alone, but it still misses the main control. The email is trying to isolate Sarah by stressing confidentiality. The right move is to verify the request directly through a separate trusted channel, not just to get another internal opinion.', control: 'Partial: Peer review helps; out-of-band verification is the required control' },
+          { letter: 'A', text: 'Just process it — it’s within Sarah’s approval limit and the email sounds like him.', outcome: 'wrong', feedback: 'This is the attack working exactly as intended. Urgency plus authority is the whole mechanism here. If she acts now, the attacker wins.', control: 'Missing: Sender domain verification, dual-authorisation policy' },
+          { letter: 'B', text: 'Look properly at the sender — the domain is slightly off (arken-systems.co vs arkensystems.co.uk).', outcome: 'correct', feedback: 'Correct. The domain is slightly off. That’s the signal. In practice this should stop everything immediately.', control: 'Control applied: Email domain verification | NIST PR.AT-1' },
+          { letter: 'C', text: 'Reply and ask him to confirm — quick sense check before doing anything.', outcome: 'wrong', feedback: 'That keeps Sarah inside the attacker’s channel. Any reply is just going back to them.', control: 'Missing: Out-of-band verification procedure' },
+          { letter: 'D', text: 'Forward it to someone else in finance — “this looks odd, am I overthinking it?”', outcome: 'partial', feedback: 'Better than acting alone. Still not the real control. A colleague may notice the domain, but the request still needs to be verified properly outside the thread.', control: 'Partial: Peer review helps; out-of-band verification is the required control' },
         ]
       },
       {
@@ -978,10 +957,10 @@ David Hartley | CEO | Arken Systems Ltd`,
         context: 'Sarah has spotted the suspicious domain. She now needs to confirm whether the request is real before doing anything further.',
         question: 'What is the right way to verify the request?',
         choices: [
-          { letter: 'A', text: 'Call David on the mobile number listed in the staff directory, not any number provided in the email.', outcome: 'correct', feedback: 'Correct. This is the right control. Verification has to happen through a known-good contact route that the attacker does not control. The important detail is where the number comes from: the internal directory, not the suspicious email.', control: 'Control applied: Out-of-band verification | NIST DE.CM-7 | ISO 27001 A.7.2.2' },
-          { letter: 'B', text: 'Send David a WhatsApp message using the number saved in her personal phone.', outcome: 'partial', feedback: 'This might work in real life, but it is still informal and not a robust documented control. If the saved number is out of date or compromised, the check falls apart. The safer answer is to use the official staff directory as the source of truth.', control: 'Partial: Informal verification; not a documented procedure' },
-          { letter: 'C', text: 'Reply to the email and ask David to call her to confirm.', outcome: 'wrong', feedback: 'That hands the verification step straight back to the attacker. They can easily arrange a fake confirmation. Out-of-band verification only works if Sarah starts the contact herself using a trusted source.', control: 'Missing: Out-of-band verification' },
-          { letter: 'D', text: 'Check David’s calendar to see whether he really is in a meeting, then process the payment.', outcome: 'wrong', feedback: 'A real meeting does not make the email real. Attackers often time these messages around genuine travel, meetings, and busy periods precisely because it makes them more believable.', control: 'Missing: Out-of-band verification — calendar confirmation is not sufficient' },
+          { letter: 'A', text: 'Call David on the mobile number listed in the staff directory, not any number provided in the email.', outcome: 'correct', feedback: 'Correct. The important detail is not just “call him.” It is where the number comes from. If the attacker controls the contact route, it is not verification.', control: 'Control applied: Out-of-band verification | NIST DE.CM-7 | ISO 27001 A.7.2.2' },
+          { letter: 'B', text: 'Send David a WhatsApp message using the number saved in her personal phone.', outcome: 'partial', feedback: 'People do this in real life, so it is not a silly answer. But it is informal and slightly fragile. Saved numbers can be old, wrong, or compromised.', control: 'Partial: Informal verification; not a documented procedure' },
+          { letter: 'C', text: 'Reply to the email and ask David to call her to confirm.', outcome: 'wrong', feedback: 'That gives the attacker control of the next step as well. They can imitate reassurance just as easily as urgency.', control: 'Missing: Out-of-band verification' },
+          { letter: 'D', text: 'Check David’s calendar to see whether he really is in a meeting, then process the payment.', outcome: 'wrong', feedback: 'A real meeting does not make the email real. Attackers often borrow genuine context because it makes people less willing to challenge the request.', control: 'Missing: Out-of-band verification — calendar confirmation is not sufficient' },
         ]
       },
       {
@@ -990,17 +969,17 @@ David Hartley | CEO | Arken Systems Ltd`,
         context: 'Sarah calls David and confirms he never sent the request. The email is fraudulent.',
         question: 'What should happen next?',
         choices: [
-          { letter: 'A', text: 'Delete the email and let David know privately. No payment was made, so the problem is over.', outcome: 'wrong', feedback: 'Not making the payment is good, but the incident is not over. The email is still evidence, and the attacker still knows something about Arken’s people and payment processes. Deleting it removes useful evidence and stops the wider response.', control: 'Missing: Incident reporting, evidence preservation' },
-          { letter: 'B', text: 'Report it to IT security as an incident, keep the email as evidence, and follow the incident response process.', outcome: 'correct', feedback: 'Correct. This is a security incident even though no money was lost. IT or security need to see the message, assess whether anyone else was targeted, and work out whether there are signs of wider compromise or data exposure.', control: 'Control applied: Incident reporting | NIST RS.CO-2 | ISO 27001 A.16.1.2' },
-          { letter: 'C', text: 'Forward it to all staff so everyone knows to watch out for it.', outcome: 'partial', feedback: 'The instinct to warn others is understandable, but it should not be the first move. Security should see the email first so they can assess the risk, preserve evidence, and decide how best to communicate the warning safely.', control: 'Partial: Awareness is good; incident procedure should come first' },
-          { letter: 'D', text: 'Report it to Action Fraud and Arken’s bank immediately.', outcome: 'partial', feedback: 'External reporting may well be appropriate, but not as a first solo step. This needs to go through the organisation’s incident process first so the response is coordinated and proportionate.', control: 'Partial: External reporting is correct but should be coordinated via IR process' },
+          { letter: 'A', text: 'Delete the email and let David know privately. No payment was made, so the problem is over.', outcome: 'wrong', feedback: 'The money was not lost, which is good. But the incident still happened. Deleting the email throws away evidence and makes the wider pattern harder to see.', control: 'Missing: Incident reporting, evidence preservation' },
+          { letter: 'B', text: 'Report it to IT security as an incident, keep the email as evidence, and follow the incident response process.', outcome: 'correct', feedback: 'Correct. This still tells the organisation something important about its exposure, even without financial loss. Security need the message, not just the summary.', control: 'Control applied: Incident reporting | NIST RS.CO-2 | ISO 27001 A.16.1.2' },
+          { letter: 'C', text: 'Forward it to all staff so everyone knows to watch out for it.', outcome: 'partial', feedback: 'The instinct is understandable. But security should see it first and decide how the warning goes out. Otherwise people improvise, and evidence handling gets messy.', control: 'Partial: Awareness is good; incident procedure should come first' },
+          { letter: 'D', text: 'Report it to Action Fraud and Arken’s bank immediately.', outcome: 'partial', feedback: 'Not completely wrong, just out of sequence. This should go through the internal incident route first so the response is coordinated.', control: 'Partial: External reporting is correct but should be coordinated via IR process' },
         ]
       },
     ],
     gaps: [
-      { icon: '⚠', control: 'Email domain spoofing protection', desc: 'The fraudulent lookalike domain was able to reach the inbox. Technical controls alone were not enough to stop it.' },
-      { icon: '⚠', control: 'Dual-authorisation for high-value payments', desc: 'One employee could process a high-value payment alone. There was no second approval threshold in the workflow.' },
-      { icon: '⚠', control: 'Out-of-band verification procedure', desc: 'There was no formal rule requiring telephone verification for payment requests from senior leaders.' },
+      { icon: '⚠', control: 'Email domain spoofing protection', desc: 'The lookalike domain still landed in the inbox. Whatever filtering was in place, it did not stop the one email that mattered.' },
+      { icon: '⚠', control: 'Dual-authorisation for high-value payments', desc: 'One employee could move £85k alone. That is not a training issue. That is process design.' },
+      { icon: '⚠', control: 'Out-of-band verification procedure', desc: 'There was no hard rule saying a request like this had to be checked outside email. So it became discretionary, which is exactly what the attacker needed.' },
     ]
   },
 
@@ -1044,10 +1023,10 @@ T: 0161 884 2291`,
         context: 'A known supplier asks Arken to update their bank details before a £42,000 payment due in three days. The email address looks genuine.',
         question: 'What is the correct control response?',
         choices: [
-          { letter: 'A', text: 'Update the account details straight away — the email looks legitimate and the payment deadline is close.', outcome: 'wrong', feedback: 'This is how invoice redirection fraud works. A genuine-looking email is not enough. Supplier mailboxes get compromised all the time, and deadlines are often used to push finance teams into acting too fast.', control: 'Missing: Supplier change verification procedure' },
-          { letter: 'B', text: 'Call NovaGuard using the phone number already held in Arken’s supplier records, not the number in the email, and confirm the change verbally.', outcome: 'correct', feedback: 'Correct. This is the key control. The check must use a trusted contact route that Arken already holds. The number written in the email could belong to the attacker.', control: 'Control applied: Supplier change verification | NIST PR.AC-1 | ISO 27001 A.13.2.2' },
-          { letter: 'C', text: 'Reply and ask Linda to confirm again on company letterhead.', outcome: 'wrong', feedback: 'If the mailbox is compromised, the attacker controls the whole conversation. They can send polished documents, letterheads, and reassuring replies. None of that proves the request is real.', control: 'Missing: Out-of-band verification' },
-          { letter: 'D', text: 'Check that the message came from a genuine NovaGuard domain before updating the details.', outcome: 'partial', feedback: 'That is a useful first check, but it is not enough. In this kind of attack the mailbox itself may be compromised, so the domain can still be genuine. The account change still needs independent verbal confirmation.', control: 'Partial: Domain check is helpful; verbal confirmation is also required' },
+          { letter: 'A', text: 'Update the details now — it’s a known supplier and the timing lines up with the payment run.', outcome: 'wrong', feedback: 'This is the trap. Routine tone plus payment deadline is exactly how these requests get waved through.', control: 'Missing: Supplier change verification procedure' },
+          { letter: 'B', text: 'Call NovaGuard using the number already on file — not the one in the email — and confirm the change.', outcome: 'correct', feedback: 'Correct. The check only means something if Arken controls the contact route. The number written in the email is part of the request, so it cannot also be the proof that the request is genuine.', control: 'Control applied: Supplier change verification | NIST PR.AC-1 | ISO 27001 A.13.2.2' },
+          { letter: 'C', text: 'Ask for a signed letter confirming the change before updating anything.', outcome: 'wrong', feedback: 'If the mailbox is compromised, the attacker can send polished follow-up material all day. Letterhead does not save you here.', control: 'Missing: Out-of-band verification' },
+          { letter: 'D', text: 'Check the sender domain and, if it’s correct, go ahead with the update.', outcome: 'partial', feedback: 'Useful, but not enough. In the real version of this attack, the mailbox itself is compromised, so the domain is genuine anyway.', control: 'Partial: Domain check is helpful; verbal confirmation is also required' },
         ]
       },
       {
@@ -1056,17 +1035,17 @@ T: 0161 884 2291`,
         context: 'At the moment, anyone in accounts payable can change supplier bank details on their own. Managers only review payments, not the underlying changes to records.',
         question: 'What is the main control gap in that process?',
         choices: [
-          { letter: 'A', text: 'The supplier portal should require two-factor authentication.', outcome: 'partial', feedback: 'That would help on the technical side, but it does not fix the main process weakness here. One person can still make a sensitive record change alone.', control: 'Partial: 2FA is useful; maker-checker is the primary missing control' },
-          { letter: 'B', text: 'Supplier bank detail changes should require a second, independent approver before they take effect.', outcome: 'correct', feedback: 'Correct. This is classic maker-checker control. The person who makes the change should not be able to approve it on their own. That one step makes it much harder for a single mistake to become a successful fraud.', control: 'Control applied: Maker-checker / segregation of duties | NIST PR.AC-4 | ISO 27001 A.6.1.2' },
-          { letter: 'C', text: 'The finance team should receive annual fraud awareness training.', outcome: 'partial', feedback: 'Training matters, but training is not enough on its own. A good process should not depend entirely on whether one person spots the red flags that day.', control: 'Partial: Training is necessary but not sufficient' },
-          { letter: 'D', text: 'Supplier account changes should only be allowed during set payment windows.', outcome: 'partial', feedback: 'That might reduce the number of opportunities, but it does not remove the underlying risk. A fraudulent change can still happen during the allowed window.', control: 'Partial: Time controls reduce exposure; maker-checker is the primary gap' },
+          { letter: 'A', text: 'The supplier portal should require two-factor authentication.', outcome: 'partial', feedback: 'Worth having, but it is not the main weakness described here. The bigger problem is that one person can introduce a high-risk change without another person seeing it.', control: 'Partial: 2FA is useful; maker-checker is the primary missing control' },
+          { letter: 'B', text: 'Supplier bank detail changes should require a second, independent approver before they take effect.', outcome: 'correct', feedback: 'Correct. This is a straightforward maker-checker gap. One person should not be able to create the problem and approve it at the same time.', control: 'Control applied: Maker-checker / segregation of duties | NIST PR.AC-4 | ISO 27001 A.6.1.2' },
+          { letter: 'C', text: 'The finance team should receive annual fraud awareness training.', outcome: 'partial', feedback: 'Training helps. But this is still too dependent on one person having a good day and a suspicious mindset.', control: 'Partial: Training is necessary but not sufficient' },
+          { letter: 'D', text: 'Supplier account changes should only be allowed during set payment windows.', outcome: 'partial', feedback: 'That slightly narrows the window, but it does not fix the underlying weakness. A bad change is still a bad change.', control: 'Partial: Time controls reduce exposure; maker-checker is the primary gap' },
         ]
       },
     ],
     gaps: [
-      { icon: '⚠', control: 'Supplier change verification procedure', desc: 'There was no formal requirement to verify bank detail changes by calling a trusted supplier contact already held on record.' },
-      { icon: '⚠', control: 'Maker-checker for supplier account changes', desc: 'A single employee could make a high-risk change without independent approval.' },
-      { icon: '⚠', control: 'Supplier record management', desc: 'There was no clearly maintained source of verified supplier contacts for out-of-band verification.' },
+      { icon: '⚠', control: 'Supplier change verification procedure', desc: 'There was no hard stop requiring someone to pick up the phone and verify the change using an existing supplier contact. So email alone became enough.' },
+      { icon: '⚠', control: 'Maker-checker for supplier account changes', desc: 'One person could alter the record and let that change flow straight into payment. Too much trust in one click.' },
+      { icon: '⚠', control: 'Supplier record management', desc: 'The process depended on having a trusted contact to call, but there was no clearly maintained source of truth for that contact. That kind of gap usually stays invisible until the day it matters.' },
     ]
   },
 
@@ -1108,10 +1087,10 @@ James`,
         context: 'An HR administrator receives a request to change payroll bank details. The request comes from a personal Gmail account, not the employee’s work email. The employee ID looks real.',
         question: 'What controls should apply before any change is made?',
         choices: [
-          { letter: 'A', text: 'Accept the request — the employee ID is valid and the explanation sounds reasonable.', outcome: 'wrong', feedback: 'A valid employee ID is not proof of identity. Someone with basic background information could easily write this email. The use of a personal address for a payroll change is a red flag, not reassurance.', control: 'Missing: Identity verification for payroll changes' },
-          { letter: 'B', text: 'Reply to the Gmail address and ask for more confirmation details.', outcome: 'wrong', feedback: 'That just keeps the conversation with whoever controls the Gmail account. Any extra details they provide are still coming through the same untrusted channel.', control: 'Missing: Out-of-band verification' },
-          { letter: 'C', text: 'Call James using his registered work mobile number and require confirmation from his corporate email before the change is processed.', outcome: 'correct', feedback: 'Correct. This combines two strong checks: direct identity verification through a trusted contact route, and a written instruction from a verified work account. Together they make the change much harder to fake.', control: 'Control applied: Identity verification + written authorisation | NIST PR.AC-1 | ISO 27001 A.9.2.1' },
-          { letter: 'D', text: 'Refuse all payroll changes sent from personal email addresses.', outcome: 'partial', feedback: 'That policy would remove ambiguity, which is helpful, but on its own it is too blunt. A stronger design is a proper verification process that can still deal safely with genuine edge cases.', control: 'Partial: Policy helps; verification process is the primary control' },
+          { letter: 'A', text: 'Looks legitimate — process the change so payroll doesn’t get delayed.', outcome: 'wrong', feedback: 'A convincing story is not identity. Most of the details here are easy to obtain.', control: 'Missing: Identity verification for payroll changes' },
+          { letter: 'B', text: 'Reply and ask for a bit more info to confirm it’s really him.', outcome: 'wrong', feedback: 'More information does not solve identity. It just adds detail to the same untrusted channel.', control: 'Missing: Out-of-band verification' },
+          { letter: 'C', text: 'Call him on his work number and get confirmation from his corporate email before changing anything.', outcome: 'correct', feedback: 'Correct. This stacks two sensible checks together: direct contact through a trusted route, then written confirmation from the verified work account. Much harder to fake.', control: 'Control applied: Identity verification + written authorisation | NIST PR.AC-1 | ISO 27001 A.9.2.1' },
+          { letter: 'D', text: 'Reject anything from personal email full stop — tell him to resend properly.', outcome: 'partial', feedback: 'Cleaner rule. But it still leaves edge cases unresolved. The stronger answer is a safe verification process that can handle them without improvisation.', control: 'Partial: Policy helps; verification process is the primary control' },
         ]
       },
       {
@@ -1120,17 +1099,17 @@ James`,
         context: 'Arken’s HR system allows any HR administrator to update payroll bank details without manager approval.',
         question: 'What governance control is missing?',
         choices: [
-          { letter: 'A', text: 'HR administrators should need line manager approval before any payroll bank details are changed.', outcome: 'correct', feedback: 'Correct. This adds a second check and makes it harder for one mistaken decision to lead to diverted salary payments. It is the same maker-checker principle, just applied to HR rather than accounts payable.', control: 'Control applied: Manager authorisation for payroll changes | NIST PR.AC-4 | ISO 27001 A.6.1.2' },
-          { letter: 'B', text: 'HR administrators should take annual payroll fraud awareness training.', outcome: 'partial', feedback: 'That is useful, but training is not the main gap here. The bigger problem is that one person can make a sensitive change alone with no independent approval.', control: 'Partial: Training supports; authorisation control is the primary gap' },
-          { letter: 'C', text: 'Payroll changes should only be processed during the first week of the month.', outcome: 'partial', feedback: 'A timing rule might reduce the attack window slightly, but it does not solve the core issue. A fraudulent request can still be processed during that allowed period.', control: 'Partial: Time controls reduce exposure; authorisation is the primary gap' },
-          { letter: 'D', text: 'Employees should manage their own bank details through a self-service portal.', outcome: 'partial', feedback: 'A portal could reduce manual handling, but it introduces different risks like account takeover and phishing. The real control need is still strong verification at the point of change.', control: 'Partial: Portal access needs strong MFA and verification at point of change' },
+          { letter: 'A', text: 'HR administrators should need line manager approval before any payroll bank details are changed.', outcome: 'correct', feedback: 'Correct. Same maker-checker idea, different department. Sensitive financial record changes should not depend on one person getting it right every time.', control: 'Control applied: Manager authorisation for payroll changes | NIST PR.AC-4 | ISO 27001 A.6.1.2' },
+          { letter: 'B', text: 'HR administrators should take annual payroll fraud awareness training.', outcome: 'partial', feedback: 'Helpful, but still secondary. The weakness here is structural.', control: 'Partial: Training supports; authorisation control is the primary gap' },
+          { letter: 'C', text: 'Payroll changes should only be processed during the first week of the month.', outcome: 'partial', feedback: 'That may reduce the attack window a bit, but not enough to matter much. Fraud can arrive on schedule too.', control: 'Partial: Time controls reduce exposure; authorisation is the primary gap' },
+          { letter: 'D', text: 'Employees should manage their own bank details through a self-service portal.', outcome: 'partial', feedback: 'Possibly useful, but it just moves the problem unless the identity and access controls are strong. Account takeover becomes the next issue.', control: 'Partial: Portal access needs strong MFA and verification at point of change' },
         ]
       },
     ],
     gaps: [
-      { icon: '⚠', control: 'Identity verification for payroll changes', desc: 'There was no documented process for verifying that the employee requesting the change was really who they claimed to be.' },
-      { icon: '⚠', control: 'Authorisation controls for HR changes', desc: 'A single HR administrator could update payroll records without independent review.' },
-      { icon: '⚠', control: 'Personal email policy for HR requests', desc: 'There was no clear rule or workflow for handling financial change requests sent from personal email accounts.' },
+      { icon: '⚠', control: 'Identity verification for payroll changes', desc: 'The request touched salary payments, but the organisation had no durable way to prove the requester really was the employee they claimed to be.' },
+      { icon: '⚠', control: 'Authorisation controls for HR changes', desc: 'One administrator could alter payroll details alone. That is how a personal mistake turns into a recurring financial loss.' },
+      { icon: '⚠', control: 'Personal email policy for HR requests', desc: 'There was no clear handling rule for high-risk requests arriving from personal email. So staff were left to improvise.' },
     ]
   },
 
@@ -1172,10 +1151,10 @@ McLean Farrow Solicitors LLP`,
         context: 'The Finance Director receives an email from the solicitor handling a £210,000 property acquisition. The email appears to come from the right firm and includes genuine transaction detail. The bank account has changed.',
         question: 'What should happen before any funds are transferred?',
         choices: [
-          { letter: 'A', text: 'Process the transfer — the domain looks right and the message references details only the solicitor would know.', outcome: 'wrong', feedback: 'This is exactly why conveyancing fraud is so damaging. These emails often contain real details because the attacker has access to a real mailbox or a genuine thread. A convincing email is not enough for a six-figure transfer.', control: 'Missing: High-value payment verification procedure' },
-          { letter: 'B', text: 'Call Jonathan Morrison through the firm’s switchboard number, sourced independently, and confirm the bank details verbally before sending anything.', outcome: 'correct', feedback: 'Correct. For a high-value transfer, especially where account details change close to a deadline, independent verbal confirmation is essential. The urgency is part of the attack pressure. It is meant to make this step feel inconvenient.', control: 'Control applied: Pre-transfer verbal verification | NIST PR.IP-9 | ISO 27001 A.7.2.2' },
-          { letter: 'C', text: 'Reply to the email and ask Jonathan to call back to confirm.', outcome: 'wrong', feedback: 'That still leaves control of the verification step with whoever controls the mailbox. The safe version is for Arken to initiate the contact using a trusted number found independently.', control: 'Missing: Independent out-of-band verification' },
-          { letter: 'D', text: 'Send a small test payment first to see whether the account works.', outcome: 'wrong', feedback: 'A fraudulent account can accept a test payment perfectly well. That only proves the account exists, not that it belongs to the intended recipient.', control: 'Missing: Test payments are not a verification control' },
+          { letter: 'A', text: 'Proceed — it references the deal correctly and the solicitor domain looks fine.', outcome: 'wrong', feedback: 'This is why conveyancing fraud works so well. The message can be full of real detail and still be fraudulent if the mailbox or thread has been compromised.', control: 'Missing: High-value payment verification procedure' },
+          { letter: 'B', text: 'Pause and call the firm using a known number — confirm the bank details verbally before sending anything.', outcome: 'correct', feedback: 'Correct. For a six-figure payment and a late-stage bank detail change, independent verbal confirmation is not optional. The urgency here is part of the pressure. It is meant to make this step feel inconvenient.', control: 'Control applied: Pre-transfer verbal verification | NIST PR.IP-9 | ISO 27001 A.7.2.2' },
+          { letter: 'C', text: 'Reply and ask him to confirm again — just to be safe.', outcome: 'wrong', feedback: 'That still leaves the verification step in the hands of whoever controls the mailbox. The safe version is for Arken to initiate the contact through a trusted number.', control: 'Missing: Independent out-of-band verification' },
+          { letter: 'D', text: 'Send a small test payment first — low risk way to check the account.', outcome: 'wrong', feedback: 'A fraudulent account can accept a test payment perfectly well. That only proves the account exists, not that it belongs to the intended recipient.', control: 'Missing: Test payments are not a verification control' },
         ]
       },
       {
@@ -1184,17 +1163,17 @@ McLean Farrow Solicitors LLP`,
         context: 'Arken has no formal rule saying that payments above a certain value need extra verification.',
         question: 'What policy control would have helped most here?',
         choices: [
-          { letter: 'A', text: 'A policy requiring independent telephone verification for all outgoing payments above £50,000, regardless of where the instruction comes from.', outcome: 'correct', feedback: 'Correct. A defined threshold removes room for judgement calls like “this seems okay.” It turns a risky discretionary decision into a fixed process requirement.', control: 'Control applied: Payment verification threshold policy | NIST PR.IP-9 | ISO 27001 A.12.1.1' },
-          { letter: 'B', text: 'Finance staff should have training specifically on solicitor impersonation fraud.', outcome: 'partial', feedback: 'That would help, but training still leaves a lot resting on the individual under time pressure. A clear policy threshold gives them something firmer to rely on.', control: 'Partial: Training supports but does not replace procedural controls' },
-          { letter: 'C', text: 'All solicitor communication should happen through a dedicated legal portal.', outcome: 'partial', feedback: 'A portal may reduce some risk, but it does not remove the need to verify last-minute bank detail changes. The core control is still independent confirmation before the transfer.', control: 'Partial: Portal reduces attack surface; verification policy is the core control' },
-          { letter: 'D', text: 'Third-party bank details should be checked against a public register.', outcome: 'partial', feedback: 'That sounds sensible, but there is no reliable public register that proves a business bank account belongs to the right party for this purpose. Direct confirmation remains the stronger control.', control: 'Partial: Public register checks have limited value for bank account verification' },
+          { letter: 'A', text: 'A policy requiring independent telephone verification for all outgoing payments above £50,000, regardless of where the instruction comes from.', outcome: 'correct', feedback: 'Correct. A threshold like this removes too much room for “it looked fine to me” judgement. It gives staff something concrete to rely on when the pressure is high.', control: 'Control applied: Payment verification threshold policy | NIST PR.IP-9 | ISO 27001 A.12.1.1' },
+          { letter: 'B', text: 'Finance staff should have training specifically on solicitor impersonation fraud.', outcome: 'partial', feedback: 'Helpful, but still secondary. A good threshold policy does more work than awareness alone because it turns suspicion into a required step.', control: 'Partial: Training supports but does not replace procedural controls' },
+          { letter: 'C', text: 'All solicitor communication should happen through a dedicated legal portal.', outcome: 'partial', feedback: 'That may reduce some risk, but it would not remove the need to verify last-minute account changes. The core issue stays the same.', control: 'Partial: Portal reduces attack surface; verification policy is the core control' },
+          { letter: 'D', text: 'Third-party bank details should be checked against a public register.', outcome: 'partial', feedback: 'It sounds tidy, but it is not a dependable control for proving the beneficiary is really the intended party. Telephone confirmation is stronger.', control: 'Partial: Public register checks have limited value for bank account verification' },
         ]
       },
     ],
     gaps: [
-      { icon: '⚠', control: 'High-value payment verification policy', desc: 'There was no mandatory threshold above which extra verbal verification became non-negotiable.' },
-      { icon: '⚠', control: 'Third-party bank change verification', desc: 'There was no clear procedure for verifying bank detail changes from solicitors, advisors, or similar trusted third parties.' },
-      { icon: '⚠', control: 'Transaction-level pressure response', desc: 'Staff had no guidance on how to respond when urgency and deadlines were being used to pressure a financial decision.' },
+      { icon: '⚠', control: 'High-value payment verification policy', desc: 'There was no threshold at which extra verification stopped being optional. So a six-figure transfer could still rest on someone thinking the email looked fine.' },
+      { icon: '⚠', control: 'Third-party bank change verification', desc: 'A late-stage bank detail change from a trusted adviser was treated too much like ordinary correspondence. It was not ordinary correspondence.' },
+      { icon: '⚠', control: 'Transaction-level pressure response', desc: 'The deadline did part of the attacker’s work. Staff had no clear procedural answer to urgency being used as leverage.' },
     ]
   },
 
@@ -1235,10 +1214,10 @@ Arken Systems`,
         context: 'Rhys receives an urgent email claiming to be from IT support. The sender domain is arken-helpdesk.co.uk, not the real internal IT domain.',
         question: 'What should Rhys recognise before clicking anything?',
         choices: [
-          { letter: 'A', text: 'Click the link immediately to stop the account being suspended.', outcome: 'wrong', feedback: 'This is exactly the reaction the message is designed to trigger. The suspension threat is there to rush the decision and shut down normal caution.', control: 'Missing: Phishing awareness, URL verification' },
-          { letter: 'B', text: 'Notice that the sender domain is wrong, the link goes to a lookalike external site, and no legitimate IT system asks users to enter their current password to “verify” themselves.', outcome: 'correct', feedback: 'Correct. There are several clues here, not just one. The sender is wrong, the link is wrong, and the request itself is wrong. Good phishing detection is often about seeing the pattern, not relying on a single giveaway.', control: 'Control applied: Phishing indicator recognition | NIST PR.AT-1 | ISO 27001 A.7.2.2' },
-          { letter: 'C', text: 'Reply to the email and ask IT whether it is genuine.', outcome: 'wrong', feedback: 'That still engages with the attacker. If Rhys wants to check, the right route is the real helpdesk or ticketing system, not the suspicious message.', control: 'Missing: Correct reporting channel — do not engage with suspect email' },
-          { letter: 'D', text: 'Forward the message to IT and ask whether they sent it.', outcome: 'partial', feedback: 'That is much better than clicking the link. Even so, the stronger response is to report it as suspected phishing through the proper route rather than treating it as a casual question.', control: 'Partial: Forwarding is reasonable; formal phishing report is the correct action' },
+          { letter: 'A', text: 'Click the link and sort it — easier than risking account lockout.', outcome: 'wrong', feedback: 'That is the reaction the email is trying to manufacture. The suspension threat exists to make checking feel expensive and clicking feel safer.', control: 'Missing: Phishing awareness, URL verification' },
+          { letter: 'B', text: 'There are too many red flags — wrong domain, external link, and asking for a password. Don’t touch it.', outcome: 'correct', feedback: 'Correct. It is not one thing. It is the pattern.', control: 'Control applied: Phishing indicator recognition | NIST PR.AT-1 | ISO 27001 A.7.2.2' },
+          { letter: 'C', text: 'Reply and ask IT if this is genuine before doing anything.', outcome: 'wrong', feedback: 'That still keeps Rhys in the attacker’s channel. If he wants to verify, he needs to use the real helpdesk or known internal route.', control: 'Missing: Correct reporting channel — do not engage with suspect email' },
+          { letter: 'D', text: 'Forward it to IT and ask “is this legit?”', outcome: 'partial', feedback: 'Better than clicking, definitely. But the stronger action is to report it properly as suspected phishing rather than casually asking for reassurance.', control: 'Partial: Forwarding is reasonable; formal phishing report is the correct action' },
         ]
       },
       {
@@ -1247,17 +1226,17 @@ Arken Systems`,
         context: 'Rhys realises the message is probably phishing.',
         question: 'What should he do next?',
         choices: [
-          { letter: 'A', text: 'Delete it and move on — he did not click anything, so there is no problem.', outcome: 'wrong', feedback: 'Even if Rhys is safe, someone else might not be. Security still need to know the campaign is active so they can respond properly.', control: 'Missing: Incident reporting, evidence preservation' },
-          { letter: 'B', text: 'Report it to IT security using the phishing report button or official helpdesk, without clicking the link, and leave the email available as evidence.', outcome: 'correct', feedback: 'Correct. That gives security the best chance to block the domain, warn others, and assess whether anyone else engaged with the message.', control: 'Control applied: Phishing reporting procedure | NIST RS.CO-2 | ISO 27001 A.16.1.2' },
-          { letter: 'C', text: 'Warn everyone by forwarding it to the all-staff mailing list.', outcome: 'partial', feedback: 'The desire to warn colleagues is understandable, but forwarding the phishing link more widely can create new risk. Security should manage the warning in a controlled way.', control: 'Partial: Awareness is important; IT security should manage the communication' },
-          { letter: 'D', text: 'Change his password immediately just in case.', outcome: 'partial', feedback: 'A precautionary password change may be sensible in some cases, but the main control action here is still reporting. Otherwise the wider campaign stays invisible to the people who need to manage it.', control: 'Partial: Password change is good practice; reporting is the primary required action' },
+          { letter: 'A', text: 'Delete it and move on — he did not click anything, so there is no problem.', outcome: 'wrong', feedback: 'There may be no problem for Rhys personally. There may still be a problem for everyone else.', control: 'Missing: Incident reporting, evidence preservation' },
+          { letter: 'B', text: 'Report it to IT security using the phishing report button or official helpdesk, without clicking the link, and leave the email available as evidence.', outcome: 'correct', feedback: 'Correct. That gives security something they can actually work with: the message itself, the timing, and the chance to look for other recipients.', control: 'Control applied: Phishing reporting procedure | NIST RS.CO-2 | ISO 27001 A.16.1.2' },
+          { letter: 'C', text: 'Warn everyone by forwarding it to the all-staff mailing list.', outcome: 'partial', feedback: 'The instinct is fair, but forwarding the content more widely can create another sort of mess. Security should handle the warning in a controlled way.', control: 'Partial: Awareness is important; IT security should manage the communication' },
+          { letter: 'D', text: 'Change his password immediately just in case.', outcome: 'partial', feedback: 'Not a bad precaution, especially if he thinks he may have interacted with it. But the primary action is still reporting the campaign. Otherwise the wider issue stays mostly invisible.', control: 'Partial: Password change is good practice; reporting is the primary required action' },
         ]
       },
     ],
     gaps: [
-      { icon: '⚠', control: 'Email filtering and lookalike domain blocking', desc: 'A phishing email from a lookalike domain still reached the inbox.' },
-      { icon: '⚠', control: 'Phishing reporting procedure', desc: 'There was no obvious, well-understood route for staff to report a phishing message quickly.' },
-      { icon: '⚠', control: 'Security awareness training — phishing indicators', desc: 'Employees were too reliant on gut instinct rather than being trained to look for specific indicators like false domains and suspicious links.' },
+      { icon: '⚠', control: 'Email filtering and lookalike domain blocking', desc: 'A cheap lookalike domain still reached the inbox and carried enough urgency to be dangerous. Filtering did not do enough here.' },
+      { icon: '⚠', control: 'Phishing reporting procedure', desc: 'There was no reporting route so obvious that a user would use it immediately without thinking. That matters.' },
+      { icon: '⚠', control: 'Security awareness training — phishing indicators', desc: 'Staff were expected to rely too much on gut feeling. The email had several concrete warning signs, and users should have been trained to notice them quickly.' },
     ]
   },
 
@@ -1305,10 +1284,10 @@ DeltaBridge Technology`,
         context: 'Chioma receives an email from a trusted vendor. It references a real purchase order and asks for two changes at once: a delivery address update and new bank details.',
         question: 'What should stand out here, even though the message appears legitimate?',
         choices: [
-          { letter: 'A', text: 'Nothing unusual — Chioma should confirm both changes so dispatch can go ahead.', outcome: 'wrong', feedback: 'Two change requests in one message is exactly the kind of pattern that should slow things down, not speed them up. It is unusual enough on its own, and even more so when one of the changes involves payment details.', control: 'Missing: Change request pattern recognition' },
-          { letter: 'B', text: 'The combination of a delivery address change and a bank detail change in one email is unusual, and neither should be confirmed without independent verification.', outcome: 'correct', feedback: 'Correct. This is what makes the email more sophisticated. One request makes the other feel less suspicious. But both changes affect control points, and both need checking outside the email thread.', control: 'Control applied: Multi-vector change recognition | NIST DE.CM-7 | ISO 27001 A.13.2.2' },
-          { letter: 'C', text: 'The bank details should be verified, but the delivery address change is probably fine to confirm.', outcome: 'partial', feedback: 'Verifying the bank details is right, but the address change also matters. A compromised mailbox can be used to divert goods as well as money.', control: 'Partial: Bank verification is correct; delivery change also needs verification' },
-          { letter: 'D', text: 'Check that the PO number matches Arken’s records and, if it does, proceed.', outcome: 'partial', feedback: 'Matching the PO shows the attacker knows something real, but that is not the same as proving the instruction is genuine. In fact, it often means the attacker has access to the vendor’s mailbox or thread.', control: 'Partial: PO matching is useful context; not sufficient for authentication' },
+          { letter: 'A', text: 'Confirm both — it’s a live order and the email chain looks normal.', outcome: 'wrong', feedback: 'Two sensitive changes at once should slow things down, not speed them up.', control: 'Missing: Change request pattern recognition' },
+          { letter: 'B', text: 'Something’s off — two changes at once. Don’t confirm either without checking outside the email.', outcome: 'correct', feedback: 'Correct. Both requests touch control points. Both need independent verification.', control: 'Control applied: Multi-vector change recognition | NIST DE.CM-7 | ISO 27001 A.13.2.2' },
+          { letter: 'C', text: 'Verify the bank details, but the delivery address change is probably fine to confirm.', outcome: 'partial', feedback: 'Half right. The delivery change matters as well. A compromised mailbox can divert goods just as easily as money.', control: 'Partial: Bank verification is correct; delivery change also needs verification' },
+          { letter: 'D', text: 'Check the PO number matches and move ahead if it does.', outcome: 'partial', feedback: 'Matching records does not prove legitimacy. It just shows the attacker knows something real.', control: 'Partial: PO matching is useful context; not sufficient for authentication' },
         ]
       },
       {
@@ -1317,17 +1296,17 @@ DeltaBridge Technology`,
         context: 'This is not a spoofed domain. It is a likely compromised vendor mailbox, so ordinary sender checks are not enough.',
         question: 'Which control is most effective against this kind of attack?',
         choices: [
-          { letter: 'A', text: 'A rule requiring all supplier payment or delivery changes to be verified by phone using a pre-registered contact number, no matter how genuine the email looks.', outcome: 'correct', feedback: 'Correct. When a real mailbox is compromised, technical email checks can look perfectly normal. The only dependable defence is a process control that sits outside the email itself.', control: 'Control applied: Mandatory verbal verification for supplier changes | NIST PR.AC-1 | ISO 27001 A.15.1.2' },
-          { letter: 'B', text: 'Require DMARC and DKIM across all suppliers.', outcome: 'partial', feedback: 'Those controls are still valuable, but they mainly help against spoofing. They do much less when the attacker is sending mail from the supplier’s real mailbox.', control: 'Partial: Technical controls needed but insufficient for compromised mailbox attacks' },
-          { letter: 'C', text: 'Move all supplier correspondence into a procurement portal.', outcome: 'partial', feedback: 'A portal can improve structure and audit trail, but it does not remove the need for verification when sensitive details change. If a supplier account is compromised, the same basic problem remains.', control: 'Partial: Portal helps; verbal verification for changes is still required' },
-          { letter: 'D', text: 'Run a quarterly audit of supplier bank details.', outcome: 'partial', feedback: 'That may help spot issues after the fact, but it does not stop the attack at the point of change. Prevention matters more here than retrospective review.', control: 'Partial: Audit control is valuable; preventive verification at point of change is the priority' },
+          { letter: 'A', text: 'A rule requiring all supplier payment or delivery changes to be verified by phone using a pre-registered contact number, no matter how genuine the email looks.', outcome: 'correct', feedback: 'Correct. Once the attacker is in a real mailbox, many of the usual technical clues disappear. At that point the real defence is procedural and boring: step outside email and verify it properly.', control: 'Control applied: Mandatory verbal verification for supplier changes | NIST PR.AC-1 | ISO 27001 A.15.1.2' },
+          { letter: 'B', text: 'Require DMARC and DKIM across all suppliers.', outcome: 'partial', feedback: 'Still useful, but mainly against spoofing. It helps much less when the attacker is sending from the real account.', control: 'Partial: Technical controls needed but insufficient for compromised mailbox attacks' },
+          { letter: 'C', text: 'Move all supplier correspondence into a procurement portal.', outcome: 'partial', feedback: 'That may improve structure and traceability. It still does not remove the need to verify sensitive changes independently.', control: 'Partial: Portal helps; verbal verification for changes is still required' },
+          { letter: 'D', text: 'Run a quarterly audit of supplier bank details.', outcome: 'partial', feedback: 'Useful afterwards. Too late for this attack.', control: 'Partial: Audit control is valuable; preventive verification at point of change is the priority' },
         ]
       },
     ],
     gaps: [
-      { icon: '⚠', control: 'Supplier change verification (non-spoofed attacks)', desc: 'Technical email checks do not solve compromised supplier mailbox risk. The missing control is procedural verification.' },
-      { icon: '⚠', control: 'Multi-request change pattern detection', desc: 'Staff had no clear guidance on treating simultaneous requests to change logistics and payment details as high risk.' },
-      { icon: '⚠', control: 'Supplier contact register for out-of-band verification', desc: 'There was no clearly maintained list of trusted supplier contacts for verbal verification.' },
+      { icon: '⚠', control: 'Supplier change verification (non-spoofed attacks)', desc: 'Once the attacker was in a real supplier mailbox, the organisation had nothing dependable outside email to fall back on. That is the real gap.' },
+      { icon: '⚠', control: 'Multi-request change pattern detection', desc: 'A delivery diversion and a bank change arriving together should have felt high-risk immediately. Staff had no clear instruction to treat that pattern as abnormal.' },
+      { icon: '⚠', control: 'Supplier contact register for out-of-band verification', desc: 'The whole defence depends on having a trusted number to call. Without that, “verify by phone” turns into a nice idea rather than a working control.' },
     ]
   },
 ];
@@ -1346,9 +1325,6 @@ const FRAMEWORK_CONTROLS = [
   { control: 'ISO 27001 A.16.1.2', desc: 'Security events are reported through appropriate management channels. Relevant to preserving evidence and escalating incidents correctly.' },
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────────────────────────────────────
 let state = {
   currentScenario: 0,
   currentCheckpoint: 0,
@@ -1357,9 +1333,6 @@ let state = {
   completedScenarios: new Set(),
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────────────────────────────────────────
 function init() {
   renderScenarioNav();
 }
@@ -1368,27 +1341,25 @@ function renderScenarioNav() {
   const nav = document.getElementById('scenario-nav');
   nav.innerHTML = SCENARIOS.map((sc, i) => `
     <div class="scenario-btn ${state.completedScenarios.has(i) ? 'complete' : ''}" id="nav-btn-${i}" onclick="startScenario(${i})">
-      <div class="sb-num">Scenario ${i+1}</div>
+      <div class="sb-num">Scenario ${i + 1}</div>
       <div class="sb-name">${sc.name}</div>
       <div class="sb-type">${sc.subtitle}</div>
     </div>
   `).join('');
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SCENARIO START
-// ─────────────────────────────────────────────────────────────────────────────
 function startScenario(index) {
   state.currentScenario = index;
   state.currentCheckpoint = 0;
   state.answered = false;
 
   document.getElementById('home-view').style.display = 'none';
+  document.getElementById('panel-methodology').style.display = 'none';
   document.getElementById('gap-report').classList.remove('show');
   document.getElementById('simulator').classList.add('show');
 
   renderScenarioNav();
-  document.querySelectorAll('.scenario-btn').forEach((b,i) => b.classList.toggle('active', i === index));
+  document.querySelectorAll('.scenario-btn').forEach((b, i) => b.classList.toggle('active', i === index));
 
   renderScenario();
 }
@@ -1435,6 +1406,7 @@ function renderScenario() {
   fb.innerHTML = '';
   const btnNext = document.getElementById('btn-next');
   btnNext.className = 'btn-next';
+  btnNext.textContent = '';
   state.answered = false;
 }
 
@@ -1453,9 +1425,10 @@ function renderEmail(email) {
     'before Friday',
     'today',
     'immediately',
-    'Old details are now closed',
+    'Our old details are now closed',
     'cannot wait until tomorrow',
   ];
+
   suspiciousPhrases.forEach(phrase => {
     body = body.replace(new RegExp(phrase, 'g'), `<span class="highlight-amber">${phrase}</span>`);
   });
@@ -1483,9 +1456,6 @@ function renderEmail(email) {
   `;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CHOICE SELECTION
-// ─────────────────────────────────────────────────────────────────────────────
 function selectChoice(index) {
   if (state.answered) return;
   state.answered = true;
@@ -1529,6 +1499,7 @@ function selectChoice(index) {
   const isLastScenario = state.currentScenario === SCENARIOS.length - 1;
 
   btnNext.className = 'btn-next show';
+
   if (isLastCheckpoint && isLastScenario) {
     btnNext.textContent = 'View Full Gap Report →';
     btnNext.onclick = showGapReport;
@@ -1549,9 +1520,6 @@ function nextCheckpoint() {
   renderScenario();
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// GAP REPORT
-// ─────────────────────────────────────────────────────────────────────────────
 function showGapReport() {
   state.completedScenarios.add(state.currentScenario);
   renderScenarioNav();
@@ -1586,46 +1554,48 @@ function showGapReport() {
   `;
 
   const scenarioResults = document.getElementById('scenario-results');
-  scenarioResults.innerHTML = SCENARIOS.map((sc, si) => {
+  scenarioResults.innerHTML = SCENARIOS.map((sc) => {
     const scResults = state.results.filter(r => r.scenarioId === sc.id);
     const scTotal = scResults.length;
-    const scScore = scTotal > 0 ? Math.round(((scResults.filter(r=>r.outcome==='correct').length + scResults.filter(r=>r.outcome==='partial').length * 0.5) / scTotal) * 100) : 0;
+    const scScore = scTotal > 0
+      ? Math.round(((scResults.filter(r => r.outcome === 'correct').length + scResults.filter(r => r.outcome === 'partial').length * 0.5) / scTotal) * 100)
+      : 0;
     const rating = scScore >= 75 ? 'pass' : scScore >= 40 ? 'partial' : 'fail';
     const ratingText = rating === 'pass' ? 'Adequate' : rating === 'partial' ? 'Gaps Present' : 'Significant Gaps';
 
     return `
-    <div class="scenario-result-card">
-      <div class="src-header" onclick="toggleScResult(this)">
-        <div class="src-name">${sc.id}: ${sc.name} — ${sc.subtitle}</div>
-        <div class="src-score">
-          <div class="src-pct">${scScore}%</div>
-          <div class="src-rating ${rating}">${ratingText}</div>
+      <div class="scenario-result-card">
+        <div class="src-header" onclick="toggleScResult(this)">
+          <div class="src-name">${sc.id}: ${sc.name} — ${sc.subtitle}</div>
+          <div class="src-score">
+            <div class="src-pct">${scScore}%</div>
+            <div class="src-rating ${rating}">${ratingText}</div>
+          </div>
         </div>
-      </div>
-      <div class="src-body">
-        <div style="margin-bottom:16px">
-          ${scResults.map(r => `
+        <div class="src-body">
+          <div style="margin-bottom:16px">
+            ${scResults.map(r => `
+              <div class="gap-item">
+                <div class="gap-icon">${r.outcome === 'correct' ? '✓' : r.outcome === 'partial' ? '◑' : '✗'}</div>
+                <div class="gap-content">
+                  <div class="gap-control">${r.checkpointTitle}</div>
+                  <div class="gap-desc" style="color:${r.outcome === 'correct' ? 'var(--green)' : r.outcome === 'partial' ? 'var(--amber)' : 'var(--red)'}">${r.control}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-dim);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.1em">Identified control gaps</div>
+          ${sc.gaps.map(g => `
             <div class="gap-item">
-              <div class="gap-icon">${r.outcome === 'correct' ? '✓' : r.outcome === 'partial' ? '◑' : '✗'}</div>
+              <div class="gap-icon" style="color:var(--amber)">${g.icon}</div>
               <div class="gap-content">
-                <div class="gap-control">${r.checkpointTitle}</div>
-                <div class="gap-desc" style="color:${r.outcome==='correct'?'var(--green)':r.outcome==='partial'?'var(--amber)':'var(--red)'}">${r.control}</div>
+                <div class="gap-control">${g.control}</div>
+                <div class="gap-desc">${g.desc}</div>
               </div>
             </div>
           `).join('')}
         </div>
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-dim);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.1em">Identified control gaps</div>
-        ${sc.gaps.map(g => `
-          <div class="gap-item">
-            <div class="gap-icon" style="color:var(--amber)">${g.icon}</div>
-            <div class="gap-content">
-              <div class="gap-control">${g.control}</div>
-              <div class="gap-desc">${g.desc}</div>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </div>`;
+      </div>`;
   }).join('');
 
   document.getElementById('framework-map').innerHTML = `
@@ -1657,26 +1627,27 @@ function restart() {
   };
   document.getElementById('gap-report').classList.remove('show');
   document.getElementById('simulator').classList.remove('show');
+  document.getElementById('panel-methodology').style.display = 'none';
   document.getElementById('home-view').style.display = 'block';
   renderScenarioNav();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
-init();
 
 function showMethodology() {
   document.getElementById('panel-methodology').style.display = 'block';
   document.getElementById('home-view').style.display = 'none';
   document.getElementById('simulator').classList.remove('show');
   document.getElementById('gap-report').classList.remove('show');
-  window.scrollTo({top: 0, behavior: 'smooth'});
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function closeMethodology() {
   document.getElementById('panel-methodology').style.display = 'none';
   document.getElementById('home-view').style.display = 'block';
-  window.scrollTo({top: 0, behavior: 'smooth'});
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+init();
 </script>
 </body>
 </html>
