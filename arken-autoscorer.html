@@ -4,1614 +4,1439 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Arken Systems — Third-Party Risk Auto-Scorer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Epilogue:wght@400;500;600;700;800;900&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0d1117;
-      --panel: #161b22;
-      --panel-soft: #1c232d;
-      --border: #2b3440;
-      --text: #e6edf3;
-      --text-soft: #b9c5d1;
-      --text-muted: #8b98a7;
-      --accent: #5fb3ff;
-      --accent-soft: rgba(95, 179, 255, 0.12);
-      --danger: #ff6b6b;
-      --high: #ff9f43;
-      --medium: #f6c453;
-      --low: #55d187;
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.24);
+      --bg:         #1a1714;
+      --bg-raised:  #211e1a;
+      --bg-inset:   #151310;
+      --border:     #332e28;
+      --border-soft:#2a2520;
+      --text:       #e8e0d4;
+      --text-mid:   #b8ad9e;
+      --text-dim:   #7a7168;
+      --amber:      #d4903a;
+      --amber-soft: rgba(212, 144, 58, 0.10);
+      --amber-glow: rgba(212, 144, 58, 0.18);
+      --red:        #c0534a;
+      --red-soft:   rgba(192, 83, 74, 0.12);
+      --orange:     #c47840;
+      --yellow:     #b8982a;
+      --green:      #5a9068;
+      --green-soft: rgba(90, 144, 104, 0.12);
+      --shadow-sm:  0 1px 3px rgba(0,0,0,0.3);
+      --shadow:     0 4px 16px rgba(0,0,0,0.35);
+      --shadow-lg:  0 8px 32px rgba(0,0,0,0.4);
+      --radius:     6px;
+      --radius-lg:  10px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
-      background: linear-gradient(180deg, #0b0f14 0%, #0d1117 100%);
+      background: var(--bg);
       color: var(--text);
-      font-family: "Inter", sans-serif;
-      min-height: 100vh;
-      line-height: 1.5;
-    }
-
-    .container {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 28px 18px 80px;
-    }
-
-    .top-note {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 18px;
-      letter-spacing: 0.02em;
-    }
-
-    .hero {
-      background: linear-gradient(180deg, rgba(95,179,255,0.05), rgba(95,179,255,0.02));
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 28px;
-      box-shadow: var(--shadow);
-      margin-bottom: 22px;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.6fr 1fr;
-      gap: 24px;
-      align-items: start;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 11px;
-      color: var(--accent);
-      background: var(--accent-soft);
-      padding: 6px 10px;
-      border-radius: 999px;
-      margin-bottom: 16px;
-    }
-
-    h1 {
-      font-size: clamp(28px, 5vw, 44px);
-      line-height: 1.05;
-      margin-bottom: 12px;
-      letter-spacing: -0.03em;
-    }
-
-    h1 span {
-      color: var(--accent);
-    }
-
-    .hero p {
-      color: var(--text-soft);
-      max-width: 760px;
+      font-family: 'Source Serif 4', Georgia, serif;
       font-size: 15px;
+      line-height: 1.6;
+      min-height: 100vh;
     }
 
-    .hero-meta {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px;
-    }
-
-    .meta-title {
-      font-weight: 700;
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
-
-    .meta-list {
+    .shell {
       display: grid;
+      grid-template-columns: 220px 1fr;
+      grid-template-rows: 48px 1fr;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      grid-column: 1 / -1;
+      background: var(--bg-inset);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 16px;
+    }
+
+    .topbar-brand {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--amber);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .topbar-sep {
+      width: 1px;
+      height: 18px;
+      background: var(--border);
+    }
+
+    .topbar-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .topbar-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
       gap: 10px;
-      font-size: 13px;
+    }
+
+    .topbar-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 3px 7px;
+      letter-spacing: 0.05em;
+    }
+
+    .sidebar {
+      background: var(--bg-inset);
+      border-right: 1px solid var(--border);
+      padding: 20px 0;
+      position: sticky;
+      top: 0;
+      height: calc(100vh - 48px);
+      overflow-y: auto;
+    }
+
+    .sidebar-section {
+      padding: 0 14px 20px;
+      border-bottom: 1px solid var(--border-soft);
+      margin-bottom: 20px;
+    }
+
+    .sidebar-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .sidebar-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--text-mid);
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .nav-item:hover {
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+    }
+
+    .nav-item.active {
+      background: var(--amber-glow);
+      color: var(--amber);
+      border-left: 2px solid var(--amber);
+      margin-left: -2px;
+    }
+
+    .nav-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+
+    .nav-item.active .nav-dot { opacity: 1; }
+
+    .meta-block {
+      background: var(--bg-raised);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      padding: 10px 12px;
     }
 
     .meta-row {
       display: flex;
       justify-content: space-between;
-      gap: 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      padding-bottom: 10px;
+      gap: 8px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      padding: 5px 0;
+      border-bottom: 1px solid var(--border-soft);
     }
 
-    .meta-row:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
+    .meta-row:last-child { border-bottom: none; }
+    .meta-k { color: var(--text-dim); }
+    .meta-v { color: var(--text-mid); text-align: right; }
+
+    .main {
+      padding: 28px 32px 80px;
+      max-width: 920px;
     }
 
-    .meta-key {
-      color: var(--text-muted);
+    .page-header {
+      margin-bottom: 18px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
     }
 
-    .meta-val {
-      text-align: right;
-      color: var(--text);
-      font-weight: 500;
-    }
-
-    .scenario {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 22px;
-    }
-
-    .scenario-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-    }
-
-    .scenario-label {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 11px;
-      color: var(--text-muted);
+    .page-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--amber);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       margin-bottom: 8px;
     }
 
-    .scenario-value {
-      font-size: 14px;
-      color: var(--text);
-      line-height: 1.45;
+    .page-title {
+      font-family: 'Epilogue', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 10px;
     }
 
-    .tabs {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
+    .page-desc {
+      font-size: 14px;
+      color: var(--text-mid);
+      max-width: 690px;
+    }
+
+    .working-note {
+      background: linear-gradient(180deg, rgba(212,144,58,0.08), rgba(212,144,58,0.03));
+      border: 1px solid rgba(212, 144, 58, 0.22);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
       margin-bottom: 22px;
     }
 
-    .tab {
-      border: 1px solid var(--border);
-      background: var(--panel);
-      color: var(--text-soft);
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .tab:hover {
-      border-color: var(--accent);
-      color: var(--text);
-    }
-
-    .tab.active {
-      background: var(--accent-soft);
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .panel {
-      display: none;
-    }
-
-    .panel.active {
-      display: block;
-    }
-
-    .section {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 24px;
-      box-shadow: var(--shadow);
-    }
-
-    .section-head {
-      margin-bottom: 20px;
-    }
-
-    .section-head h2 {
-      font-size: 22px;
+    .working-note-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--amber);
       margin-bottom: 6px;
-      letter-spacing: -0.02em;
     }
 
-    .section-head p {
-      color: var(--text-soft);
-      font-size: 14px;
+    .working-note p {
+      font-size: 13.5px;
+      color: var(--text-mid);
+      margin-bottom: 6px;
     }
+
+    .working-note p:last-child { margin-bottom: 0; }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
 
     .domain-block {
       border: 1px solid var(--border);
-      border-radius: 14px;
-      margin-bottom: 14px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 10px;
+      background: var(--bg-raised);
       overflow: hidden;
-      background: rgba(255,255,255,0.02);
     }
 
-    .domain-header {
+    .domain-trigger {
       width: 100%;
       display: flex;
-      justify-content: space-between;
       align-items: center;
       gap: 12px;
-      background: transparent;
+      padding: 13px 16px;
+      background: none;
       border: none;
       color: var(--text);
-      padding: 16px 18px;
       cursor: pointer;
       text-align: left;
     }
 
-    .domain-header:hover {
-      background: rgba(255,255,255,0.02);
-    }
+    .domain-trigger:hover { background: rgba(255,255,255,0.02); }
 
-    .domain-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .domain-code {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 11px;
-      color: var(--accent);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 5px 8px;
-      white-space: nowrap;
-    }
-
-    .domain-name {
-      font-weight: 700;
-      font-size: 15px;
-    }
-
-    .domain-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .domain-id {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--amber);
+      background: var(--amber-soft);
+      border: 1px solid rgba(212,144,58,0.2);
+      border-radius: 3px;
+      padding: 3px 7px;
+      letter-spacing: 0.05em;
       flex-shrink: 0;
     }
 
+    .domain-name-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .domain-name {
+      font-family: 'Epilogue', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .domain-note-inline {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 3px;
+    }
+
     .domain-weight {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 12px;
-      color: var(--text-muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      flex-shrink: 0;
     }
 
-    .chevron {
-      color: var(--text-muted);
-      transition: transform 0.2s ease;
+    .domain-chevron {
+      font-size: 10px;
+      color: var(--text-dim);
+      transition: transform 0.18s;
+      flex-shrink: 0;
     }
 
-    .domain-header.open .chevron {
-      transform: rotate(180deg);
-    }
+    .domain-trigger.open .domain-chevron { transform: rotate(180deg); }
 
-    .domain-questions {
+    .domain-body {
       display: none;
-      padding: 0 18px 18px;
+      padding: 4px 16px 16px;
+      border-top: 1px solid var(--border-soft);
     }
 
-    .domain-questions.open {
-      display: block;
+    .domain-body.open { display: block; }
+
+    .domain-body-note {
+      background: var(--bg-inset);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font-size: 12.5px;
+      color: var(--text-mid);
+      margin: 12px 0 2px;
     }
 
-    .question {
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      margin-top: 12px;
-      background: #11161d;
+    .question-row {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border-soft);
     }
+
+    .question-row:last-child { border-bottom: none; }
 
     .question-id {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 11px;
-      color: var(--accent);
-      margin-bottom: 8px;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--amber);
+      margin-bottom: 5px;
     }
 
     .question-text {
-      font-size: 14px;
-      color: var(--text);
-      margin-bottom: 12px;
+      font-size: 13.5px;
+      color: var(--text-mid);
+      margin-bottom: 10px;
+      line-height: 1.5;
     }
 
-    .question select {
-      width: 100%;
-      max-width: 220px;
-      background: var(--panel-soft);
+    .q-select {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      background: var(--bg-inset);
       border: 1px solid var(--border);
       color: var(--text);
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 14px;
+      border-radius: var(--radius);
+      padding: 7px 10px;
+      min-width: 160px;
       outline: none;
+      cursor: pointer;
     }
 
-    .question select:focus {
-      border-color: var(--accent);
-    }
+    .q-select:focus { border-color: var(--amber); }
 
     .btn-row {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
-      margin-top: 22px;
+      margin-top: 20px;
     }
 
     .btn {
-      border: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: var(--radius);
+      padding: 9px 16px;
       cursor: pointer;
-      border-radius: 12px;
-      padding: 12px 18px;
-      font-weight: 700;
-      transition: 0.2s ease;
+      border: none;
+      transition: opacity 0.15s, background 0.15s;
+      letter-spacing: 0.03em;
     }
+
+    .btn:hover { opacity: 0.88; }
 
     .btn-primary {
-      background: var(--accent);
-      color: #08131f;
+      background: var(--amber);
+      color: #1a1410;
     }
 
-    .btn-primary:hover {
-      filter: brightness(1.07);
-    }
-
-    .btn-secondary {
+    .btn-ghost {
       background: transparent;
-      color: var(--text-soft);
+      color: var(--text-mid);
       border: 1px solid var(--border);
     }
 
-    .btn-secondary:hover {
-      border-color: var(--accent);
+    .btn-ghost:hover {
+      border-color: var(--amber);
       color: var(--text);
+      opacity: 1;
+    }
+
+    #results { display: none; }
+    #results.show { display: block; }
+
+    .result-header-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .rcard {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+    }
+
+    .rcard-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
+
+    .score-num {
+      font-family: 'Epilogue', sans-serif;
+      font-size: 48px;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .score-denom {
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      color: var(--text-dim);
+    }
+
+    .risk-pill {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      border: 1px solid;
+      letter-spacing: 0.06em;
+    }
+
+    .risk-pill.low    { color: var(--green); background: var(--green-soft); border-color: var(--green); }
+    .risk-pill.medium { color: var(--yellow); background: rgba(184,152,42,0.1); border-color: var(--yellow); }
+    .risk-pill.high   { color: var(--orange); background: rgba(196,120,64,0.1); border-color: var(--orange); }
+    .risk-pill.critical { color: var(--red); background: var(--red-soft); border-color: var(--red); }
+
+    .rcard-meta { display: grid; gap: 6px; }
+
+    .rcard-meta-row {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .rcard-meta-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .rcard-meta-k { color: var(--text-dim); }
+    .rcard-meta-v { color: var(--text-mid); }
+
+    .section-divider {
+      font-family: 'Epilogue', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      margin: 24px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .domain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .dcard {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+    }
+
+    .dcard-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .dcard-name {
+      font-family: 'Epilogue', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .dcard-sub {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 3px;
+    }
+
+    .dcard-score {
+      font-family: 'Epilogue', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .bar {
+      height: 5px;
+      background: var(--bg-inset);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      border: 1px solid var(--border-soft);
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 99px;
+    }
+
+    .flag-list { display: grid; gap: 5px; }
+
+    .flag-item {
+      display: flex;
+      gap: 7px;
+      align-items: flex-start;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    .flag-pip {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .content-block {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      margin-bottom: 12px;
+    }
+
+    .content-block h3 {
+      font-family: 'Epilogue', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .item-list { display: grid; gap: 0; }
+
+    .list-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .list-item:last-child { border-bottom: none; }
+
+    .item-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      border-radius: 3px;
+      padding: 2px 6px;
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    .item-label.critical { color: var(--red); background: var(--red-soft); }
+    .item-label.high     { color: var(--orange); background: rgba(196,120,64,0.1); }
+    .item-label.medium   { color: var(--yellow); background: rgba(184,152,42,0.1); }
+
+    .item-title {
+      font-family: 'Epilogue', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .item-body {
+      font-size: 13px;
+      color: var(--text-mid);
+    }
+
+    .item-domain {
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-top: 5px;
     }
 
     .upload-zone {
       border: 2px dashed var(--border);
-      border-radius: 16px;
-      background: #121821;
-      padding: 34px 20px;
+      border-radius: var(--radius-lg);
+      padding: 40px 20px;
       text-align: center;
       position: relative;
-      transition: 0.2s ease;
+      background: var(--bg-raised);
+      transition: border-color 0.15s, background 0.15s;
+      cursor: pointer;
     }
 
-    .upload-zone.dragover,
-    .upload-zone:hover {
-      border-color: var(--accent);
-      background: #121d29;
+    .upload-zone:hover,
+    .upload-zone.dragover {
+      border-color: var(--amber);
+      background: var(--amber-soft);
     }
 
     .upload-zone input[type="file"] {
       position: absolute;
       inset: 0;
       opacity: 0;
-      width: 100%;
-      height: 100%;
       cursor: pointer;
     }
 
     .upload-zone h3 {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
-    .upload-zone p {
-      color: var(--text-soft);
-      font-size: 14px;
-    }
-
-    .helper-link {
-      display: inline-block;
-      margin-top: 16px;
-      color: var(--accent);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      font-size: 14px;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-
-    #csv-preview {
-      margin-top: 18px;
-    }
-
-    .method-grid {
-      display: grid;
-      gap: 16px;
-    }
-
-    .method-card {
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: #121821;
-      padding: 20px;
-    }
-
-    .method-card h3 {
+      font-family: 'Epilogue', sans-serif;
       font-size: 16px;
-      margin-bottom: 10px;
-    }
-
-    .method-card p,
-    .method-card li {
-      color: var(--text-soft);
-      font-size: 14px;
-    }
-
-    .method-card ul {
-      padding-left: 18px;
-      display: grid;
-      gap: 8px;
-    }
-
-    .small-label {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 11px;
-      color: var(--accent);
-      margin-bottom: 10px;
-    }
-
-    #results {
-      display: none;
-      margin-top: 22px;
-    }
-
-    #results.show {
-      display: block;
-    }
-
-    .report-header {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr 0.8fr;
-      gap: 16px;
-      margin-bottom: 22px;
-    }
-
-    .report-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: var(--shadow);
-    }
-
-    .report-label {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    .report-title {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-
-    .report-meta {
-      display: grid;
-      gap: 10px;
-    }
-
-    .report-meta-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      font-size: 13px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .report-meta-row:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-
-    .risk-badge {
-      display: inline-block;
-      font-size: 22px;
-      font-weight: 800;
-      border-radius: 12px;
-      padding: 14px 16px;
-      border: 2px solid;
-    }
-
-    .risk-badge.low {
-      color: var(--low);
-      background: rgba(85, 209, 135, 0.08);
-      border-color: var(--low);
-    }
-
-    .risk-badge.medium {
-      color: var(--medium);
-      background: rgba(246, 196, 83, 0.08);
-      border-color: var(--medium);
-    }
-
-    .risk-badge.high {
-      color: var(--high);
-      background: rgba(255, 159, 67, 0.08);
-      border-color: var(--high);
-    }
-
-    .risk-badge.critical {
-      color: var(--danger);
-      background: rgba(255, 107, 107, 0.08);
-      border-color: var(--danger);
-    }
-
-    .score-big {
-      font-size: 54px;
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: -0.04em;
-    }
-
-    .score-big span {
-      font-size: 18px;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    .domain-results {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-      margin-bottom: 22px;
-    }
-
-    .domain-result {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: var(--shadow);
-    }
-
-    .domain-result-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: start;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .domain-result-name {
-      font-size: 15px;
       font-weight: 700;
       margin-bottom: 6px;
     }
 
-    .domain-result-meta {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .domain-result-score {
-      font-size: 24px;
-      font-weight: 800;
-    }
-
-    .bar {
-      height: 8px;
-      border-radius: 999px;
-      background: #0f141b;
-      overflow: hidden;
-      margin-bottom: 12px;
-      border: 1px solid rgba(255,255,255,0.04);
-    }
-
-    .bar-fill {
-      height: 100%;
-      border-radius: 999px;
-      transition: width 0.4s ease;
-    }
-
-    .flags {
-      display: grid;
-      gap: 8px;
-      font-size: 13px;
-      color: var(--text-soft);
-    }
-
-    .flag-row {
-      display: flex;
-      gap: 8px;
-      align-items: flex-start;
-    }
-
-    .flag-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      margin-top: 6px;
-      flex-shrink: 0;
-    }
-
-    .content-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 18px;
-      box-shadow: var(--shadow);
-    }
-
-    .content-card h3 {
-      font-size: 18px;
-      margin-bottom: 14px;
-    }
-
-    .content-list {
-      display: grid;
-      gap: 14px;
-    }
-
-    .list-item {
-      border-top: 1px solid rgba(255,255,255,0.05);
-      padding-top: 14px;
-    }
-
-    .list-item:first-child {
-      border-top: none;
-      padding-top: 0;
-    }
-
-    .list-title {
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .list-meta {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .severity {
-      display: inline-block;
-      font-family: "IBM Plex Mono", monospace;
+    .upload-zone p {
+      font-family: 'DM Mono', monospace;
       font-size: 11px;
-      border-radius: 999px;
-      padding: 4px 8px;
+      color: var(--text-dim);
+    }
+
+    .text-link {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--amber);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      margin-top: 14px;
+      display: inline-block;
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 10px;
+    }
+
+    .method-card {
+      background: var(--bg-raised);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 18px;
+    }
+
+    .method-card.tall {
+      grid-row: span 2;
+    }
+
+    .method-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px;
+      color: var(--amber);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .method-card h3 {
+      font-family: 'Epilogue', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
       margin-bottom: 8px;
     }
 
-    .severity.critical {
-      color: var(--danger);
-      background: rgba(255,107,107,0.12);
+    .method-card p,
+    .method-card li {
+      font-size: 13px;
+      color: var(--text-mid);
+      line-height: 1.55;
     }
 
-    .severity.high {
-      color: var(--high);
-      background: rgba(255,159,67,0.12);
+    .method-card ul {
+      padding-left: 16px;
+      display: grid;
+      gap: 6px;
     }
 
-    .severity.medium {
-      color: var(--medium);
-      background: rgba(246,196,83,0.12);
+    .method-card p + p {
+      margin-top: 10px;
     }
 
-    .disclaimer {
-      margin-top: 22px;
-      background: #11161d;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px 18px;
-      color: var(--text-soft);
-      font-size: 14px;
+    .notice {
+      background: var(--bg-inset);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 24px;
+      line-height: 1.6;
     }
 
-    .disclaimer strong {
-      color: var(--text);
-    }
-
-    .notif {
+    .toast {
       position: fixed;
-      right: 18px;
-      bottom: 18px;
-      background: #18202a;
+      bottom: 20px;
+      right: 20px;
+      background: var(--bg-raised);
+      border: 1px solid var(--amber);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
       color: var(--text);
-      border: 1px solid var(--accent);
-      border-radius: 12px;
-      padding: 12px 14px;
-      font-size: 14px;
       box-shadow: var(--shadow);
       opacity: 0;
-      transform: translateY(8px);
+      transform: translateY(6px);
       pointer-events: none;
-      transition: 0.25s ease;
-      z-index: 50;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
     }
 
-    .notif.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .toast.show { opacity: 1; transform: none; }
 
-    @media (max-width: 900px) {
-      .hero-grid,
-      .scenario,
-      .report-header {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .container {
-        padding: 16px 12px 60px;
-      }
-
-      .hero,
-      .section,
-      .report-card,
-      .domain-result,
-      .content-card {
-        padding: 18px;
-      }
-
-      h1 {
-        font-size: 30px;
-      }
-
-      .score-big {
-        font-size: 42px;
-      }
-
-      .domain-right {
-        gap: 8px;
-      }
-
-      .domain-weight {
-        display: none;
-      }
+    @media (max-width: 780px) {
+      .shell { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .main { padding: 20px 16px 60px; }
+      .result-header-grid,
+      .method-grid { grid-template-columns: 1fr; }
+      .method-card.tall { grid-row: auto; }
     }
 
     @media print {
-      body {
-        background: #fff;
-        color: #000;
-      }
-
-      .tabs,
-      .btn-row,
-      .action-row,
-      .notif {
-        display: none !important;
-      }
-
-      .section,
-      .report-card,
-      .domain-result,
-      .content-card,
-      .hero,
-      .scenario-card,
-      .disclaimer {
-        box-shadow: none;
-        background: #fff;
-        color: #000;
-        border-color: #ccc;
-      }
+      .sidebar, .topbar, .btn-row, .toast { display: none !important; }
+      .shell { display: block; }
+      .main { padding: 0; max-width: none; }
+      .working-note { break-inside: avoid; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="top-note">Portfolio tool · fictional scenario · built to demonstrate third-party risk thinking</div>
+<div class="shell">
 
-    <section class="hero">
-      <div class="hero-grid">
-        <div>
-          <div class="eyebrow">Third-Party Risk Assessment Tool</div>
-          <h1>Third-Party Risk <span>Auto-Scorer</span></h1>
-          <p>
-            This tool is designed as a first-pass vendor assessment. It does not replace proper assurance,
-            but it shows how I think about weighting, follow-up questions, and remediation priorities when a supplier
-            may be handling sensitive systems or data.
-          </p>
-        </div>
-        <div class="hero-meta">
-          <div class="meta-title">Tool context</div>
-          <div class="meta-list">
-            <div class="meta-row">
-              <span class="meta-key">Framework base</span>
-              <span class="meta-val">SIG Lite (adapted)</span>
-            </div>
-            <div class="meta-row">
-              <span class="meta-key">Type</span>
-              <span class="meta-val">Portfolio build</span>
-            </div>
-            <div class="meta-row">
-              <span class="meta-key">Scenario</span>
-              <span class="meta-val">Fictional vendor review</span>
-            </div>
-            <div class="meta-row">
-              <span class="meta-key">Purpose</span>
-              <span class="meta-val">Screening and discussion</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+  <header class="topbar">
+    <span class="topbar-brand">Arken Systems</span>
+    <div class="topbar-sep"></div>
+    <span class="topbar-title">Third-party risk screening tool</span>
+    <div class="topbar-right">
+      <span class="topbar-badge">TPRA-01</span>
+      <span class="topbar-badge">working model</span>
+    </div>
+  </header>
 
-    <section class="scenario">
-      <div class="scenario-card">
-        <div class="scenario-label">Built for</div>
-        <div class="scenario-value">A portfolio demonstration of third-party risk assessment logic</div>
-      </div>
-      <div class="scenario-card">
-        <div class="scenario-label">Scenario</div>
-        <div class="scenario-value">Pre-contract review of a cloud or software supplier</div>
-      </div>
-      <div class="scenario-card">
-        <div class="scenario-label">Context</div>
-        <div class="scenario-value">Fictional organisation with regulated client and data exposure</div>
-      </div>
-      <div class="scenario-card">
-        <div class="scenario-label">Reference points</div>
-        <div class="scenario-value">SIG Lite · ISO 27001 · GDPR · NIST-style control thinking</div>
-      </div>
-    </section>
-
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('manual')">Manual assessment</button>
-      <button class="tab" onclick="switchTab('upload')">CSV upload</button>
-      <button class="tab" id="results-tab-btn" style="display:none" onclick="switchTab('results-tab')">Results</button>
-      <button class="tab" onclick="switchTab('methodology')">Methodology</button>
+  <nav class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Assessment</div>
+      <button class="nav-item active" data-view="manual" onclick="switchView('manual')">
+        <span class="nav-dot"></span> Fill in answers
+      </button>
+      <button class="nav-item" data-view="upload" onclick="switchView('upload')">
+        <span class="nav-dot"></span> Import CSV
+      </button>
+      <button class="nav-item" id="results-nav" data-view="results" style="display:none" onclick="switchView('results')">
+        <span class="nav-dot"></span> Review output
+      </button>
     </div>
 
-    <section class="panel active" id="panel-manual">
-      <div class="section">
-        <div class="section-head">
-          <h2>Assessment form</h2>
-          <p>
-            Work through the domains below and answer as many questions as you can. The scoring is weighted, so weaker
-            answers in some areas matter more than others.
-          </p>
-        </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Notes</div>
+      <button class="nav-item" data-view="methodology" onclick="switchView('methodology')">
+        <span class="nav-dot"></span> How I weighted it
+      </button>
+    </div>
 
-        <div id="manual-form"></div>
-
-        <div class="btn-row">
-          <button class="btn btn-primary" onclick="scoreManual()">Generate risk report</button>
-          <button class="btn btn-secondary" onclick="resetForm()">Clear answers</button>
-        </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Tool info</div>
+      <div class="meta-block">
+        <div class="meta-row"><span class="meta-k">Base</span><span class="meta-v">SIG Lite</span></div>
+        <div class="meta-row"><span class="meta-k">Use</span><span class="meta-v">Initial screen</span></div>
+        <div class="meta-row"><span class="meta-k">Domains</span><span class="meta-v">8</span></div>
+        <div class="meta-row"><span class="meta-k">Questions</span><span class="meta-v">27</span></div>
       </div>
-    </section>
+    </div>
+  </nav>
 
-    <section class="panel" id="panel-upload">
-      <div class="section">
-        <div class="section-head">
-          <h2>CSV upload</h2>
-          <p>
-            You can also complete the assessment offline and upload a CSV. The expected format is:
-            <strong>question_id, domain, response</strong>
-          </p>
-        </div>
+  <main class="main">
 
-        <div class="upload-zone" id="drop-zone">
-          <input type="file" accept=".csv" id="csv-input" onchange="handleCSV(event)" />
-          <h3>Drop a CSV here or click to browse</h3>
-          <p>Accepted responses: Yes, Partial, No, N-A</p>
-        </div>
+    <div class="page-header">
+      <div class="page-eyebrow">Tool 01 — Third-party risk</div>
+      <h1 class="page-title">Vendor Risk Auto-Scorer</h1>
+      <p class="page-desc">
+        A first-pass vendor risk screen built around SIG Lite and adjusted for a fictional regulated-data scenario.
+        It is not trying to replace a full assessment. The point is to show how I prioritise controls, where I push harder,
+        and what I would want to test before I made a decision.
+      </p>
+    </div>
 
-        <button class="helper-link" onclick="downloadTemplate()">Download blank CSV template</button>
+    <div class="working-note">
+      <div class="working-note-label">Working note</div>
+      <p>
+        I weighted identity & access management, data protection, and incident response more heavily than some standard questionnaire models would.
+      </p>
+      <p>
+        That is deliberate. In this scenario, those are the areas most likely to turn an ordinary vendor weakness into immediate client harm.
+      </p>
+    </div>
 
-        <div id="csv-preview"></div>
+    <div class="panel active" id="panel-manual">
+      <div id="manual-form"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="scoreManual()">Generate report</button>
+        <button class="btn btn-ghost" onclick="resetForm()">Clear answers</button>
       </div>
-    </section>
+    </div>
 
-    <section class="panel" id="panel-methodology">
-      <div class="section">
-        <div class="section-head">
-          <h2>Methodology</h2>
-          <p>
-            This section explains how the tool works and, just as importantly, what it does not do.
-          </p>
-        </div>
-
-        <div class="method-grid">
-          <div class="method-card">
-            <div class="small-label">Scoring model</div>
-            <h3>How the score is calculated</h3>
-            <p>
-              Each answer maps to a simple value: Yes = 1.0, Partial = 0.5, No = 0.0. N-A is excluded.
-              Each domain produces its own percentage, and those percentages are then weighted before being combined into the final score.
-            </p>
-            <br />
-            <p>
-              Overall thresholds:
-              <strong>80+ = Low</strong>,
-              <strong>60+ = Medium</strong>,
-              <strong>40+ = High</strong>,
-              <strong>under 40 = Critical</strong>.
-            </p>
-          </div>
-
-          <div class="method-card">
-            <div class="small-label">Why use weights</div>
-            <h3>Not every weakness carries the same risk</h3>
-            <p>
-              A flat average can hide what really matters. Weaknesses in access control, incident response,
-              or privacy controls often matter more than weaknesses in lower-impact areas. The weighting here is
-              a judgement call for this fictional scenario, shown openly so the logic can be challenged.
-            </p>
-          </div>
-
-          <div class="method-card">
-            <div class="small-label">Why SIG Lite</div>
-            <h3>Recognisable structure, adapted for the scenario</h3>
-            <p>
-              I used SIG Lite as a starting point because it gives the assessment a familiar third-party risk structure.
-              The exact wording, weighting, and follow-up logic are adapted for this portfolio tool, so this should be read
-              as a demonstration of thinking rather than a production-ready questionnaire.
-            </p>
-          </div>
-
-          <div class="method-card">
-            <div class="small-label">Limitations</div>
-            <h3>What this tool does not claim to do</h3>
-            <ul>
-              <li>It is a screening tool, not a substitute for real assurance or independent testing.</li>
-              <li>All answers are self-reported unless separately verified.</li>
-              <li>The weights are scenario-specific and should not be treated as universal defaults.</li>
-              <li>Compensating controls may exist but are not fully captured by a simple questionnaire.</li>
-              <li>The question set is fixed here for portfolio purposes.</li>
-            </ul>
-          </div>
-        </div>
+    <div class="panel" id="panel-upload">
+      <div class="upload-zone" id="drop-zone">
+        <input type="file" accept=".csv" id="csv-input" onchange="handleCSV(event)" />
+        <h3>Drop a CSV or click to browse</h3>
+        <p>Columns: question_id, domain, response — accepted values: Yes / Partial / No / N-A</p>
       </div>
-    </section>
+      <button class="text-link" onclick="downloadTemplate()">Download blank template</button>
+      <div id="csv-preview"></div>
+    </div>
 
-    <section id="results">
-      <div class="section-head" style="margin: 0 0 14px 2px;">
-        <h2>Risk assessment report</h2>
-        <p id="vendor-name-display">Assessment results</p>
-      </div>
+    <div class="panel" id="panel-results">
       <div id="results-inner"></div>
-    </section>
-
-    <div class="disclaimer">
-      <strong>Note:</strong> This is a portfolio tool built around a fictional scenario. Arken Systems is not a real company,
-      and no real supplier is being assessed here. The aim is to show how I think about third-party risk, weighting, follow-up questions,
-      and remediation priorities.
     </div>
-  </div>
 
-  <div class="notif" id="notif"></div>
-
-  <script>
-    const DOMAINS = [
-      {
-        id: 'AM', name: 'Asset Management', weight: 0.08,
-        questions: [
-          { id: 'AM-01', text: 'Does the vendor maintain a documented inventory of all information assets that store, process, or transmit client data?' },
-          { id: 'AM-02', text: 'Are assets classified according to sensitivity and criticality, with handling requirements documented?' },
-          { id: 'AM-03', text: 'Is there a formal process for the disposal or decommissioning of assets that have handled sensitive data?' },
-        ]
-      },
-      {
-        id: 'IAM', name: 'Identity & Access Management', weight: 0.14,
-        questions: [
-          { id: 'IAM-01', text: 'Is Multi-Factor Authentication enforced for all privileged and remote access accounts?' },
-          { id: 'IAM-02', text: 'Are access rights reviewed at least quarterly, with a documented process for removing access on role change or departure?' },
-          { id: 'IAM-03', text: 'Is there a separation of duties approach for critical processes?' },
-          { id: 'IAM-04', text: 'Are third-party accounts subject to the same access controls as internal accounts, with time-limited access where possible?' },
-        ]
-      },
-      {
-        id: 'DP', name: 'Data Protection & Privacy', weight: 0.15,
-        questions: [
-          { id: 'DP-01', text: 'Is data encrypted at rest and in transit to current accepted standards?' },
-          { id: 'DP-02', text: 'Is there a documented data retention and deletion policy, with evidence that it is actually followed?' },
-          { id: 'DP-03', text: 'Is there a current Data Processing Agreement or equivalent contractual privacy wording in place where needed?' },
-          { id: 'DP-04', text: 'Can the vendor demonstrate a workable process for subject access and related privacy rights requests?' },
-        ]
-      },
-      {
-        id: 'IR', name: 'Incident Response', weight: 0.14,
-        questions: [
-          { id: 'IR-01', text: 'Does the vendor have a documented and tested incident response plan?' },
-          { id: 'IR-02', text: 'Can the vendor notify the client of a relevant security incident within 24 hours of detection?' },
-          { id: 'IR-03', text: 'Has the vendor run a tabletop or similar incident exercise within the last 12 months?' },
-        ]
-      },
-      {
-        id: 'RM', name: 'Risk Management', weight: 0.12,
-        questions: [
-          { id: 'RM-01', text: 'Does the vendor maintain an information security risk register reviewed by management?' },
-          { id: 'RM-02', text: 'Is there a documented process for treating, tracking, or formally accepting risks?' },
-          { id: 'RM-03', text: 'Does the vendor conduct periodic penetration testing and share evidence on request?' },
-        ]
-      },
-      {
-        id: 'BC', name: 'Business Continuity', weight: 0.10,
-        questions: [
-          { id: 'BC-01', text: 'Is there a documented business continuity and disaster recovery plan covering relevant services?' },
-          { id: 'BC-02', text: 'Has continuity or recovery planning been tested within the last 12 months?' },
-          { id: 'BC-03', text: 'Can the vendor demonstrate an acceptable recovery time for critical services?' },
-        ]
-      },
-      {
-        id: 'SC', name: 'Supply Chain Security', weight: 0.12,
-        questions: [
-          { id: 'SC-01', text: 'Does the vendor maintain an inventory of sub-processors or fourth parties that may handle client data?' },
-          { id: 'SC-02', text: 'Are sub-processors subject to equivalent due diligence and contractual controls?' },
-          { id: 'SC-03', text: 'Is there a formal process for notifying the client before onboarding new material sub-processors?' },
-        ]
-      },
-      {
-        id: 'CM', name: 'Compliance & Certifications', weight: 0.15,
-        questions: [
-          { id: 'CM-01', text: 'Does the vendor hold a current recognised security certification or equivalent assurance evidence?' },
-          { id: 'CM-02', text: 'Has the vendor undergone an independent security review or audit within the last 18 months?' },
-          { id: 'CM-03', text: 'Does the vendor have a process for tracking and responding to relevant regulatory requirements?' },
-        ]
-      },
-    ];
-
-    const SCORE_MAP = { 'Yes': 1.0, 'Partial': 0.5, 'No': 0.0, 'N-A': null };
-
-    const REMEDIATION_MAP = {
-      'IAM-01': {
-        title: 'Enforce MFA for privileged and remote access',
-        severity: 'critical',
-        detail: 'This is a foundational control and should normally be treated as a priority before onboarding.'
-      },
-      'IAM-02': {
-        title: 'Introduce a regular access review process',
-        severity: 'high',
-        detail: 'Access should be reviewed on a planned basis, with clear ownership for removing unnecessary privileges.'
-      },
-      'DP-01': {
-        title: 'Strengthen encryption controls',
-        severity: 'critical',
-        detail: 'The vendor should be able to explain how sensitive data is protected both in storage and in transit.'
-      },
-      'DP-03': {
-        title: 'Put contractual privacy terms in place before data transfer',
-        severity: 'critical',
-        detail: 'Data handling expectations should be formally documented before any live processing begins.'
-      },
-      'IR-01': {
-        title: 'Request the incident response plan and evidence of testing',
-        severity: 'high',
-        detail: 'A plan that exists only on paper is not enough. Ask when it was last tested and what changed afterwards.'
-      },
-      'IR-02': {
-        title: 'Agree a clear incident notification expectation',
-        severity: 'high',
-        detail: 'Notification timing should be explicit rather than implied, especially where personal or client-sensitive data is involved.'
-      },
-      'CM-01': {
-        title: 'Ask for current assurance evidence',
-        severity: 'critical',
-        detail: 'Where certification or equivalent assurance is expected, that evidence should be current and in scope.'
-      },
-      'SC-01': {
-        title: 'Request the sub-processor register',
-        severity: 'medium',
-        detail: 'This helps surface concentration risk and hidden dependencies in the wider supply chain.'
-      },
-      'RM-03': {
-        title: 'Ask for recent penetration testing evidence',
-        severity: 'high',
-        detail: 'Independent testing is useful because it shows not only whether testing happened, but whether findings were addressed.'
-      },
-      'BC-02': {
-        title: 'Review continuity testing evidence',
-        severity: 'medium',
-        detail: 'Plans are more credible when the vendor can show the last test, the outcome, and the follow-up actions.'
-      },
-    };
-
-    const FOLLOWUP_POOL = {
-      'IAM': [
-        'Can you provide a redacted example of your most recent access review and explain how exceptions were handled?',
-        'How do you manage privileged accounts for contractors or temporary administrators?',
-        'What is your process for detecting unusual authentication behaviour on high-risk accounts?'
-      ],
-      'DP': [
-        'Can you explain your retention and deletion process in practice, not just in policy terms?',
-        'What is your process for handling subject access requests or similar privacy rights requests?',
-        'How do you verify that sensitive data is deleted from retired systems and backups where applicable?'
-      ],
-      'IR': [
-        'What happened in your most recent incident exercise, and what changed afterwards?',
-        'Who decides whether an event becomes a formal incident, and how is that decision documented?',
-        'How do you preserve evidence during an incident while keeping services running?'
-      ],
-      'SC': [
-        'Can you provide a current list of material sub-processors with a short description of what each one does?',
-        'What due diligence do you perform before approving a new sub-processor?',
-        'How would you notify us if a sub-processor incident affected our data or service?'
-      ],
-      'CM': [
-        'Can you share your latest certification or audit summary, including scope boundaries?',
-        'How do you track changes in laws, regulation, or customer assurance expectations relevant to your service?',
-        'Have there been any recent findings, exceptions, or material compliance issues that a client should know about?'
-      ],
-      'RM': [
-        'What are the main security risks currently being tracked by management?',
-        'Who is allowed to accept a residual risk, and how is that recorded?',
-        'How do assurance findings feed into remediation planning and risk tracking?'
-      ],
-      'AM': [
-        'How do you keep the asset inventory accurate as systems change over time?',
-        'What happens when a system holding sensitive data is retired or replaced?'
-      ],
-      'BC': [
-        'What did your last continuity or recovery test show?',
-        'How do you know your stated recovery objectives are realistic rather than theoretical?'
-      ],
-    };
-
-    function renderForm() {
-      const container = document.getElementById('manual-form');
-      container.innerHTML = '';
-
-      DOMAINS.forEach(domain => {
-        const block = document.createElement('div');
-        block.className = 'domain-block';
-
-        block.innerHTML = `
-          <button class="domain-header" type="button" onclick="toggleDomain(this)">
-            <div class="domain-left">
-              <span class="domain-code">${domain.id}</span>
-              <span class="domain-name">${domain.name}</span>
-            </div>
-            <div class="domain-right">
-              <span class="domain-weight">${Math.round(domain.weight * 100)}% weight</span>
-              <span class="chevron">▼</span>
-            </div>
-          </button>
-          <div class="domain-questions" id="dq-${domain.id}">
-            ${domain.questions.map(q => `
-              <div class="question">
-                <div class="question-id">${q.id}</div>
-                <div class="question-text">${q.text}</div>
-                <select id="q-${q.id}">
-                  <option value="">Select response</option>
-                  <option value="Yes">Yes</option>
-                  <option value="Partial">Partial</option>
-                  <option value="No">No</option>
-                  <option value="N-A">N/A</option>
-                </select>
-              </div>
-            `).join('')}
-          </div>
-        `;
-
-        container.appendChild(block);
-      });
-    }
-
-    function toggleDomain(header) {
-      const code = header.querySelector('.domain-code').textContent;
-      const panel = document.getElementById('dq-' + code);
-      header.classList.toggle('open');
-      panel.classList.toggle('open');
-    }
-
-    function collectResponses() {
-      const responses = {};
-      DOMAINS.forEach(domain => {
-        domain.questions.forEach(q => {
-          const el = document.getElementById('q-' + q.id);
-          if (el) responses[q.id] = el.value || null;
-        });
-      });
-      return responses;
-    }
-
-    function scoreResponses(responses) {
-      let totalWeightedScore = 0;
-      let totalWeight = 0;
-      const domainScores = {};
-
-      DOMAINS.forEach(domain => {
-        let domainRaw = 0;
-        let domainCount = 0;
-        const domainFlags = [];
-
-        domain.questions.forEach(q => {
-          const resp = responses[q.id];
-          const score = SCORE_MAP[resp];
-
-          if (score !== null && score !== undefined && resp) {
-            domainRaw += score;
-            domainCount++;
-
-            if (score < 1.0) {
-              domainFlags.push({ id: q.id, text: q.text, score, resp });
-            }
-          }
-        });
-
-        const domainPct = domainCount > 0 ? (domainRaw / domainCount) * 100 : null;
-
-        domainScores[domain.id] = {
-          pct: domainPct,
-          name: domain.name,
-          weight: domain.weight,
-          flags: domainFlags,
-          count: domainCount
-        };
-
-        if (domainPct !== null) {
-          totalWeightedScore += domainPct * domain.weight;
-          totalWeight += domain.weight;
-        }
-      });
-
-      const overallPct = totalWeight > 0 ? totalWeightedScore / totalWeight : 0;
-
-      let rating = 'CRITICAL RISK';
-      let ratingClass = 'critical';
-
-      if (overallPct >= 80) {
-        rating = 'LOW RISK';
-        ratingClass = 'low';
-      } else if (overallPct >= 60) {
-        rating = 'MEDIUM RISK';
-        ratingClass = 'medium';
-      } else if (overallPct >= 40) {
-        rating = 'HIGH RISK';
-        ratingClass = 'high';
-      }
-
-      return { overallPct, rating, ratingClass, domainScores };
-    }
-
-    function getRatingColor(pct) {
-      if (pct >= 80) return 'var(--low)';
-      if (pct >= 60) return 'var(--medium)';
-      if (pct >= 40) return 'var(--high)';
-      return 'var(--danger)';
-    }
-
-    function getFollowUps(domainScores) {
-      return Object.entries(domainScores)
-        .filter(([id, d]) => d.pct !== null && FOLLOWUP_POOL[id])
-        .sort((a, b) => a[1].pct - b[1].pct)
-        .slice(0, 3)
-        .map(([id, d]) => ({
-          domain: d.name,
-          question: FOLLOWUP_POOL[id][0],
-          score: d.pct
-        }));
-    }
-
-    function getRemediations(responses) {
-      const rems = [];
-
-      Object.entries(responses).forEach(([qid, resp]) => {
-        if ((resp === 'No' || resp === 'Partial') && REMEDIATION_MAP[qid]) {
-          rems.push({ qid, resp, ...REMEDIATION_MAP[qid] });
-        }
-      });
-
-      rems.sort((a, b) => {
-        const order = { critical: 0, high: 1, medium: 2 };
-        return order[a.severity] - order[b.severity];
-      });
-
-      return rems.slice(0, 6);
-    }
-
-    function renderResults(result, responses, vendorName) {
-      const { overallPct, rating, ratingClass, domainScores } = result;
-      const followUps = getFollowUps(domainScores);
-      const remediations = getRemediations(responses);
-      const now = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-      const answeredCount = Object.values(responses).filter(v => v).length;
-      const totalQuestions = DOMAINS.reduce((acc, d) => acc + d.questions.length, 0);
-
-      document.getElementById('vendor-name-display').textContent = `${vendorName || 'Vendor assessment'} · ${now}`;
-
-      const html = `
-        <div class="report-header">
-          <div class="report-card">
-            <div class="report-label">Assessment summary</div>
-            <div class="report-title">${vendorName || 'Unnamed vendor'}</div>
-            <div class="report-meta">
-              <div class="report-meta-row">
-                <span style="color: var(--text-muted);">Assessment date</span>
-                <span>${now}</span>
-              </div>
-              <div class="report-meta-row">
-                <span style="color: var(--text-muted);">Questions answered</span>
-                <span>${answeredCount} of ${totalQuestions}</span>
-              </div>
-              <div class="report-meta-row">
-                <span style="color: var(--text-muted);">Framework base</span>
-                <span>SIG Lite (adapted)</span>
-              </div>
-              <div class="report-meta-row">
-                <span style="color: var(--text-muted);">Use case</span>
-                <span>Initial screening</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="report-card">
-            <div class="report-label">Overall rating</div>
-            <div class="risk-badge ${ratingClass}">${rating}</div>
-          </div>
-
-          <div class="report-card">
-            <div class="report-label">Weighted score</div>
-            <div class="score-big">${Math.round(overallPct)}<span>/100</span></div>
-            <div style="color: var(--text-muted); font-size: 13px; margin-top: 8px;">
-              Based on ${Object.values(domainScores).filter(d => d.pct !== null).length} scored domains
-            </div>
-          </div>
-        </div>
-
-        <div class="section-head" style="margin-bottom: 14px;">
-          <h2>Domain breakdown</h2>
-          <p>This shows where the vendor looks stronger and where the assessment suggests closer scrutiny.</p>
-        </div>
-
-        <div class="domain-results">
-          ${Object.entries(domainScores).map(([id, d]) => {
-            const pct = d.pct !== null ? Math.round(d.pct) : null;
-            const color = pct !== null ? getRatingColor(pct) : 'var(--text-muted)';
-
-            return `
-              <div class="domain-result">
-                <div class="domain-result-top">
-                  <div>
-                    <div class="domain-result-name">${d.name}</div>
-                    <div class="domain-result-meta">${Math.round(d.weight * 100)}% weight · ${d.count} answered</div>
-                  </div>
-                  <div class="domain-result-score" style="color:${color};">${pct !== null ? pct : '—'}</div>
-                </div>
-
-                <div class="bar">
-                  <div class="bar-fill" style="width:${pct || 0}%; background:${color};"></div>
-                </div>
-
-                <div class="flags">
-                  ${
-                    d.flags.length === 0 && pct !== null
-                      ? `<div style="color: var(--low);">No issues surfaced in this domain from the answers given.</div>`
-                      : d.flags.slice(0, 2).map(f => `
-                          <div class="flag-row">
-                            <span class="flag-dot" style="background:${f.score === 0 ? 'var(--danger)' : 'var(--medium)'};"></span>
-                            <span>${f.id}: ${f.resp === 'No' ? 'not in place' : 'only partly in place'}</span>
-                          </div>
-                        `).join('')
-                  }
-                  ${d.flags.length > 2 ? `<div style="color: var(--text-muted);">+${d.flags.length - 2} further issues in this domain</div>` : ''}
-                </div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-
-        <div class="content-card">
-          <h3>Top follow-up questions</h3>
-          <div class="content-list">
-            ${followUps.map((fq, i) => `
-              <div class="list-item">
-                <div class="list-title">Question ${i + 1}</div>
-                <div>${fq.question}</div>
-                <div class="list-meta">Domain: ${fq.domain} · Score: ${Math.round(fq.score)}%</div>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-
-        ${remediations.length > 0 ? `
-          <div class="content-card">
-            <h3>Priority remediation flags</h3>
-            <div class="content-list">
-              ${remediations.map(r => `
-                <div class="list-item">
-                  <div class="severity ${r.severity}">${r.severity.toUpperCase()}</div>
-                  <div class="list-title">${r.title}</div>
-                  <div>${r.detail}</div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        ` : ''}
-
-        <div class="content-card">
-          <h3>Next step</h3>
-          <p style="color: var(--text-soft); font-size: 14px;">
-            This output should be treated as a structured starting point for due diligence, not a final decision on its own.
-            In practice, the next step would be to test the weaker areas with evidence requests, follow-up calls, and contractual review.
+    <div class="panel" id="panel-methodology">
+      <div class="method-grid">
+        <div class="method-card tall">
+          <div class="method-tag">Weighting</div>
+          <h3>Why some areas are heavier than others</h3>
+          <p>
+            Not all gaps carry the same risk. I weighted identity & access management, data protection, and incident response more heavily because in this scenario those are the areas most likely to create immediate client impact if they fail.
           </p>
-
-          <div class="btn-row action-row">
-            <button class="btn btn-primary" onclick="window.print()">Print / export PDF</button>
-            <button class="btn btn-secondary" onclick="resetToForm()">New assessment</button>
-            <button class="btn btn-secondary" onclick="copyResults()">Copy summary</button>
-          </div>
+          <p>
+            Asset management still matters, but in a first-pass screen I would be less likely to stop onboarding over an imperfect asset inventory than over weak access control or vague breach notification.
+          </p>
+          <p>
+            I also did not want certification evidence to outweigh operational reality. A vendor can have a badge and still be poor at access reviews, incident handling, or subcontractor visibility.
+          </p>
+          <p>
+            So the weights are a judgement call, not a truth claim. In a payments-heavy or operational resilience scenario, I would probably rebalance them.
+          </p>
         </div>
-      `;
 
-      document.getElementById('results-inner').innerHTML = html;
-      document.getElementById('results').classList.add('show');
-      document.getElementById('results-tab-btn').style.display = 'inline-block';
-      switchTab('results-tab');
-      document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
-    }
+        <div class="method-card">
+          <div class="method-tag">Scoring</div>
+          <h3>Simple on purpose</h3>
+          <p>
+            Yes = 1.0, Partial = 0.5, No = 0.0. N/A is excluded from the denominator.
+          </p>
+          <p>
+            Each domain scores independently, then those domain scores are weighted into an overall figure. The model is intentionally simple. The aim is not perfect precision. It is to surface where the real problems are likely to sit.
+          </p>
+        </div>
 
-    function scoreManual() {
-      const vendorName = prompt('Enter vendor name for this assessment (optional):') || 'Unnamed Vendor';
-      const responses = collectResponses();
-      const answered = Object.values(responses).filter(v => v).length;
+        <div class="method-card">
+          <div class="method-tag">Framework</div>
+          <h3>SIG Lite gives it a recognisable shape</h3>
+          <p>
+            SIG Lite is used as a starting structure because it is familiar in third-party risk work.
+            The questions, weights, and follow-up prompts here are adapted rather than copied.
+          </p>
+        </div>
 
-      if (answered < 5) {
-        showNotif('Please answer at least 5 questions before generating a report.');
-        return;
+        <div class="method-card">
+          <div class="method-tag">Limits</div>
+          <h3>What this does not do</h3>
+          <ul>
+            <li>It does not verify self-reported answers.</li>
+            <li>It does not capture every compensating control.</li>
+            <li>A single score can hide nuance.</li>
+            <li>In practice I would always follow this with evidence requests and discussion.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="notice">
+      Fictional scenario. The aim is not to assess a real vendor, but to show how I think about third-party risk — what I prioritise, what I challenge, and how I turn questionnaire answers into next steps.
+    </div>
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DOMAINS = [
+  {
+    id: 'AM',
+    name: 'Asset Management',
+    weight: 0.08,
+    note: '',
+    questions: [
+      { id: 'AM-01', text: 'Does the vendor maintain a documented inventory of systems and assets that store, process, or transmit client data?' },
+      { id: 'AM-02', text: 'Are assets classified by sensitivity or business criticality, with handling expectations documented?' },
+      { id: 'AM-03', text: 'Is there a formal process for disposing of or decommissioning assets that have handled sensitive data?' }
+    ]
+  },
+  {
+    id: 'IAM',
+    name: 'Identity & Access Management',
+    weight: 0.14,
+    note: 'Weighted higher here because weak access control tends to create immediate client-facing risk, especially where vendors have remote or privileged access.',
+    questions: [
+      { id: 'IAM-01', text: 'Is MFA enforced for all privileged accounts and any remote access into relevant systems?' },
+      { id: 'IAM-02', text: 'Are access rights reviewed at least quarterly, with a documented process for removing access on role change or departure?' },
+      { id: 'IAM-03', text: 'Is there a workable separation-of-duties approach for critical processes?' },
+      { id: 'IAM-04', text: 'Are third-party accounts subject to the same access controls as internal accounts, with time-limited access where possible?' }
+    ]
+  },
+  {
+    id: 'DP',
+    name: 'Data Protection & Privacy',
+    weight: 0.15,
+    note: 'This is one of the areas I would push on fastest in a regulated-data scenario. If the vendor cannot explain retention, transfer, and privacy handling clearly, that matters early.',
+    questions: [
+      { id: 'DP-01', text: 'Is data encrypted at rest and in transit to current accepted standards?' },
+      { id: 'DP-02', text: 'Is there a documented data retention and deletion process, with some evidence that it is followed in practice?' },
+      { id: 'DP-03', text: 'Is there a current Data Processing Agreement or equivalent contractual privacy wording in place where needed?' },
+      { id: 'DP-04', text: 'Can the vendor demonstrate a workable process for subject access and related privacy rights requests?' }
+    ]
+  },
+  {
+    id: 'IR',
+    name: 'Incident Response',
+    weight: 0.14,
+    note: 'I care less about whether the plan document looks polished and more about whether the vendor can explain the last exercise and what changed afterwards.',
+    questions: [
+      { id: 'IR-01', text: 'Does the vendor have a documented incident response plan that has been tested in some form?' },
+      { id: 'IR-02', text: 'Can the vendor notify the client of a relevant security incident within 24 hours of detection?' },
+      { id: 'IR-03', text: 'Has the vendor run a tabletop, simulation, or equivalent exercise within the last 12 months?' }
+    ]
+  },
+  {
+    id: 'RM',
+    name: 'Risk Management',
+    weight: 0.12,
+    note: 'Nothing especially unusual about how I weighted this one. It matters, but for this scenario it sits behind access, privacy, and incident handling.',
+    questions: [
+      { id: 'RM-01', text: 'Does the vendor maintain an information security risk register reviewed by management?' },
+      { id: 'RM-02', text: 'Is there a documented process for treating, tracking, or formally accepting risks?' },
+      { id: 'RM-03', text: 'Does the vendor conduct periodic penetration testing and share evidence on request?' }
+    ]
+  },
+  {
+    id: 'BC',
+    name: 'Business Continuity',
+    weight: 0.10,
+    note: 'Lower weight here because in this scenario service interruption is still serious, but less immediately damaging than a data protection or access control failure.',
+    questions: [
+      { id: 'BC-01', text: 'Is there a documented business continuity or disaster recovery plan covering relevant services?' },
+      { id: 'BC-02', text: 'Has continuity or recovery planning been tested within the last 12 months?' },
+      { id: 'BC-03', text: 'Can the vendor demonstrate an acceptable recovery time for critical services?' }
+    ]
+  },
+  {
+    id: 'SC',
+    name: 'Supply Chain Security',
+    weight: 0.12,
+    note: 'This is often where hidden complexity sits. I do not treat fourth-party visibility as a nice-to-have where client data is involved.',
+    questions: [
+      { id: 'SC-01', text: 'Does the vendor maintain an inventory of sub-processors or fourth parties that may handle client data?' },
+      { id: 'SC-02', text: 'Are sub-processors subject to equivalent due diligence and contractual controls?' },
+      { id: 'SC-03', text: 'Is there a formal process for notifying the client before onboarding new material sub-processors?' }
+    ]
+  },
+  {
+    id: 'CM',
+    name: 'Compliance & Certifications',
+    weight: 0.15,
+    note: 'I gave this a meaningful weight because assurance evidence matters, but I would still rather see honest operational detail than badge-heavy answers with no depth behind them.',
+    questions: [
+      { id: 'CM-01', text: 'Does the vendor hold a current recognised security certification or equivalent assurance evidence?' },
+      { id: 'CM-02', text: 'Has the vendor undergone an independent security review or audit within the last 18 months?' },
+      { id: 'CM-03', text: 'Does the vendor have a process for tracking and responding to relevant regulatory requirements?' }
+    ]
+  }
+];
+
+const SCORE_MAP = { 'Yes': 1.0, 'Partial': 0.5, 'No': 0.0, 'N-A': null };
+
+const REMEDIATION_MAP = {
+  'IAM-01': {
+    title: 'Enforce MFA for privileged and remote access',
+    severity: 'critical',
+    detail: 'I would normally treat this as a baseline control rather than something to remediate later.'
+  },
+  'IAM-02': {
+    title: 'Introduce a regular access review process',
+    severity: 'high',
+    detail: 'I would want a scheduled review process with named ownership, not just an assumption that managers will spot excess access informally.'
+  },
+  'DP-01': {
+    title: 'Strengthen encryption controls',
+    severity: 'critical',
+    detail: 'I would want a plain-English answer to where sensitive data sits, when it is encrypted, who manages the keys, and whether older systems or backups are handled differently. If the answer gets vague at that point, that tells me enough.'
+  },
+  'DP-02': {
+    title: 'Show that retention and deletion actually happen in practice',
+    severity: 'high',
+    detail: 'A written retention schedule is easy to produce. What I would want to know is whether old records, exports, backups, and ad hoc data stores are genuinely being cleared, or whether deletion only exists at policy level.'
+  },
+  'DP-03': {
+    title: 'Put contractual privacy terms in place before live processing',
+    severity: 'critical',
+    detail: 'I would not be comfortable moving into live handling of regulated data without clear contractual wording around roles, responsibilities, and data handling expectations.'
+  },
+  'IR-01': {
+    title: 'Request the incident response plan and some evidence it has been tested',
+    severity: 'high',
+    detail: 'If this only exists on paper, I would want to know when it was last exercised and what changed afterwards.'
+  },
+  'IR-02': {
+    title: 'Agree a clear incident notification timeline',
+    severity: 'high',
+    detail: 'If the vendor says they will notify “promptly” or “where appropriate”, I would push harder. I would want to know who decides that a client-impacting incident is reportable, how quickly that judgement is made, and whether 24 hours is realistic in practice.'
+  },
+  'CM-01': {
+    title: 'Request current assurance evidence',
+    severity: 'critical',
+    detail: 'If certification or external assurance is being relied on, I would want current evidence and I would want to know exactly what is in scope.'
+  },
+  'SC-01': {
+    title: 'Request the sub-processor register',
+    severity: 'medium',
+    detail: 'This matters because hidden dependencies tend to surface late, usually when they are hardest to fix.'
+  },
+  'RM-03': {
+    title: 'Ask for recent penetration testing evidence',
+    severity: 'high',
+    detail: 'I would want to see recent testing and, more importantly, what was actually fixed afterwards.'
+  },
+  'BC-02': {
+    title: 'Review continuity testing evidence',
+    severity: 'medium',
+    detail: 'A plan is more credible once the vendor can explain the last test, what failed, and what changed.'
+  }
+};
+
+const FOLLOWUP_POOL = {
+  'IAM': [
+    'Can you provide a redacted example of your most recent access review and explain how exceptions were handled?',
+    'How do you control privileged access for contractors or temporary administrators?'
+  ],
+  'DP': [
+    'Can you explain your retention and deletion process in practice, not just in policy language?',
+    'How do you handle subject access requests and related privacy rights requests day to day?'
+  ],
+  'IR': [
+    'What happened in your most recent incident exercise, and what changed afterwards?'
+  ],
+  'SC': [
+    'Can you provide a current list of material sub-processors with a short description of what each handles?'
+  ],
+  'CM': [
+    'Can you share your latest certification or audit summary, including scope boundaries?',
+    'Have there been any recent findings or exceptions a client should know about?'
+  ],
+  'RM': [
+    'Who is allowed to accept a residual risk, and how is that decision recorded?'
+  ],
+  'BC': [
+    'What did your last continuity or recovery test actually show?'
+  ]
+};
+
+function renderForm() {
+  const c = document.getElementById('manual-form');
+  c.innerHTML = '';
+
+  DOMAINS.forEach(d => {
+    const b = document.createElement('div');
+    b.className = 'domain-block';
+
+    b.innerHTML = `
+      <button class="domain-trigger" type="button" onclick="toggleDomain(this, '${d.id}')">
+        <span class="domain-id">${d.id}</span>
+        <span class="domain-name-wrap">
+          <span class="domain-name">${d.name}</span>
+          ${d.note ? `<div class="domain-note-inline">Author note on weighting</div>` : ``}
+        </span>
+        <span class="domain-weight">${Math.round(d.weight * 100)}% wt</span>
+        <span class="domain-chevron">▾</span>
+      </button>
+      <div class="domain-body" id="db-${d.id}">
+        ${d.note ? `<div class="domain-body-note">${d.note}</div>` : ``}
+        ${d.questions.map(q => `
+          <div class="question-row">
+            <div class="question-id">${q.id}</div>
+            <div class="question-text">${q.text}</div>
+            <select class="q-select" id="q-${q.id}">
+              <option value="">— select —</option>
+              <option value="Yes">Yes</option>
+              <option value="Partial">Partial</option>
+              <option value="No">No</option>
+              <option value="N-A">N/A</option>
+            </select>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    c.appendChild(b);
+  });
+
+  document.querySelectorAll('.domain-trigger')[0]?.click();
+  document.querySelectorAll('.domain-trigger')[1]?.click();
+  document.querySelectorAll('.domain-trigger')[2]?.click();
+}
+
+function toggleDomain(btn, id) {
+  btn.classList.toggle('open');
+  document.getElementById('db-' + id).classList.toggle('open');
+}
+
+function collectResponses() {
+  const r = {};
+  DOMAINS.forEach(d => d.questions.forEach(q => {
+    const el = document.getElementById('q-' + q.id);
+    if (el) r[q.id] = el.value || null;
+  }));
+  return r;
+}
+
+function scoreResponses(responses) {
+  let totalW = 0, totalWS = 0;
+  const domainScores = {};
+
+  DOMAINS.forEach(d => {
+    let raw = 0, count = 0;
+    const flags = [];
+
+    d.questions.forEach(q => {
+      const resp = responses[q.id];
+      const s = SCORE_MAP[resp];
+      if (s !== null && s !== undefined && resp) {
+        raw += s;
+        count++;
+        if (s < 1.0) flags.push({ id: q.id, text: q.text, score: s, resp });
       }
+    });
 
-      const result = scoreResponses(responses);
-      renderResults(result, responses, vendorName);
+    const pct = count > 0 ? (raw / count) * 100 : null;
+    domainScores[d.id] = { pct, name: d.name, weight: d.weight, flags, count };
+    if (pct !== null) {
+      totalWS += pct * d.weight;
+      totalW += d.weight;
     }
+  });
 
-    function resetForm() {
-      DOMAINS.forEach(domain => {
-        domain.questions.forEach(q => {
-          const el = document.getElementById('q-' + q.id);
-          if (el) el.value = '';
-        });
-      });
+  const overall = totalW > 0 ? totalWS / totalW : 0;
+  let rating = 'CRITICAL', cls = 'critical';
+  if (overall >= 80) { rating = 'LOW RISK'; cls = 'low'; }
+  else if (overall >= 60) { rating = 'MEDIUM RISK'; cls = 'medium'; }
+  else if (overall >= 40) { rating = 'HIGH RISK'; cls = 'high'; }
 
-      showNotif('Answers cleared.');
-    }
+  return { overall, rating, cls, domainScores };
+}
 
-    function resetToForm() {
-      document.getElementById('results').classList.remove('show');
-      document.getElementById('results-tab-btn').style.display = 'none';
-      switchTab('manual');
-    }
+function ratingColor(pct) {
+  if (pct >= 80) return 'var(--green)';
+  if (pct >= 60) return 'var(--yellow)';
+  if (pct >= 40) return 'var(--orange)';
+  return 'var(--red)';
+}
 
-    function handleCSV(event) {
-      const file = event.target.files[0];
-      if (!file) return;
+function renderResults(result, responses, vendorName) {
+  const { overall, rating, cls, domainScores } = result;
+  const now = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  const answered = Object.values(responses).filter(v => v).length;
+  const total = DOMAINS.reduce((a, d) => a + d.questions.length, 0);
 
-      const reader = new FileReader();
+  const followUps = Object.entries(domainScores)
+    .filter(([id, d]) => d.pct !== null && FOLLOWUP_POOL[id])
+    .sort((a, b) => a[1].pct - b[1].pct)
+    .slice(0, 3)
+    .map(([id, d], index) => {
+      const pool = FOLLOWUP_POOL[id];
+      const chosen = pool[Math.min(index, pool.length - 1)];
+      return { domain: d.name, q: chosen, score: d.pct };
+    });
 
-      reader.onload = (e) => {
-        const text = e.target.result;
-        const rows = text.trim().split('\n').slice(1);
-        const responses = {};
-        let errors = 0;
+  const remeds = Object.entries(responses)
+    .filter(([qid, resp]) => (resp === 'No' || resp === 'Partial') && REMEDIATION_MAP[qid])
+    .map(([qid, resp]) => ({ qid, resp, ...REMEDIATION_MAP[qid] }))
+    .sort((a, b) => ({ critical: 0, high: 1, medium: 2 }[a.severity] - ({ critical: 0, high: 1, medium: 2 }[b.severity])))
+    .slice(0, 6);
 
-        rows.forEach(row => {
-          const cols = row.split(',').map(c => c.trim().replace(/"/g, ''));
-          if (cols.length >= 3) {
-            const [qid, , resp] = cols;
-            const validResps = ['Yes', 'No', 'Partial', 'N-A'];
-            if (validResps.includes(resp)) {
-              responses[qid] = resp;
-            } else {
-              errors++;
-            }
-          } else {
-            errors++;
-          }
-        });
+  document.getElementById('results-inner').innerHTML = `
+    <div class="result-header-grid">
+      <div class="rcard">
+        <div class="rcard-label">Assessment record</div>
+        <div class="rcard-meta">
+          <div class="rcard-meta-row"><span class="rcard-meta-k">Vendor</span><span class="rcard-meta-v">${vendorName || 'Unnamed'}</span></div>
+          <div class="rcard-meta-row"><span class="rcard-meta-k">Date</span><span class="rcard-meta-v">${now}</span></div>
+          <div class="rcard-meta-row"><span class="rcard-meta-k">Coverage</span><span class="rcard-meta-v">${answered}/${total} answered</span></div>
+          <div class="rcard-meta-row"><span class="rcard-meta-k">Base</span><span class="rcard-meta-v">SIG Lite (adapted)</span></div>
+          <div class="rcard-meta-row"><span class="rcard-meta-k">Use</span><span class="rcard-meta-v">Initial screen</span></div>
+        </div>
+      </div>
 
-        const answered = Object.keys(responses).length;
+      <div class="rcard" style="display:flex;flex-direction:column;gap:10px;justify-content:center;">
+        <div class="rcard-label">Overall rating</div>
+        <div class="risk-pill ${cls}">${rating}</div>
+      </div>
 
-        document.getElementById('csv-preview').innerHTML = `
-          <div class="content-card" style="margin-bottom:0;">
-            <h3>CSV parsed</h3>
-            <p style="color: var(--text-soft); font-size: 14px;">
-              Parsed ${answered} valid responses from <strong>${file.name}</strong>${errors ? `, with ${errors} row(s) skipped.` : '.'}
-            </p>
-            <div class="btn-row">
-              <button class="btn btn-primary" onclick='scoreCSV(${JSON.stringify(responses)})'>Score these responses</button>
+      <div class="rcard">
+        <div class="rcard-label">Weighted score</div>
+        <div class="score-num" style="color:${ratingColor(overall)}">${Math.round(overall)}<span class="score-denom">/100</span></div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);margin-top:8px;">
+          ${Object.values(domainScores).filter(d => d.pct !== null).length} of 8 domains scored
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider">Domain breakdown</div>
+
+    <div class="domain-grid">
+      ${Object.entries(domainScores).map(([id, d]) => {
+        const pct = d.pct !== null ? Math.round(d.pct) : null;
+        const col = pct !== null ? ratingColor(pct) : 'var(--text-dim)';
+        return `
+          <div class="dcard">
+            <div class="dcard-top">
+              <div>
+                <div class="dcard-name">${d.name}</div>
+                <div class="dcard-sub">${Math.round(d.weight * 100)}% weight · ${d.count} answered</div>
+              </div>
+              <div class="dcard-score" style="color:${col}">${pct !== null ? pct : '—'}</div>
+            </div>
+            <div class="bar"><div class="bar-fill" style="width:${pct || 0}%;background:${col}"></div></div>
+            <div class="flag-list">
+              ${d.flags.length === 0 && pct !== null
+                ? `<div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green);">No obvious issues surfaced here.</div>`
+                : d.flags.slice(0, 2).map(f => `
+                    <div class="flag-item">
+                      <span class="flag-pip" style="background:${f.score === 0 ? 'var(--red)' : 'var(--yellow)'}"></span>
+                      ${f.id}: ${f.resp === 'No' ? 'not in place' : 'partially in place'}
+                    </div>`).join('')
+              }
+              ${d.flags.length > 2 ? `<div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);">+${d.flags.length - 2} further issue(s)</div>` : ''}
             </div>
           </div>
         `;
-      };
+      }).join('')}
+    </div>
 
-      reader.readAsText(file);
-    }
+    ${followUps.length > 0 ? `
+      <div class="section-divider">Where I would push further</div>
+      <div class="content-block">
+        <div class="item-list">
+          ${followUps.map((f, i) => `
+            <div class="list-item">
+              <div class="item-title">Q${i + 1} — ${f.domain}</div>
+              <div class="item-body">${f.q}</div>
+              <div class="item-domain">Domain score: ${Math.round(f.score)}%</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : ''}
 
-    function scoreCSV(responses) {
-      const vendorName = prompt('Enter vendor name for this assessment (optional):') || 'CSV Import';
-      const result = scoreResponses(responses);
-      renderResults(result, responses, vendorName);
-    }
+    ${remeds.length > 0 ? `
+      <div class="section-divider">What I would expect to be addressed</div>
+      <div class="content-block">
+        <div class="item-list">
+          ${remeds.map(r => `
+            <div class="list-item">
+              <span class="item-label ${r.severity}">${r.severity.toUpperCase()}</span>
+              <div class="item-title">${r.title}</div>
+              <div class="item-body">${r.detail}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : ''}
 
-    function downloadTemplate() {
-      const header = 'question_id,domain,response\n';
-      const rows = DOMAINS.flatMap(domain =>
-        domain.questions.map(q => `${q.id},${domain.id},`)
-      ).join('\n');
+    <div class="section-divider">Next step</div>
+    <div class="content-block">
+      <p style="font-size:13px;color:var(--text-mid);">
+        This output is a starting point, not a decision. In practice I would take the weaker areas and test them — request evidence, ask follow-up questions, and look at how the vendor explains any gaps. Self-reported answers are useful, but I would not rely on them without supporting documentation or independent assurance.
+      </p>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="window.print()">Print / save PDF</button>
+        <button class="btn btn-ghost" onclick="resetToForm()">New assessment</button>
+        <button class="btn btn-ghost" onclick="copyResults()">Copy text</button>
+      </div>
+    </div>
+  `;
 
-      const blob = new Blob([header + rows], { type: 'text/csv' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'arken_vendor_assessment_template.csv';
-      a.click();
+  document.getElementById('results-nav').style.display = 'flex';
+  switchView('results');
+}
 
-      showNotif('Template downloaded.');
-    }
+function scoreManual() {
+  const vendorName = prompt('Vendor name (optional):') || 'Unnamed Vendor';
+  const responses = collectResponses();
+  if (Object.values(responses).filter(v => v).length < 5) {
+    toast('Answer at least 5 questions to generate a report.');
+    return;
+  }
+  renderResults(scoreResponses(responses), responses, vendorName);
+}
 
-    function copyResults() {
-      const el = document.getElementById('results-inner');
-      if (!el) return;
+function resetForm() {
+  DOMAINS.forEach(d => d.questions.forEach(q => {
+    const el = document.getElementById('q-' + q.id);
+    if (el) el.value = '';
+  }));
+  toast('Answers cleared.');
+}
 
-      navigator.clipboard.writeText(el.innerText)
-        .then(() => showNotif('Results copied to clipboard.'));
-    }
+function resetToForm() {
+  document.getElementById('results-nav').style.display = 'none';
+  switchView('manual');
+}
 
-    function switchTab(id) {
-      const ids = ['manual', 'upload', 'results-tab', 'methodology'];
-      document.querySelectorAll('.tab').forEach((tab, index) => {
-        tab.classList.toggle('active', ids[index] === id);
-      });
+function handleCSV(event) {
+  const file = event.target.files[0];
+  if (!file) return;
 
-      document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+  const reader = new FileReader();
+  reader.onload = e => {
+    const rows = e.target.result.trim().split('\n').slice(1);
+    const responses = {};
+    let errors = 0;
 
-      if (id === 'manual') document.getElementById('panel-manual').classList.add('active');
-      if (id === 'upload') document.getElementById('panel-upload').classList.add('active');
-      if (id === 'methodology') document.getElementById('panel-methodology').classList.add('active');
-      if (id === 'results-tab') {
-        document.getElementById('results').classList.add('show');
-      }
-    }
-
-    function showNotif(msg) {
-      const el = document.getElementById('notif');
-      el.textContent = msg;
-      el.classList.add('show');
-      setTimeout(() => el.classList.remove('show'), 2600);
-    }
-
-    const dz = document.getElementById('drop-zone');
-    dz.addEventListener('dragover', e => {
-      e.preventDefault();
-      dz.classList.add('dragover');
-    });
-
-    dz.addEventListener('dragleave', () => {
-      dz.classList.remove('dragover');
-    });
-
-    dz.addEventListener('drop', e => {
-      e.preventDefault();
-      dz.classList.remove('dragover');
-
-      const file = e.dataTransfer.files[0];
-      if (file && file.name.endsWith('.csv')) {
-        handleCSV({ target: { files: [file] } });
+    rows.forEach(row => {
+      const cols = row.split(',').map(c => c.trim().replace(/"/g, ''));
+      if (cols.length >= 3 && ['Yes', 'No', 'Partial', 'N-A'].includes(cols[2])) {
+        responses[cols[0]] = cols[2];
       } else {
-        showNotif('Please drop a CSV file.');
+        errors++;
       }
     });
 
-    renderForm();
+    const n = Object.keys(responses).length;
+    document.getElementById('csv-preview').innerHTML = `
+      <div class="content-block" style="margin-top:16px;">
+        <p style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text-mid);">
+          Parsed ${n} valid responses from <strong>${file.name}</strong>${errors ? ` · ${errors} row(s) skipped` : ''}
+        </p>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick='scoreCSV(${JSON.stringify(responses)})'>Score these responses</button>
+        </div>
+      </div>
+    `;
+  };
+  reader.readAsText(file);
+}
 
-    const headers = document.querySelectorAll('.domain-header');
-    headers[0]?.click();
-    headers[1]?.click();
-  </script>
+function scoreCSV(responses) {
+  const vendorName = prompt('Vendor name (optional):') || 'CSV Import';
+  renderResults(scoreResponses(responses), responses, vendorName);
+}
+
+function downloadTemplate() {
+  const header = 'question_id,domain,response\n';
+  const rows = DOMAINS.flatMap(d => d.questions.map(q => `${q.id},${d.id},`)).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([header + rows], { type: 'text/csv' }));
+  a.download = 'arken_tpra_template.csv';
+  a.click();
+  toast('Template downloaded.');
+}
+
+function copyResults() {
+  const el = document.getElementById('results-inner');
+  if (el) navigator.clipboard.writeText(el.innerText).then(() => toast('Copied to clipboard.'));
+}
+
+function switchView(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+  document.getElementById('panel-' + id)?.classList.add('active');
+  document.querySelector(`.nav-item[data-view="${id}"]`)?.classList.add('active');
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2600);
+}
+
+const dz = document.getElementById('drop-zone');
+dz.addEventListener('dragover', e => {
+  e.preventDefault();
+  dz.classList.add('dragover');
+});
+dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+dz.addEventListener('drop', e => {
+  e.preventDefault();
+  dz.classList.remove('dragover');
+  const f = e.dataTransfer.files[0];
+  f?.name.endsWith('.csv') ? handleCSV({ target: { files: [f] } }) : toast('Please drop a .csv file.');
+});
+
+renderForm();
+</script>
 </body>
 </html>
