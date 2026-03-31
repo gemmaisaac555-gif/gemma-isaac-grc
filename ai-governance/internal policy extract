@@ -1,0 +1,123 @@
+Definition of an AI Incident — Internal Policy Extract
+Veriflow Payments Ltd (Arken Systems GRC Portfolio)
+
+This is a thinking exercise. There is no such company.
+
+Document type: Policy Extract — AI Governance
+Prepared by: Arken Systems GRC Function
+Approved by: AI Governance Committee (Proposed)
+Date: March 2025
+Classification: Internal — Operational Guidance
+
+Related documents:
+
+AI Risk Register — Credit Scoring Model Deployment
+AI Incident Scenario — Board Brief
+Fundamental Rights Impact Assessment (FRIA) — AI Credit Scoring System
+AI Governance Control Mapping — Credit Scoring System
+1. Purpose
+
+This document defines what constitutes an AI incident within Veriflow Payments Ltd.
+
+The intent is to ensure that model-related failures are identified, escalated, and managed consistently, rather than being treated as isolated performance issues.
+
+2. Definition
+
+An AI incident is:
+
+Any event where an AI system produces outcomes that are materially misaligned with intended behaviour, regulatory expectations, or acceptable risk thresholds — regardless of whether a security breach has occurred.
+
+This definition is intentionally broader than traditional incident definitions.
+
+3. What This Includes (Non-Exhaustive)
+
+An AI incident may include:
+
+3.1 Outcome-Based Failures
+Systematic or disproportionate impact on specific customer groups
+Decisions that cannot be adequately explained or justified
+Material increase in error rates (e.g. false declines in credit decisions)
+
+Not all errors are incidents.
+Patterns are.
+
+3.2 Monitoring & Control Failures
+Failure to detect model drift or performance degradation
+Absence of alerts where thresholds should exist
+Reliance on customer complaints as the primary detection mechanism
+
+If the system is only understood after customers react to it,
+that is already late.
+
+3.3 Governance & Oversight Gaps
+Human oversight mechanisms exist but are not operationally effective
+Decisions cannot be meaningfully reviewed or overridden
+Ownership of model decisions is unclear
+
+A control that cannot be exercised is not a control.
+
+3.4 Data & Input Issues
+Training or input data later identified as inappropriate, biased, or unreliable
+Undocumented changes in data sources affecting outcomes
+
+Data issues are often treated as upstream problems.
+In practice, they become downstream incidents.
+
+3.5 AI-Enabled Security or Manipulation Events
+Evidence of data poisoning, model evasion, or adversarial behaviour
+Suspicion that model outputs are being intentionally influenced
+
+These may resemble traditional security incidents,
+but require different analysis and response.
+
+4. What This Does Not Automatically Include
+
+The following do not, on their own, constitute an AI incident:
+
+Minor fluctuations in model performance within expected tolerance
+Individual incorrect decisions without evidence of pattern
+Known and accepted model limitations previously documented and approved
+
+There is a risk of over-classifying incidents.
+That risk is preferable to missing them entirely.
+
+5. Escalation Threshold (Practical Guidance)
+
+An issue should be treated as an AI incident if:
+
+It affects multiple customers, or
+It cannot be clearly explained within existing model documentation, or
+It raises a credible regulatory or reputational concern, or
+It exposes a gap in governance rather than a one-off error
+
+If there is uncertainty, escalation is expected.
+
+6. Relationship to Existing Incident Management
+
+AI incidents should be:
+
+Logged within the central incident management process
+Assessed jointly by GRC, Data Science, and Compliance functions
+Escalated to the AI Governance Committee where appropriate
+
+Not all AI incidents require regulatory notification.
+Some will.
+
+That determination should not be made informally.
+
+7. Final Observation
+
+Traditional incident frameworks are designed around:
+
+Breach
+Failure
+Disruption
+
+AI systems introduce a different category:
+
+Undetected misalignment
+
+The system continues to operate.
+The outputs continue to be produced.
+
+The issue is whether those outputs should be trusted.
