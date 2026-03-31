@@ -1,0 +1,114 @@
+AI Incident Scenario — Board Brief
+Veriflow Payments Ltd (Arken Systems GRC Portfolio)
+
+This is a thinking exercise. There is no such company.
+
+Document type: Board Brief — AI Incident
+Prepared by: Arken Systems GRC Function
+Addressed to: Board of Directors, Veriflow Payments Ltd
+Date: March 2025
+Classification: Confidential — Internal Distribution Only
+
+Related documents:
+
+AI Risk Register — Credit Scoring Model Deployment
+Fundamental Rights Impact Assessment (FRIA) — AI Credit Scoring System
+AI Governance Control Mapping — Credit Scoring System
+Artefact F — Board Brief: Third-Party Security Incident (Databridge Analytics Ltd)
+1. Summary of Situation
+
+Over a two-week period, the credit scoring model has demonstrated a material increase in decline rates affecting a specific segment of applicants.
+
+Decline rates increased by ~18% overall
+Disproportionate impact observed in self-employed applicants with variable income profiles
+Pattern identified through customer complaints rather than automated monitoring
+
+There is no indication of system compromise or data breach.
+
+The model is operating as designed.
+
+That is the concern.
+
+2. Why This Is Being Treated as an Incident
+
+This does not meet the traditional definition of a security incident.
+
+However, it meets the threshold of an AI governance incident.
+
+The system is producing outcomes that may not be justifiable
+The behaviour was not detected through existing controls
+The impact is customer-facing and potentially systemic
+
+If left unaddressed, this creates exposure beyond operational performance — specifically regulatory and reputational risk.
+
+3. What We Currently Understand
+
+Initial review suggests:
+
+Recent model update introduced increased weighting on income stability indicators
+These indicators correlate strongly with non-linear income patterns (e.g. self-employed customers)
+No explicit rule exists targeting this group, but the outcome is functionally similar
+
+There is currently no clear explanation that can be confidently provided to affected customers.
+
+That is a more immediate issue than the model behaviour itself.
+
+4. Impact Assessment
+Customer Impact
+Increased likelihood of unjustified credit refusal
+Reduced transparency in decision-making
+Elevated complaints risk
+Regulatory Exposure
+
+Relevant considerations include:
+
+Fairness and transparency expectations under UK GDPR
+Potential scrutiny under emerging AI governance expectations (EU AI Act alignment if applicable)
+FCA expectations around customer outcomes and decision accountability
+
+This is unlikely to trigger immediate reporting thresholds.
+It may, however, trigger supervisory interest if identified externally.
+
+Reputational Risk
+
+This type of issue does not typically surface as a technical failure.
+
+It surfaces as:
+
+“Customers being treated unfairly by an automated system.”
+
+That distinction matters.
+
+5. Control Observations
+Monitoring focused on model accuracy, not outcome distribution
+No defined threshold for what constitutes unacceptable disparity in outcomes
+Human oversight exists, but is not triggered at scale — only on individual review
+
+In practical terms, the system failed quietly.
+
+6. Immediate Actions Taken
+Model update paused pending review
+Retrospective analysis initiated on affected decisions
+Customer support briefed to escalate relevant complaints
+Internal review group convened (GRC, Data Science, Compliance)
+7. Decisions Required from the Board
+Model Continuation vs Suspension
+Continue operating with controls, or suspend model pending remediation
+Customer Remediation Approach
+Whether to proactively review and potentially reverse affected decisions
+Disclosure Position
+Internal containment vs voluntary disclosure to regulator
+Governance Adjustment
+Agreement on what constitutes an “AI incident” going forward
+8. Final Observation
+
+No control failed in a way that would be captured by a traditional audit.
+
+The system remained secure.
+The model remained functional.
+
+The failure was in how outcomes were produced and how long that went unnoticed.
+
+This is not a gap in security.
+
+It is a gap in governance.
