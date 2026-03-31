@@ -1,0 +1,130 @@
+AI Threat Addendum (ENISA-Aligned)
+Credit Scoring System — Veriflow Payments Ltd
+
+This is a thinking exercise. There is no such company.
+
+Document type: Threat Addendum — AI System
+Prepared by: Arken Systems GRC Function
+Date: March 2025
+Classification: Internal — Supporting Analysis
+
+Primary reference: ENISA guidance on AI and cybersecurity risk
+
+1. Purpose
+
+This document highlights AI-specific threat considerations that are not fully addressed by standard control frameworks such as:
+
+ISO/IEC 27001
+NIST Cybersecurity Framework
+
+It is intended as a supplement, not a replacement.
+
+2. Framing Note
+
+Traditional security controls assume:
+
+Systems behave predictably
+Inputs are either valid or malicious
+Failures are visible
+
+AI systems challenge all three assumptions.
+
+3. Key AI-Specific Threat Scenarios
+3.1 Data Poisoning (Upstream Manipulation)
+
+Scenario
+Training or enrichment data is subtly manipulated, altering model behaviour over time.
+
+Relevance to Veriflow
+Dependence on third-party enrichment data (Databridge) introduces indirect exposure.
+
+Why this is difficult to detect
+
+No obvious breach
+Model performance may appear stable
+Effects emerge gradually
+
+This is less like an attack and more like a slow drift in reality.
+
+3.2 Model Evasion (Adversarial Input)
+
+Scenario
+Applicants intentionally structure inputs to produce favourable outcomes.
+
+Example
+Manipulating income patterns or transaction characteristics to appear lower risk.
+
+Why this matters
+
+System appears accurate in aggregate
+Individual exploitation becomes normalised
+
+Controls tend to assume honest input.
+
+That assumption does not always hold.
+
+3.3 Model Inversion / Data Leakage
+
+Scenario
+Sensitive training data is inferred from model outputs.
+
+Relevance
+Lower likelihood in current deployment, but increases with model exposure (APIs, third-party access).
+
+Control gap
+Standard access controls do not fully mitigate inference risks.
+
+3.4 Hidden Supply Chain Dependencies
+
+Scenario
+Third-party data or models introduce risk not visible at the contractual level.
+
+Example
+Databridge relying on additional undisclosed data sources.
+
+Why this matters
+
+Risk is inherited, not owned
+Assurance stops at the first supplier layer
+
+This is already visible in traditional supply chains.
+AI makes it harder to trace.
+
+3.5 Behavioural Manipulation (Non-Technical)
+
+Scenario
+Users adapt behaviour in response to perceived model logic.
+
+Example
+Customers changing transaction behaviour to influence scoring.
+
+Observation
+This is not strictly malicious.
+
+But it still changes system integrity over time.
+
+4. Control Implications
+
+These risks do not require entirely new frameworks.
+
+They require different questions to be asked within existing ones:
+
+Not just “Is the data secure?”
+→ “Could the data be shaping the model in unintended ways?”
+Not just “Is access controlled?”
+→ “Could outputs reveal more than intended?”
+Not just “Is the supplier compliant?”
+→ “What are they indirectly introducing into the system?”
+5. Final Observation
+
+These threats rarely appear as clear incidents.
+
+They appear as:
+
+Gradual shifts
+Edge-case failures
+Patterns that only make sense in hindsight
+
+Which means they are easy to miss.
+
+And difficult to explain once they surface.
