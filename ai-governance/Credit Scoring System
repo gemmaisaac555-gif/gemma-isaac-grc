@@ -1,0 +1,235 @@
+AI Governance Control Mapping — Credit Scoring System
+Veriflow Payments Ltd (Arken Systems GRC Portfolio)
+
+This is a thinking exercise. There is no such company.
+
+Document type: Control Mapping / Governance Analysis
+Prepared by: Arken Systems GRC Function
+Addressed to: AI Governance Committee, Veriflow Payments Ltd
+Date: March 2025
+Classification: Confidential — Internal Distribution Only
+
+Related documents:
+
+AI Risk Register — Credit Scoring Model Deployment
+Fundamental Rights Impact Assessment (FRIA) — AI Credit Scoring System
+Artefact A — Risk Acceptance With Teeth
+Artefact B — Third-Party Control Gap Analysis (Databridge Analytics Ltd)
+1. Purpose of This Document
+
+This document maps key risks in Veriflow’s AI credit scoring system against:
+
+ISO/IEC 27001
+NIST Cybersecurity Framework
+ISO/IEC 42001
+ENISA (AI-specific threat considerations)
+
+The objective is not to demonstrate compliance.
+It is to show where existing control frameworks are sufficient, and where they are not.
+
+In practice, most control failures occur at those boundaries.
+
+2. Framing Observation (Before the Table)
+
+There is a tendency to assume that if a system is secure, it is therefore safe to deploy.
+
+That assumption does not hold for AI systems.
+
+A credit scoring model can be:
+
+Secure (no breach, no unauthorised access), and
+Functionally operational
+
+…and still produce outcomes that are:
+
+Unfair
+Unexplainable
+Misaligned with regulatory expectations
+
+Or simply wrong in a way that is hard to detect until damage has already occurred.
+
+Traditional frameworks were not designed to answer those questions.
+
+3. Control Mapping
+3.1 Training Data Integrity & Confidentiality
+
+Risk
+Training data is exposed, altered, or sourced in a way that introduces hidden bias or error.
+
+Primary framework anchor
+ISO 27001 / NIST CSF
+
+Where that is sufficient
+
+Encryption at rest and in transit
+Access controls
+Supplier assurance (Databridge)
+
+Where it is not sufficient
+These controls confirm the data is protected — not that it is appropriate.
+
+A dataset can be perfectly secured and still unsuitable for model training.
+
+Additional governance expectation (ISO 42001)
+
+Documented data provenance
+Assessment of representativeness
+Explicit acceptance of known limitations
+
+ENISA-informed consideration
+
+Data poisoning risk (malicious or accidental)
+Dependency on third-party data pipelines
+3.2 Model Decision Transparency (Explainability)
+
+Risk
+The organisation cannot adequately explain why a customer was declined credit.
+
+Primary framework anchor
+ISO 42001
+
+Where traditional frameworks fall short
+ISO 27001 confirms the system is controlled.
+It does not require the system to be understandable.
+
+Control expectation
+
+Model documentation (model card or equivalent)
+Defined explanation standards for adverse decisions
+Internal ability to reconstruct decision logic when challenged
+
+There is a practical limit here — not all models are fully explainable.
+The risk is pretending they are.
+
+3.3 Human Oversight & Intervention
+
+Risk
+Decisions are made without meaningful human review, particularly in borderline or high-impact cases.
+
+Primary framework anchor
+ISO 42001
+
+Where traditional frameworks fall short
+NIST CSF introduces governance concepts, but does not define what “appropriate human oversight” looks like in practice.
+
+Control expectation
+
+Defined escalation thresholds
+Clear ownership of override decisions
+Evidence that intervention is possible (not just documented)
+
+In many organisations, “human in the loop” exists on paper but not in workflow.
+
+3.4 Model Drift & Performance Degradation
+
+Risk
+Model performance deteriorates over time due to changes in customer behaviour, economic conditions, or data inputs.
+
+Primary framework anchor
+ISO 42001
+
+Where traditional frameworks fall short
+ISO 27001 treats systems as relatively stable assets.
+AI systems are not stable — they degrade.
+
+Control expectation
+
+Ongoing performance monitoring
+Defined thresholds for retraining or suspension
+Periodic validation against current data
+
+A model that was valid six months ago may no longer be valid today.
+This is rarely treated with the urgency it deserves.
+
+3.5 Incident Response (AI-Specific)
+
+Risk
+The model causes harm (e.g. systemic unfair decisions), but this is not recognised or treated as an incident.
+
+Primary framework anchor
+NIST CSF + ISO 42001
+
+Where traditional frameworks fall short
+Incident response is usually triggered by security events, not decision failures.
+
+Control expectation
+
+Definition of what constitutes an “AI incident”
+Integration with existing incident response processes
+Clear escalation path to governance / compliance functions
+
+Not every failure will look like a breach.
+Some will look like a pattern.
+
+3.6 Third-Party AI Dependencies (Databridge Analytics Ltd)
+
+Risk
+Reliance on third-party data or models introduces risk outside direct organisational control.
+
+Primary framework anchor
+ISO 27001 / NIST CSF
+
+Where that is sufficient
+
+Supplier due diligence
+Contractual controls
+Security assurance
+
+Where it is not sufficient
+These controls assess the vendor’s security posture, not the downstream impact of their data on model behaviour.
+
+Additional governance expectation (ISO 42001)
+
+Assessment of how third-party inputs affect outcomes
+Defined fallback if vendor data becomes unreliable
+
+ENISA-informed consideration
+
+Supply chain manipulation
+Hidden dependencies in data enrichment processes
+3.7 AI-Specific Threat Considerations
+
+Risk
+The model is manipulated, exploited, or behaves unpredictably under adversarial conditions.
+
+Primary reference
+ENISA
+
+Examples
+
+Data poisoning (training data deliberately corrupted)
+Model evasion (inputs crafted to bypass controls)
+Model inversion (extracting sensitive data from outputs)
+
+These risks are not theoretical.
+They are simply not yet consistently integrated into standard control sets.
+
+4. Key Takeaway
+
+ISO 27001 and NIST CSF answer the question:
+
+“Is the system secure and managed?”
+
+ISO 42001 begins to answer:
+
+“Is the system behaving in a way we can justify?”
+
+ENISA material pushes further:
+
+“How might this system be manipulated in ways we are not currently detecting?”
+
+All three perspectives are required.
+
+Relying on one creates blind spots.
+Relying on all three still requires judgement.
+
+5. Final Observation
+
+Most governance failures will not occur because controls are absent.
+
+They will occur because:
+
+Controls were assumed to cover more than they actually do
+Or because the boundary between frameworks was never examined
+
+This document is intended to make those boundaries visible.
