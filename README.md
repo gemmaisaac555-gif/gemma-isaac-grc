@@ -49,7 +49,9 @@ How I approach risk analysis — the reasoning behind the work, not just the out
 
 - [Risk Manifesto](https://github.com/gemmaisaac555-gif/gemma-isaac-grc/blob/main/how-i-think/risk-manifesto.md) — The analytical principles that underpin this portfolio
 - [Preparing an ISMS for Audit: Lessons from ISO/IEC 27001:2022 Study](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/how-i-think/iso27001-isms-audit-readiness.html) — Working reflection on what the standard demands from an auditor's perspective, applied to a simulated Stage 1 audit of Veriflow Payments. Written at an early stage of Lead Implementer study — includes an honest account of what remains in progress.
-
+- [AI Incident Response Scenarios](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/how-i-think/ai-incident-response-scenarios.html) — Three live AI system failures at Veriflow Payments: credit bias escalation, model drift causing financial loss, and third-party model failure. Written as in-the-moment decisions with incomplete information and acknowledged uncertainty.
+- [Regulator Lens — If I Were the ICO](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/how-i-think/regulator-lens-ico.html) — Reasoning from inside an ICO enforcement perspective on Veriflow's AI credit scoring deployment. Five specific concerns grounded in enforcement patterns, not compliance checklists.
+- [Regulator Lens — If I Were the FCA](https://gemmaisaac555-gif.github.io/gemma-isaac-grc/how-i-think/regulator-lens-fca.html) — FCA supervisory perspective on the same deployment. Focuses on Consumer Duty outcomes, model validation, and the questions a supervisor would actually ask senior management.
 ---
 
 ## 📁 How I Decide
