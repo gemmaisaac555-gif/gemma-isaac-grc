@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preparing an ISMS for Audit: Lessons from ISO/IEC 27001:2022 Study | Gemma Isaac</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --ink-light: #3a3a3a;
+    --ink-faint: #6b6b6b;
+    --rule: #d4c9b8;
+    --rule-light: #ede8df;
+    --paper: #faf8f4;
+    --paper-warm: #f5f1ea;
+    --paper-mid: #efe9de;
+    --accent: #1a3a5c;
+    --accent-mid: #2d5986;
+    --accent-light: #eef3f8;
+    --mono: 'IBM Plex Mono', monospace;
+    --serif: 'Source Serif 4', Georgia, serif;
+    --display: 'Playfair Display', Georgia, serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── MASTHEAD ── */
+  .masthead {
+    background: var(--paper-warm);
+    border-bottom: 1px solid var(--rule);
+    padding: 14px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .masthead-brand {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .masthead-brand a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .masthead-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: var(--paper-mid);
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 80px 48px 48px;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::after {
+    content: '';
+    display: inline-block;
+    width: 48px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(30px, 4.5vw, 46px);
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.3px;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-deck {
+    font-size: 18px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink-light);
+    line-height: 1.65;
+    max-width: 620px;
+    margin-bottom: 40px;
+  }
+  .hero-byline {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .hero-byline-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .hero-byline-item label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .hero-byline-item span {
+    font-size: 13px;
+    color: var(--ink-light);
+  }
+  .byline-sep {
+    width: 1px;
+    height: 28px;
+    background: var(--rule);
+  }
+
+  /* ── CONTENT ── */
+  .content-wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 64px 48px 120px;
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .main-text { min-width: 0; }
+
+  /* ── PROSE ── */
+  .prose p {
+    color: var(--ink-light);
+    margin-bottom: 24px;
+    font-size: 16.5px;
+    line-height: 1.82;
+  }
+  .prose p:last-child { margin-bottom: 0; }
+  .prose strong { color: var(--ink); font-weight: 600; }
+  .prose em { font-style: italic; color: var(--ink); }
+
+  /* ── SECTION HEADINGS ── */
+  .section-heading {
+    margin: 56px 0 24px;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .section-heading .s-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    flex-shrink: 0;
+    padding-top: 4px;
+  }
+  .section-heading h2 {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+  .section-heading:first-child { margin-top: 0; }
+
+  /* ── CALLOUT BOX ── */
+  .callout {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 24px 28px;
+    margin: 32px 0;
+  }
+  .callout p {
+    font-size: 15px !important;
+    color: var(--ink-light) !important;
+    margin-bottom: 8px !important;
+    line-height: 1.7 !important;
+  }
+  .callout p:last-child { margin-bottom: 0 !important; }
+  .callout-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  /* ── CLAUSE TABLE ── */
+  .clause-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0 32px;
+    font-size: 13.5px;
+  }
+  .clause-table thead th {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper-warm);
+    font-weight: 500;
+  }
+  .clause-table tbody tr {
+    border-bottom: 1px solid var(--rule-light);
+  }
+  .clause-table tbody tr:hover {
+    background: var(--paper-warm);
+  }
+  .clause-table td {
+    padding: 11px 14px;
+    color: var(--ink-light);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .clause-table td:first-child {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .clause-table td:nth-child(2) {
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  /* ── PULL QUOTE ── */
+  .pull-quote {
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 28px 0;
+    margin: 40px 0;
+  }
+  .pull-quote p {
+    font-family: var(--display);
+    font-size: 20px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--ink);
+    margin: 0 !important;
+  }
+
+  /* ── REFLECTION LIST ── */
+  .reflection-list {
+    list-style: none;
+    margin: 16px 0 32px;
+  }
+  .reflection-list li {
+    padding: 16px 0 16px 28px;
+    border-bottom: 1px solid var(--rule-light);
+    position: relative;
+    font-size: 15.5px;
+    color: var(--ink-light);
+    line-height: 1.7;
+  }
+  .reflection-list li:last-child { border-bottom: none; }
+  .reflection-list li::before {
+    content: attr(data-n);
+    position: absolute;
+    left: 0;
+    top: 18px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-faint);
+    letter-spacing: 0.05em;
+  }
+  .reflection-list li strong {
+    display: block;
+    color: var(--ink);
+    font-size: 14.5px;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: sticky;
+    top: 24px;
+  }
+  .sidebar-block {
+    border: 1px solid var(--rule);
+    padding: 24px;
+    margin-bottom: 24px;
+    background: white;
+  }
+  .sidebar-block h3 {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule-light);
+  }
+  .sidebar-block ul {
+    list-style: none;
+  }
+  .sidebar-block ul li {
+    font-size: 12.5px;
+    color: var(--ink-light);
+    padding: 7px 0;
+    border-bottom: 1px solid var(--rule-light);
+    line-height: 1.4;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+  .sidebar-block ul li:last-child { border-bottom: none; }
+  .sidebar-block ul li .li-marker {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .sidebar-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin: 3px 3px 3px 0;
+  }
+  .sidebar-note {
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-style: italic;
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--paper-warm);
+    border-top: 1px solid var(--rule);
+    padding: 40px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .footer-brand {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .footer-meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-faint);
+    line-height: 1.9;
+    text-align: right;
+  }
+
+  /* ── ANIMATIONS ── */
+  .hero, .main-text, .sidebar {
+    animation: fadeUp 0.5s ease both;
+  }
+  .sidebar { animation-delay: 0.15s; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 720px) {
+    .hero { padding: 48px 24px 40px; }
+    .content-wrap {
+      grid-template-columns: 1fr;
+      padding: 40px 24px 80px;
+      gap: 48px;
+    }
+    .sidebar { position: static; }
+    .masthead { padding: 12px 24px; }
+    footer { padding: 32px 24px; }
+    footer .footer-meta { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-brand">
+    <a href="#">Gemma Isaac</a> &nbsp;·&nbsp; GRC &amp; AI Governance Portfolio
+  </div>
+  <div class="masthead-tag">Study Reflection &nbsp;·&nbsp; ISO/IEC 27001:2022</div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-eyebrow">Portfolio — How I Think</div>
+  <h1>Preparing an ISMS for Audit:<br><em>Lessons from ISO/IEC 27001:2022 Study</em></h1>
+  <p class="hero-deck">A working reflection on what the standard actually demands, where organisations tend to fall short before a certification audit, and what studying the source text reveals that training courses don't.</p>
+  <div class="hero-byline">
+    <div class="hero-byline-item">
+      <label>Author</label>
+      <span>Gemma Isaac</span>
+    </div>
+    <div class="byline-sep"></div>
+    <div class="hero-byline-item">
+      <label>Date</label>
+      <span>April 2026</span>
+    </div>
+    <div class="byline-sep"></div>
+    <div class="hero-byline-item">
+      <label>Status</label>
+      <span>Study in progress — Lead Implementer</span>
+    </div>
+    <div class="byline-sep"></div>
+    <div class="hero-byline-item">
+      <label>Standard</label>
+      <span>ISO/IEC 27001:2022 · 27002:2022</span>
+    </div>
+  </div>
+</header>
+
+<!-- CONTENT -->
+<div class="content-wrap">
+
+  <main class="main-text">
+
+    <!-- SECTION 1 -->
+    <div class="section-heading">
+      <span class="s-num">01</span>
+      <h2>Why I'm reading the standard itself, not just the syllabus</h2>
+    </div>
+    <div class="prose">
+      <p>Most certification study guides treat ISO 27001 as a list of things to memorise — clauses, annexes, control categories. That's useful up to a point. But what I've found more valuable, early in this process, is sitting with the actual standard text and asking a different question: <strong>what would an auditor be looking for, and why?</strong></p>
+      <p>The distinction matters because auditors aren't checking whether you've read the right documents. They're assessing whether information security management is genuinely embedded — whether the organisation understands its own context, has made deliberate decisions about risk, and can demonstrate that those decisions are working. You can pass a knowledge test without understanding that. You can't pass a certification audit without it.</p>
+      <p>This piece is a working reflection — written at an early stage of Lead Implementer study — on what I've found so far: what the standard's structure reveals about audit expectations, where the common failure points tend to be, and how I'm using a fictional scenario (Arken Systems' client, Veriflow Payments) to make the learning concrete.</p>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section-heading">
+      <span class="s-num">02</span>
+      <h2>What the clause structure tells you</h2>
+    </div>
+    <div class="prose">
+      <p>ISO 27001:2022 is built on the High Level Structure (HLS) common to all ISO management system standards. Clauses 4 through 10 are the core requirements; Annex A provides a reference set of controls. Understanding the clause sequence isn't just a memory exercise — it's a map of how a management system is supposed to work.</p>
+    </div>
+
+    <table class="clause-table">
+      <thead>
+        <tr>
+          <th>Clause</th>
+          <th>Title</th>
+          <th>What it's actually about</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>4</td>
+          <td>Context of the organisation</td>
+          <td>Understanding internal/external factors, interested parties, and defining the ISMS scope. Auditors check whether the scope is realistic and defensible.</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Leadership</td>
+          <td>Top management commitment — policy, roles, responsibilities. A policy that exists but hasn't been reviewed or communicated fails here.</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Planning</td>
+          <td>Risk assessment methodology, risk treatment plan, Statement of Applicability. The SoA is a critical audit document — every excluded Annex A control needs a justified reason.</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Support</td>
+          <td>Resources, competence, awareness, communication, documented information. "Documented information" is the standard's language for records and evidence.</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Operation</td>
+          <td>Implementing the risk treatment plan; managing operational security processes. Where most day-to-day GRC work lives.</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Performance evaluation</td>
+          <td>Monitoring, measurement, internal audit, management review. Auditors look for evidence that the organisation is actually reviewing its own performance.</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>Improvement</td>
+          <td>Nonconformities, corrective actions, continual improvement. The mechanism for responding when things go wrong.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="prose">
+      <p>What struck me early on is that the clauses flow in a deliberate order: understand your context, get leadership committed, plan your risk approach, put it into operation, check whether it's working, fix what isn't. An organisation that skips straight to controls without working through Clauses 4 and 5 will struggle in an audit — not because their technical security is poor, but because they can't demonstrate the thinking that should underpin it.</p>
+    </div>
+
+    <div class="pull-quote">
+      <p>The Statement of Applicability is, in many ways, the most revealing document an organisation produces. It shows not just what controls they've implemented, but what they've consciously decided not to — and whether they can explain why.</p>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section-heading">
+      <span class="s-num">03</span>
+      <h2>The Statement of Applicability: where audit readiness is won or lost</h2>
+    </div>
+    <div class="prose">
+      <p>ISO 27001:2022 requires organisations to produce a Statement of Applicability (SoA) — a document that maps every Annex A control to the organisation's risk treatment decisions. For each of the 93 controls across 4 themes (Organisational, People, Physical, Technological), the SoA records: whether the control is applicable, whether it's implemented, and if it's excluded, why.</p>
+      <p>This is where I've found studying the standard genuinely illuminating rather than just informative. The SoA isn't a checkbox exercise — it's a record of risk-based decision making. An auditor reviewing an SoA is asking: <em>does this organisation understand its own risk exposure, and have its control decisions followed logically from that understanding?</em></p>
+      <p>Common SoA weaknesses I've encountered in case study material and practice scenarios include:</p>
+    </div>
+
+    <ul class="reflection-list">
+      <li data-n="→">
+        <strong>Blanket inclusions without risk rationale</strong>
+        Marking all 93 controls as applicable because it seems safer, without tying each to a specific risk. This suggests the risk assessment wasn't actually driving the decisions — a finding that undermines the entire ISMS.
+      </li>
+      <li data-n="→">
+        <strong>Exclusions without justification</strong>
+        Excluding controls (particularly around supplier relationships, physical security, or cryptography) without documented reasoning. Auditors probe exclusions specifically — if the justification isn't clear and risk-grounded, it becomes a nonconformity.
+      </li>
+      <li data-n="→">
+        <strong>Misalignment between SoA and risk register</strong>
+        The SoA should be traceable back to the risk register and risk treatment plan. Where controls in the SoA don't correspond to risks identified in the assessment, the ISMS has a structural gap.
+      </li>
+      <li data-n="→">
+        <strong>Static documents treated as one-time exercises</strong>
+        An SoA that was produced for initial certification and hasn't been reviewed since doesn't meet Clause 9's performance evaluation requirements. The standard expects continual review, not point-in-time compliance.
+      </li>
+    </ul>
+
+    <!-- SECTION 4 -->
+    <div class="section-heading">
+      <span class="s-num">04</span>
+      <h2>Applying this to Veriflow: a simulated audit readiness check</h2>
+    </div>
+    <div class="prose">
+      <p>To make these concepts concrete, I've been applying them to Veriflow Payments Ltd — the fictional fintech client used across my GRC portfolio. Veriflow is a useful case study because it has the characteristics of a real organisation facing real certification pressure: FCA supervision, PCI-DSS obligations, a growing third-party API dependency, and a recently deployed AI fraud detection system.</p>
+      <p>Working through what a Stage 1 audit (document review) of Veriflow's ISMS would reveal has clarified what "audit readiness" actually means in practice.</p>
+    </div>
+
+    <div class="callout">
+      <span class="callout-label">Simulated Stage 1 Findings — Veriflow Payments Ltd</span>
+      <p><strong>Clause 4 — Context:</strong> Veriflow has not formally documented the internal and external issues relevant to its ISMS, nor a complete list of interested parties and their requirements. The ISMS scope references "payment processing systems" but doesn't explicitly address the open banking API infrastructure or the AI fraud model. An auditor would raise this as a potential gap — if the scope is ambiguous, controls may not be applied consistently.</p>
+      <p><strong>Clause 5 — Leadership:</strong> An information security policy exists but has not been reviewed in 18 months and was not circulated following last year's cloud migration. Clause 5.2 requires the policy to be appropriate to the organisation's purpose — a policy that predates a major infrastructure change raises questions about whether leadership has maintained ownership of it.</p>
+      <p><strong>Clause 6 — Planning:</strong> A risk assessment was completed in 2024 but not updated post-migration. ISO 27001 doesn't prescribe a frequency, but Clause 6.1.2 requires assessment when significant changes occur. A cloud migration would typically trigger a review. The SoA status is unknown — if it hasn't been maintained alongside the risk register, this would be a major nonconformity.</p>
+      <p><strong>Clause 9 — Performance evaluation:</strong> No internal audit programme exists. No management review has been formally conducted or recorded. These are not optional elements — Clauses 9.2 and 9.3 require both, with documented outputs. Their absence would prevent certification.</p>
+    </div>
+
+    <div class="prose">
+      <p>What this exercise surfaced is something the standard makes implicit but certification training often doesn't emphasise: <strong>the biggest audit risks for most organisations aren't technical controls — they're governance and process gaps.</strong> Missing MFA on a system is a control weakness. An undocumented risk assessment methodology, or a management review that never happened, is a fundamental failure of the management system itself.</p>
+      <p>This maps directly onto what I observed when building the NIST CSF 2.0 gap analysis for Veriflow: the Govern function gaps (absent board risk appetite, informal third-party risk management, CISO function overextended) aren't separate from ISO 27001 concerns — they're the same underlying problem viewed through a different framework lens.</p>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="section-heading">
+      <span class="s-num">05</span>
+      <h2>What I'm still working through</h2>
+    </div>
+    <div class="prose">
+      <p>I'm at an early stage of Lead Implementer study, and there are parts of the standard I haven't yet worked through in depth. I want to be direct about that, because overclaiming at this point would undermine what I'm trying to demonstrate — that I engage with source material carefully rather than reaching for confident-sounding summaries.</p>
+      <p>The areas I'm actively developing understanding of:</p>
+    </div>
+
+    <ul class="reflection-list">
+      <li data-n="→">
+        <strong>Annex A controls in depth — particularly the 2022 additions</strong>
+        ISO 27001:2022 reorganised Annex A around four themes (previously 14 domains) and introduced 11 new controls, including threat intelligence, information security for cloud services, and ICT readiness for business continuity. I've covered the structure; I'm working through the practical implementation guidance in ISO 27002:2022.
+      </li>
+      <li data-n="→">
+        <strong>The risk assessment methodology in detail</strong>
+        The standard is deliberately methodology-agnostic — it doesn't mandate a specific approach to risk assessment, only that the approach is consistent, produces comparable results, and is documented. Understanding what "good" looks like across different methodologies (OCTAVE, ISO 27005, FAIR) is on my study list.
+      </li>
+      <li data-n="→">
+        <strong>Stage 1 vs Stage 2 audit dynamics</strong>
+        I understand the distinction conceptually — Stage 1 is document review, Stage 2 is implementation evidence — but I want to work through more practice scenarios for Stage 2 before I'd claim comfortable familiarity with how certification bodies assess operating effectiveness.
+      </li>
+      <li data-n="→">
+        <strong>Surveillance audits and continual certification</strong>
+        ISO 27001 certification requires annual surveillance audits and a full recertification every three years. The ongoing maintenance of an ISMS is arguably harder than the initial certification — and it's where the "continual improvement" requirement in Clause 10 becomes most visible.
+      </li>
+    </ul>
+
+    <div class="prose">
+      <p>Writing this down as explicit gaps — rather than quietly hoping no interviewer asks about them — is itself part of the approach. GRC work requires being precise about what you know, what you've assessed, and where the uncertainty sits. That applies to risk registers and audit reports; it should apply to how I represent my own knowledge too.</p>
+    </div>
+
+    <!-- SECTION 6 -->
+    <div class="section-heading">
+      <span class="s-num">06</span>
+      <h2>Why this connects to the broader portfolio</h2>
+    </div>
+    <div class="prose">
+      <p>The ISO 27001 study sits within a larger project. The NIST CSF 2.0 gap analysis for Veriflow, the EU AI Act FRIA, the AI risk register, the internal AI use policy — these artefacts are connected by a single underlying question: <em>how do you build structured accountability for risk into an organisation, and how do you verify that it's actually working?</em></p>
+      <p>ISO 27001 is one of the most rigorous available answers to that question in the information security domain. The reason I'm studying it properly — working through the actual standard text rather than exam notes — is that I want to understand the reasoning behind the requirements, not just the requirements themselves. That's what makes the difference between someone who can describe a management system and someone who can help build one.</p>
+      <p>The Lead Implementer certification is the formal milestone. This piece is the working record of what I'm learning on the way there.</p>
+    </div>
+
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-block">
+      <h3>Key References</h3>
+      <ul>
+        <li><span class="li-marker">↗</span>ISO/IEC 27001:2022 — Information security management systems: Requirements</li>
+        <li><span class="li-marker">↗</span>ISO/IEC 27002:2022 — Information security controls (implementation guidance)</li>
+        <li><span class="li-marker">↗</span>ISO/IEC 27005:2022 — Guidance on managing information security risks</li>
+      </ul>
+    </div>
+
+    <div class="sidebar-block">
+      <h3>Related Portfolio Work</h3>
+      <ul>
+        <li><span class="li-marker">→</span>NIST CSF 2.0 Gap Analysis — Veriflow Payments Ltd</li>
+        <li><span class="li-marker">→</span>AI Risk Register — Fintech Credit Scoring System</li>
+        <li><span class="li-marker">→</span>Fundamental Rights Impact Assessment — EU AI Act</li>
+        <li><span class="li-marker">→</span>Internal AI Use Policy — Arken Systems</li>
+        <li><span class="li-marker">→</span>DWP Shadow Audit</li>
+      </ul>
+    </div>
+
+    <div class="sidebar-block">
+      <h3>Topics Covered</h3>
+      <div style="margin-top: 4px;">
+        <span class="sidebar-tag">ISO 27001:2022</span>
+        <span class="sidebar-tag">ISMS</span>
+        <span class="sidebar-tag">Audit Readiness</span>
+        <span class="sidebar-tag">SoA</span>
+        <span class="sidebar-tag">Risk Assessment</span>
+        <span class="sidebar-tag">Clause 6</span>
+        <span class="sidebar-tag">Clause 9</span>
+        <span class="sidebar-tag">Nonconformity</span>
+        <span class="sidebar-tag">Fintech</span>
+        <span class="sidebar-tag">FCA</span>
+      </div>
+    </div>
+
+    <div class="sidebar-block">
+      <h3>A Note on This Piece</h3>
+      <p class="sidebar-note">This is a study reflection written at an early stage of ISO 27001 Lead Implementer preparation. It applies framework knowledge to a fictional scenario (Veriflow Payments Ltd) rather than a real client engagement. The gaps and findings described are illustrative, grounded in the standard's requirements and publicly available guidance on common audit findings.</p>
+    </div>
+
+  </aside>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-brand">Gemma Isaac</div>
+    <div style="font-size:13px; color: var(--ink-faint); margin-top:4px; font-style:italic; font-family: var(--serif);">GRC &amp; AI Governance Portfolio</div>
+  </div>
+  <div class="footer-meta">
+    ISO 27001 Study Reflection · April 2026<br>
+    Study status: Lead Implementer — in progress<br>
+    Part of the Arken Systems / Veriflow case study series
+  </div>
+</footer>
+
+</body>
+</html>
