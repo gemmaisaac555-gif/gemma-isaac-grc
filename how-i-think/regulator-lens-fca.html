@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>If I Were the FCA: Supervising Veriflow's AI Credit Scoring Deployment | Gemma Isaac</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --ink-light: #3a3a3a;
+    --ink-faint: #6b6b6b;
+    --rule: #d4c9b8;
+    --rule-light: #ede8df;
+    --paper: #faf8f4;
+    --paper-warm: #f5f1ea;
+    --paper-mid: #efe9de;
+    --accent: #2a1a5c;
+    --accent-mid: #4a3a8a;
+    --accent-light: #f0eef8;
+    --mono: 'IBM Plex Mono', monospace;
+    --serif: 'Source Serif 4', Georgia, serif;
+    --display: 'Playfair Display', Georgia, serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.82;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .masthead {
+    background: var(--paper-warm);
+    border-bottom: 1px solid var(--rule);
+    padding: 14px 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .masthead-brand {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .masthead-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: var(--paper-mid);
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  .hero {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 72px 52px 48px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::after {
+    content: '';
+    display: inline-block;
+    width: 36px; height: 1px;
+    background: var(--accent);
+    opacity: 0.4;
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.3px;
+    margin-bottom: 20px;
+  }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-deck {
+    font-size: 17px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink-faint);
+    line-height: 1.65;
+    margin-bottom: 32px;
+  }
+  .byline {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+  }
+
+  .body-wrap {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 56px 52px 100px;
+  }
+
+  .prose p {
+    color: var(--ink-light);
+    font-size: 16.5px;
+    line-height: 1.85;
+    margin-bottom: 24px;
+  }
+  .prose p:last-child { margin-bottom: 0; }
+  .prose strong { color: var(--ink); font-weight: 600; }
+  .prose em { font-style: italic; }
+
+  .section-head {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 48px 0 20px;
+    line-height: 1.25;
+  }
+
+  .fca-principle {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    padding: 20px 24px;
+    margin: 28px 0;
+  }
+  .fca-principle-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: block;
+  }
+  .fca-principle p {
+    font-size: 15px !important;
+    color: var(--ink-light) !important;
+    margin-bottom: 8px !important;
+    line-height: 1.7 !important;
+  }
+  .fca-principle p:last-child { margin-bottom: 0 !important; }
+
+  .supervisory-q {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--rule-light);
+  }
+  .supervisory-q:last-child { border-bottom: none; }
+  .sq-question {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    font-style: italic;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .sq-answer {
+    font-size: 15px;
+    color: var(--ink-light);
+    line-height: 1.7;
+  }
+  .sq-answer strong { color: var(--ink); }
+
+  .pull-quote {
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--rule);
+    padding: 24px 0;
+    margin: 40px 0;
+  }
+  .pull-quote p {
+    font-family: var(--display);
+    font-size: 19px;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.4;
+    margin: 0 !important;
+  }
+
+  footer {
+    background: var(--paper-warm);
+    border-top: 1px solid var(--rule);
+    padding: 32px 52px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-brand { font-family: var(--display); font-size: 17px; font-weight: 700; color: var(--accent); }
+  .footer-meta { font-family: var(--mono); font-size: 10px; color: var(--ink-faint); line-height: 1.9; text-align: right; }
+
+  @media (max-width: 680px) {
+    .hero, .body-wrap, footer { padding-left: 24px; padding-right: 24px; }
+    .masthead { padding: 12px 24px; }
+    footer .footer-meta { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="masthead-brand">Gemma Isaac &nbsp;·&nbsp; GRC & AI Governance Portfolio</div>
+  <div class="masthead-tag">Regulator Lens Series &nbsp;·&nbsp; FCA</div>
+</div>
+
+<header class="hero">
+  <div class="hero-eyebrow">Regulator Lens — How I Think</div>
+  <h1>If I Were the FCA:<br><em>Supervising Veriflow's AI Credit Scoring Deployment</em></h1>
+  <p class="hero-deck">The FCA supervises differently from the ICO — it is outcomes-focused rather than rights-focused, and it operates through ongoing supervisory relationships rather than complaint-driven investigations. What would a supervisory visit actually probe?</p>
+  <div class="byline">
+    <span>Gemma Isaac</span>
+    <span>·</span>
+    <span>April 2026</span>
+    <span>·</span>
+    <span>Portfolio — How I Think</span>
+  </div>
+</header>
+
+<div class="body-wrap">
+
+  <div class="prose">
+    <p>The FCA and the ICO are both regulators with an interest in how Veriflow uses AI in credit decisions. But they approach it from fundamentally different positions and the distinction matters for how a GRC professional should think about compliance.</p>
+
+    <p>The ICO's primary concern is data subject rights — was this person's data processed lawfully, were they given a meaningful explanation, can they contest the decision? The FCA's primary concern is consumer outcomes at scale — is this firm treating customers fairly, are its models producing decisions that are appropriate given each customer's circumstances, and is senior management accountable for what the AI system does? The ICO asks: <em>was this individual treated properly?</em> The FCA asks: <em>is this firm's model producing good outcomes systematically?</em></p>
+
+    <p>This distinction has practical implications. A firm can satisfy the ICO's documentation requirements and still have an AI system that the FCA would find deeply problematic — one that produces technically lawful but systematically poor outcomes for certain customer segments. Consumer Duty, in particular, raises the bar significantly beyond what data protection law requires.</p>
+  </div>
+
+  <h2 class="section-head">How the FCA would approach Veriflow</h2>
+
+  <div class="prose">
+    <p>FCA supervisory engagement with a payment services firm of Veriflow's size would typically be risk-based and proportionate. A firm using AI for credit decisions in retail lending would fall under the FCA's model risk management and Consumer Duty frameworks. The FCA's SS1/23 (Supervisory Statement on model risk management) and the Consumer Duty rules in PRIN 2A are the primary reference points. The FCA's 2022 research on consumer outcomes in AI-driven financial services would inform what questions a supervisor asks.</p>
+
+    <p>A supervisory visit or information request would not start with the technical documentation. It would start with asking senior management to explain — in plain terms — what the model does, what it is optimised for, and how the firm knows it is producing good outcomes. The FCA calls this "management information" but what it is really testing is whether the people at the top understand and own what their systems are doing to customers.</p>
+  </div>
+
+  <div class="fca-principle">
+    <span class="fca-principle-label">Consumer Duty — The Framing That Matters</span>
+    <p>Under PRIN 2A, firms must act to deliver good outcomes for retail customers. Outcomes include: products and services that meet customers' needs; fair value; consumers receiving and understanding communications; and consumers being able to pursue their financial objectives. A credit scoring model that systematically declines creditworthy applicants fails the last of these. The FCA's focus is not whether the model was built properly — it is whether customers are experiencing good outcomes.</p>
+  </div>
+
+  <h2 class="section-head">The questions a supervisor would actually ask</h2>
+
+  <div class="supervisory-q">
+    <div class="sq-question">"Walk me through your model validation process. Who reviews the model before you deploy it, and what were their findings?"</div>
+    <div class="sq-answer">Veriflow would struggle here. The model card acknowledges that Veriflow has not independently validated the accuracy of the vendor's explanation outputs. More fundamentally, Veriflow relies on ClearScore AI's own testing and validation rather than commissioning independent validation. The FCA's model risk management guidance (SS1/23) is explicit that firms should not rely solely on vendor assurances — they need their own validation framework. <strong>This is a significant gap that a supervisor would probe.</strong></div>
+  </div>
+
+  <div class="supervisory-q">
+    <div class="sq-question">"Show me your management information on credit decision outcomes. What do you know about who gets declined and why?"</div>
+    <div class="sq-answer">Veriflow's monitoring is vendor-dependent and retrospective. The model drift incident demonstrated that the firm detected a material change in model behaviour through revenue impact, not through proactive monitoring. A supervisor asking for management information on decision outcomes would find limited deployer-side visibility. The FCA expects firms to have their own view of what their systems are doing — not just to be relaying vendor reports. <strong>Absent this, the firm cannot demonstrate Consumer Duty compliance with respect to outcomes monitoring.</strong></div>
+  </div>
+
+  <div class="supervisory-q">
+    <div class="sq-question">"How does your firm identify and address harm to vulnerable customers from automated decisions?"</div>
+    <div class="sq-answer">Consumer Duty requires firms to pay particular attention to vulnerable customers. The FCA's guidance on vulnerability is extensive and places specific obligations on firms using automated systems to consider whether those systems may systematically disadvantage customers in vulnerable circumstances. Veriflow's FRIA considers fundamental rights impacts but does not specifically address the FCA's definition of vulnerability or how the credit model performs for customers who may be in financial difficulty. <strong>This is an area where the FCA's framework goes beyond what the EU AI Act requires, and Veriflow's documentation doesn't cover it.</strong></div>
+  </div>
+
+  <div class="supervisory-q">
+    <div class="sq-question">"What is your fair value assessment for this product, and how does the AI model affect it?"</div>
+    <div class="sq-answer">Under Consumer Duty, firms must assess whether the price customers pay is reasonable relative to the benefits they receive. For a credit product where the pricing is partly determined by an AI-generated risk score, the fair value assessment depends on whether the model is accurately assessing risk. If the model is systematically mispricing risk for certain customer segments — charging higher rates to customers who are actually lower risk — that is a Consumer Duty fair value concern. Veriflow has not conducted a fair value assessment that specifically considers AI model accuracy. <strong>This is unlikely to be on Veriflow's radar, but the FCA would expect it to be.</strong></div>
+  </div>
+
+  <div class="pull-quote">
+    <p>The FCA is not asking whether your AI system is technically compliant. It is asking whether your customers are experiencing good outcomes because of it, or despite it, or despite it not actually being as good as you think it is.</p>
+  </div>
+
+  <h2 class="section-head">Where Veriflow would give a good account of itself</h2>
+
+  <div class="prose">
+    <p>The FCA's supervisory approach is relationship-based and the quality of engagement matters as much as the compliance position. A firm that is honest about its gaps, has a credible plan to close them, and demonstrates genuine senior management engagement with the issues is in a fundamentally different position from one that presents a polished compliance front while the substance is thin.</p>
+
+    <p>Veriflow's board briefing on AI emotional dependency risk demonstrates that senior leadership is engaging with AI governance as a strategic concern, not just a compliance obligation. The risk register is current and honest. The vendor due diligence established contractual protections that most firms of this size do not have. The model card is unusually frank about open compliance gaps — and treats them as live items rather than resolved ones. These are signals a supervisor would note positively.</p>
+
+    <p>The FCA's model risk management guidance distinguishes between firms that treat model risk as a technical problem and firms that treat it as a governance and accountability problem. Veriflow's documentation suggests the latter orientation, even where the implementation is incomplete. That distinction matters in a supervisory relationship.</p>
+  </div>
+
+  <h2 class="section-head">What this exercise reveals</h2>
+
+  <div class="prose">
+    <p>The gap between the ICO lens and the FCA lens is instructive. Many compliance programmes are built primarily around the ICO framework — data subject rights, lawful basis, documentation obligations. The FCA's framework — outcomes, fair value, vulnerability, management accountability — asks a different set of questions and points to different gaps. A firm can be ICO-compliant and FCA-deficient simultaneously.</p>
+
+    <p>For Veriflow, the most significant FCA-specific gaps are: the absence of independent model validation, the lack of proactive outcomes monitoring, the vulnerability framework gap, and the fair value question. None of these are ICO concerns in their primary framing. All of them are things a Consumer Duty supervisory review would find and follow up on.</p>
+
+    <p>The practical lesson: GRC programmes for AI in financial services need to be dual-framed. The ICO framework and the FCA framework are not redundant — they point at genuinely different risks, require genuinely different controls, and are enforced through genuinely different mechanisms. Understanding both — and understanding how they differ — is the difference between compliance theatre and actual risk management.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div>
+    <div class="footer-brand">Gemma Isaac</div>
+    <div style="font-size:13px; color: var(--ink-faint); margin-top:4px; font-style:italic; font-family: var(--serif);">GRC &amp; AI Governance Portfolio</div>
+  </div>
+  <div class="footer-meta">
+    Regulator Lens Series — FCA · April 2026<br>
+    Part of the Arken Systems / Veriflow case study series
+  </div>
+</footer>
+
+</body>
+</html>

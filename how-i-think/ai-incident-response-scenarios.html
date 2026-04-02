@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Incident Response Scenarios | Arken Systems</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --surface: #111318;
+    --surface-2: #181c22;
+    --surface-3: #1e2330;
+    --border: #2a3040;
+    --border-bright: #3a4558;
+    --text: #d4cfc8;
+    --text-dim: #7a8090;
+    --text-faint: #454d5c;
+    --accent: #4a9eff;
+    --accent-dim: #1a3a5c;
+    --red: #e05252;
+    --red-dim: #3a1515;
+    --amber: #e8973a;
+    --amber-dim: #3a2510;
+    --green: #4caf7d;
+    --green-dim: #0f2a1a;
+    --yellow: #e8c53a;
+    --yellow-dim: #2a2008;
+    --mono: 'IBM Plex Mono', monospace;
+    --serif: 'Source Serif 4', Georgia, serif;
+    --display: 'Playfair Display', Georgia, serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--serif);
+    font-size: 15px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .header-brand {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .header-brand span { color: var(--accent); }
+  .header-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--red);
+  }
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--red);
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 56px 48px 40px;
+    border-bottom: 1px solid var(--border);
+    max-width: 900px;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: var(--display);
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: white;
+    margin-bottom: 16px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-deck {
+    font-size: 16px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--text-dim);
+    line-height: 1.65;
+    max-width: 600px;
+    margin-bottom: 32px;
+  }
+  .hero-note {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    line-height: 1.7;
+    max-width: 580px;
+    padding: 14px 18px;
+    border-left: 2px solid var(--border-bright);
+  }
+
+  /* ── SCENARIO TABS ── */
+  .scenario-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    background: var(--surface);
+    overflow-x: auto;
+  }
+  .tab-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 16px 24px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active {
+    color: white;
+    border-bottom-color: var(--accent);
+  }
+  .tab-btn .tab-num {
+    font-size: 9px;
+    color: var(--text-faint);
+    letter-spacing: 0.1em;
+  }
+  .tab-btn.active .tab-num { color: var(--accent); }
+  .tab-btn .tab-sev {
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 2px;
+    margin-top: 2px;
+  }
+  .sev-critical { background: var(--red-dim); color: var(--red); }
+  .sev-high { background: var(--amber-dim); color: var(--amber); }
+
+  /* ── SCENARIO CONTENT ── */
+  .scenario-panel { display: none; }
+  .scenario-panel.active { display: block; }
+
+  .scenario-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 48px 100px;
+  }
+
+  /* ── INCIDENT HEADER ── */
+  .incident-header {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 28px 32px;
+    margin-bottom: 32px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: start;
+  }
+  .incident-title {
+    font-family: var(--display);
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .incident-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .meta-item label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .meta-item span {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .sev-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    margin-bottom: 36px;
+  }
+  .timeline-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .timeline-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .timeline-entry {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  .timeline-entry:last-child { border-bottom: none; }
+  .t-time {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    padding-top: 1px;
+    flex-shrink: 0;
+  }
+  .t-content {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .t-content .signal {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 1px 6px;
+    border-radius: 2px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .sig-alert { background: var(--red-dim); color: var(--red); }
+  .sig-flag { background: var(--amber-dim); color: var(--amber); }
+  .sig-info { background: var(--surface-3); color: var(--text-dim); }
+
+  /* ── WHAT WE KNOW / DON'T KNOW ── */
+  .knowledge-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 32px;
+    background: var(--border);
+  }
+  .know-box {
+    background: var(--surface);
+    padding: 24px 24px;
+  }
+  .know-box h3 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .know-box.known h3 { color: var(--green); }
+  .know-box.unknown h3 { color: var(--amber); }
+  .know-list {
+    list-style: none;
+  }
+  .know-list li {
+    font-size: 13.5px;
+    color: var(--text-dim);
+    padding: 7px 0 7px 16px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    line-height: 1.5;
+  }
+  .know-list li:last-child { border-bottom: none; }
+  .know-list li::before {
+    position: absolute;
+    left: 0;
+    top: 9px;
+    font-family: var(--mono);
+    font-size: 10px;
+  }
+  .known .know-list li::before { content: '✓'; color: var(--green); }
+  .unknown .know-list li::before { content: '?'; color: var(--amber); }
+
+  /* ── REGULATORY STAKES ── */
+  .reg-stakes {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px 28px;
+    margin-bottom: 32px;
+  }
+  .reg-stakes h3 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 16px;
+  }
+  .reg-row {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13.5px;
+  }
+  .reg-row:last-child { border-bottom: none; }
+  .reg-name {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    flex-shrink: 0;
+    width: 180px;
+  }
+  .reg-implication { color: var(--text-dim); line-height: 1.5; }
+
+  /* ── DECISION SECTION ── */
+  .decision-section {
+    background: var(--surface-2);
+    border: 1px solid var(--border-bright);
+    padding: 32px;
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .decision-section::before {
+    content: 'DECISION';
+    position: absolute;
+    top: -1px;
+    left: 32px;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    background: var(--accent-dim);
+    color: var(--accent);
+    padding: 3px 10px;
+    border: 1px solid var(--accent-dim);
+  }
+  .decision-title {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    margin: 16px 0 12px;
+    line-height: 1.3;
+  }
+  .decision-body p {
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.8;
+    margin-bottom: 14px;
+  }
+  .decision-body p:last-child { margin-bottom: 0; }
+  .decision-body strong { color: white; font-weight: 600; }
+  .decision-body em { font-style: italic; color: var(--text-dim); }
+
+  /* ── UNCERTAINTY NOTE ── */
+  .uncertainty {
+    background: var(--amber-dim);
+    border-left: 2px solid var(--amber);
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+  .uncertainty::before {
+    content: 'ACKNOWLEDGED UNCERTAINTY — ';
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    color: var(--amber);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* ── PRIORITIES ── */
+  .priorities {
+    margin-top: 24px;
+  }
+  .priorities h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 12px;
+  }
+  .priority-item {
+    display: flex;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: baseline;
+  }
+  .priority-item:last-child { border-bottom: none; }
+  .p-rank {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    flex-shrink: 0;
+    width: 24px;
+  }
+  .p-action {
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .p-rationale {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* ── REFLECTION ── */
+  .reflection {
+    border-top: 1px solid var(--border);
+    padding-top: 28px;
+    margin-top: 32px;
+  }
+  .reflection h3 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 16px;
+  }
+  .reflection p {
+    font-size: 14px;
+    font-style: italic;
+    color: var(--text-dim);
+    line-height: 1.8;
+    margin-bottom: 12px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 680px) {
+    .hero, .scenario-wrap { padding-left: 20px; padding-right: 20px; }
+    .scenario-tabs { padding: 0 20px; }
+    .site-header { padding: 12px 20px; }
+    .knowledge-grid { grid-template-columns: 1fr; }
+    .incident-header { grid-template-columns: 1fr; }
+    .timeline-entry { grid-template-columns: 90px 1fr; }
+    .reg-name { width: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-brand"><span>Arken Systems</span> &nbsp;·&nbsp; AI Incident Response</div>
+  <div class="header-status">
+    <div class="status-dot"></div>
+    Active Incident Log — Veriflow Payments Ltd
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">Portfolio — How I Decide Under Pressure</div>
+  <h1>AI Incident Response:<br><em>Three Scenarios from the Field</em></h1>
+  <p class="hero-deck">Real incidents don't arrive with complete information. These scenarios reconstruct three AI system failures at Veriflow Payments Ltd — each with partial data, time pressure, and a decision that had to be made anyway.</p>
+  <div class="hero-note">
+    These are not post-hoc analyses. They are written as live incident responses — in the moment, with what was known at the time. The uncertainty is intentional. Decisions made with acknowledged gaps are more realistic than frameworks applied after the fact.<br><br>
+    Prepared by Gemma Isaac, GRC Analyst, Arken Systems · April 2026
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="scenario-tabs">
+  <button class="tab-btn active" onclick="showTab(0)">
+    <span class="tab-num">Scenario 01</span>
+    Credit Bias Escalation
+    <span class="tab-sev sev-critical">Critical</span>
+  </button>
+  <button class="tab-btn" onclick="showTab(1)">
+    <span class="tab-num">Scenario 02</span>
+    Model Drift — Financial Loss
+    <span class="tab-sev sev-critical">Critical</span>
+  </button>
+  <button class="tab-btn" onclick="showTab(2)">
+    <span class="tab-num">Scenario 03</span>
+    Third-Party Model Failure
+    <span class="tab-sev sev-high">High</span>
+  </button>
+</div>
+
+<!-- ════════════════ SCENARIO 01 ════════════════ -->
+<div class="scenario-panel active" id="panel-0">
+<div class="scenario-wrap">
+
+  <div class="incident-header">
+    <div>
+      <div class="incident-title">Credit Bias Escalation:<br>Disproportionate Decline Rates in Ethnic Minority Applicants</div>
+      <div class="incident-meta">
+        <div class="meta-item"><label>Date</label><span>14 March 2026 · 09:47</span></div>
+        <div class="meta-item"><label>System</label><span>ClearScore AI Credit Scoring</span></div>
+        <div class="meta-item"><label>Raised by</label><span>Head of Customer Operations</span></div>
+        <div class="meta-item"><label>Incident ref</label><span>VF-AI-INC-001</span></div>
+      </div>
+    </div>
+    <div class="sev-badge sev-critical">● Critical</div>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-label">How this reached me</div>
+    <div class="timeline-entry">
+      <div class="t-time">Mon 09:12</div>
+      <div class="t-content">Customer Operations receives a complaint from a rejected merchant applicant alleging racial discrimination in the credit decision. Complaint references two friends from similar financial backgrounds who were accepted. <span class="signal sig-alert">Complaint</span></div>
+    </div>
+    <div class="timeline-entry">
+      <div class="t-time">09:31</div>
+      <div class="t-content">Customer Operations manager pulls the last 30 days of decline decisions and notices, informally, that a higher proportion of declined applicants have names suggesting South Asian and Black African origin. She flags to her director. <span class="signal sig-flag">Pattern flag</span></div>
+    </div>
+    <div class="timeline-entry">
+      <div class="t-time">09:47</div>
+      <div class="t-content">I receive an email: "Gemma — can you look at this? Not sure if it's a data thing or a model thing or nothing. Don't want to escalate if it's nothing." No data attached. No statistical analysis. Just the observation. <span class="signal sig-info">Referred to GRC</span></div>
+    </div>
+    <div class="timeline-entry">
+      <div class="t-time">10:15</div>
+      <div class="t-content">I pull the available internal data. Veriflow does not collect applicant ethnicity data directly — this information is not in our systems. The pattern observation was based on names, which is not a reliable proxy and is itself a concerning analytical approach. <span class="signal sig-flag">Data gap</span></div>
+    </div>
+    <div class="timeline-entry">
+      <div class="t-time">11:00</div>
+      <div class="t-content">I contact ClearScore AI to request disaggregated performance data by demographic group. They confirm this is in their quarterly reporting cycle. Next report due in six weeks. No ad-hoc reporting capability offered. <span class="signal sig-alert">Vendor gap</span></div>
+    </div>
+  </div>
+
+  <div class="knowledge-grid">
+    <div class="know-box known">
+      <h3>What I know</h3>
+      <ul class="know-list">
+        <li>One formal discrimination complaint has been received and is live</li>
+        <li>A pattern observation exists — but it was made informally and without statistical rigour</li>
+        <li>Veriflow does not hold ethnicity data so cannot independently verify a demographic disparity</li>
+        <li>ClearScore AI's vendor due diligence identified that bias monitoring is vendor-controlled with no deployer-side visibility</li>
+        <li>The AI risk register flagged disproportionate impact as a High risk with a mitigation action that has not yet been completed</li>
+        <li>Under the Equality Act 2010, indirect discrimination does not require intent</li>
+      </ul>
+    </div>
+    <div class="know-box unknown">
+      <h3>What I don't know</h3>
+      <ul class="know-list">
+        <li>Whether there is a statistically significant disparity — the informal pattern observation is not evidence</li>
+        <li>Whether the disparity, if real, is driven by the model or by input data correlated with protected characteristics</li>
+        <li>How many applicants may have been affected — we have no way to calculate this without demographic data</li>
+        <li>Whether ClearScore AI's training data contains proxies for ethnicity (postcode, spending patterns) that create indirect discrimination</li>
+        <li>Whether the individual complaint has merit — that requires a separate review of the specific decision</li>
+        <li>What ClearScore AI's actual fairness metrics show — we are six weeks from their next report</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="reg-stakes">
+    <h3>Regulatory implications</h3>
+    <div class="reg-row">
+      <div class="reg-name">Equality Act 2010</div>
+      <div class="reg-implication">Indirect discrimination — if the model produces disparate outcomes for a protected group without justification, this is unlawful regardless of intent. A single complaint is sufficient to trigger investigation obligations.</div>
+    </div>
+    <div class="reg-row">
+      <div class="reg-name">FCA Consumer Duty</div>
+      <div class="reg-implication">The duty requires firms to deliver good outcomes for all customers, including those sharing protected characteristics. An unexplained disparity in credit decisions is a Consumer Duty concern even before it constitutes discrimination.</div>
+    </div>
+    <div class="reg-row">
+      <div class="reg-name">EU AI Act Art. 26</div>
+      <div class="reg-implication">As deployer, Veriflow is responsible for monitoring AI system outputs for compliance and for taking action where risks to fundamental rights are identified. We cannot outsource this obligation to ClearScore AI.</div>
+    </div>
+    <div class="reg-row">
+      <div class="reg-name">UK GDPR Art. 22</div>
+      <div class="reg-implication">The complainant has a right to meaningful explanation of the automated decision affecting them. This request may follow. We need to be able to provide one.</div>
+    </div>
+  </div>
+
+  <div class="decision-section">
+    <div class="decision-title">My decision and the reasoning behind it</div>
+    <div class="decision-body">
+
+      <div class="uncertainty">
+        I cannot confirm whether a discriminatory pattern exists. The informal observation is not evidence. I am making decisions based on the possibility that it is real, because the consequences of acting too slowly — if it is real — are materially worse than acting on something that turns out to be noise.
+      </div>
+
+      <p>The first and most important decision is to <strong>treat this as a live incident from this moment</strong>, not as a monitoring flag. The distinction matters: a live incident triggers our incident response process, creates a documented timeline, and assigns ownership. A monitoring flag can sit on a tracker for six weeks. Given the regulatory exposure — Equality Act, Consumer Duty, EU AI Act — I am not prepared to let this sit.</p>
+
+      <p>The second decision is to <strong>not suspend the model immediately</strong>. This is the harder call and I want to be explicit about my reasoning. Suspension would be the appropriate response if I had evidence of ongoing harm. I do not yet have that evidence — I have one complaint and an informal observation. Suspension would also cause significant operational disruption and would need to be justified to senior leadership. I am not confident I can justify it on current information. <em>I may be wrong about this. If the disparity is confirmed, I will need to defend this decision.</em></p>
+
+      <p>The third decision is to <strong>invoke contractual audit rights immediately</strong>. Our vendor due diligence established these rights. I am exercising them now — not in six weeks when the quarterly report arrives. I am requesting disaggregated performance data by postcode cluster (as a proxy for demographic risk) within five business days. If ClearScore AI does not provide this, that itself becomes an escalation point.</p>
+
+      <div class="priorities">
+        <h4>Actions, in priority order</h4>
+        <div class="priority-item">
+          <div class="p-rank">01</div>
+          <div class="p-action">
+            Log this as a formal AI incident (VF-AI-INC-001) and notify the CISO and DPO within the hour
+            <div class="p-rationale">Creates the documented timeline. If this escalates, we need to show we took it seriously immediately.</div>
+          </div>
+        </div>
+        <div class="priority-item">
+          <div class="p-rank">02</div>
+          <div class="p-action">
+            Request emergency disaggregated performance data from ClearScore AI under our contractual audit rights — five business day deadline
+            <div class="p-rationale">We cannot assess severity without data. The vendor contractual obligation exists; use it.</div>
+          </div>
+        </div>
+        <div class="priority-item">
+          <div class="p-rank">03</div>
+          <div class="p-action">
+            Review the specific declined application that generated the complaint and prepare a decision explanation for the complainant
+            <div class="p-rationale">UK GDPR Art. 22 right to explanation. Also: if this application was incorrectly declined, we should know that now.</div>
+          </div>
+        </div>
+        <div class="priority-item">
+          <div class="p-rank">04</div>
+          <div class="p-action">
+            Establish an independent monitoring layer for decline rates by postcode cluster — do not wait for vendor data
+            <div class="p-rationale">This is a gap we identified in vendor due diligence and never closed. Close it now.</div>
+          </div>
+        </div>
+        <div class="priority-item">
+          <div class="p-rank">05</div>
+          <div class="p-action">
+            Schedule a 48-hour review point — if ClearScore AI data confirms disparity, I will recommend model suspension at that point
+            <div class="p-rationale">I am not suspending now on insufficient evidence. I am committing to a decision point when evidence arrives.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reflection">
+    <h3>What I'm sitting with</h3>
+    <p>The decision not to suspend immediately is the one I'm least comfortable with. My reasoning is sound — I don't have evidence of ongoing harm, and suspension on the basis of an informal observation would be hard to defend. But I'm aware that "hard to defend" is a business consideration, and "someone may be experiencing discrimination right now" is a human one. I've logged that tension explicitly because I think it belongs in the incident record.</p>
+    <p>I'm also aware that the gap in our vendor contract — no ad-hoc demographic reporting capability — was identified in our due diligence and flagged as a risk. This incident is that risk materialising. The lesson is that a contractual right to annual audit data is not the same as operational visibility. We needed ongoing monitoring and we didn't build it. That's on us, not the vendor.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ════════════════ SCENARIO 02 ════════════════ -->
+<div class="scenario-panel" id="panel-1">
+<div class="scenario-wrap">
+
+  <div class="incident-header">
+    <div>
+      <div class="incident-title">Model Drift Causing Financial Loss:<br>Approval Rate Collapse in SME Segment</div>
+      <div class="incident-meta">
+        <div class="meta-item"><label>Date</label><span>7 April 2026 · 14:22</span></div>
+        <div class="meta-item"><label>System</label><span>ClearScore AI Credit Scoring</span></div>
+        <div class="meta-item"><label>Raised by</label><span>Head of Commercial</span></div>
+        <div class="meta-item"><label>Incident ref</label><span>VF-AI-INC-002</span></div>
+      </div>
+    </div>
+    <div class="sev-badge sev-critical">● Critical</div>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-label">How this reached me</div>
+    <div class="timeline-entry">
+      <div class="t-time">Mon 08:30</div>
+      <div class="t-content">Weekly commercial dashboard shows SME merchant approval rate has dropped from 67% to 41% over the past three weeks. Finance flags a £340k projected revenue shortfall if the rate holds. <span class="signal sig-alert">Revenue impact</span></div>
+    </div>
+    <div class="timeline-entry">
+      <div class="t-time">09:45</div>
+      <div class="t-content">Head of Commercial raises with CTO: "The model is rejecting applications it was approving six weeks ago. Same applicant profiles, different outcomes. Something has changed." <span class="signal sig-flag">Behaviour change</span></div>
+    </div>
+    <div class="timeline-entry">
+      <div class="t-time">11:00</div>
+      <div class="t-content">CTO contacts ClearScore AI. They confirm a model update was deployed three weeks ago — the same week the approval rate started falling. The update was not communicated to Veriflow in advance. <span class="signal sig-alert">Contract breach</span></div>
+    </div>
+    <div class="timeline-entry">
+      <div class="t-time">14:22</div>
+      <div class="t-content">Incident referred to GRC. Question from CTO: "Can we roll back? Should we suspend? What do we do?" No rollback has been offered by ClearScore AI yet. Current decisions are still being made by the updated model. <span class="signal sig-info">GRC engaged</span></div>
+    </div>
+  </div>
+
+  <div class="knowledge-grid">
+    <div class="know-box known">
+      <h3>What I know</h3>
+      <ul class="know-list">
+        <li>The model was updated three weeks ago without prior notification to Veriflow — this is a breach of the contractual notification requirement from our vendor due diligence</li>
+        <li>The approval rate change is statistically significant — 26 percentage points is not noise</li>
+        <li>The change correlates precisely with the model update timing</li>
+        <li>Veriflow has suffered a quantifiable financial impact — £340k projected shortfall</li>
+        <li>We have no information about what changed in the update or why</li>
+        <li>Decisions made since the update may be systematically different from what the previous model would have produced</li>
+      </ul>
+    </div>
+    <div class="know-box unknown">
+      <h3>What I don't know</h3>
+      <ul class="know-list">
+        <li>Whether the new model is more accurate — the approval rate drop may reflect genuinely higher-risk applicants, or it may reflect miscalibration</li>
+        <li>Whether the applicants declined in the past three weeks were correctly declined or incorrectly declined</li>
+        <li>Whether a rollback is technically possible, and if so, how long it would take</li>
+        <li>What changed in the model update — ClearScore AI has not yet provided technical details</li>
+        <li>Whether other lenders using ClearScore AI have seen similar patterns</li>
+        <li>Whether the update introduced bias as a side effect of optimising for a different performance metric</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="reg-stakes">
+    <h3>Regulatory implications</h3>
+    <div class="reg-row">
+      <div class="reg-name">EU AI Act Art. 26</div>
+      <div class="reg-implication">Deployer obligation to monitor post-market performance. The fact that we detected this through revenue impact rather than monitoring is itself a governance failure. We were not actively watching the model.</div>
+    </div>
+    <div class="reg-row">
+      <div class="reg-name">FCA Consumer Duty</div>
+      <div class="reg-implication">If the updated model is incorrectly declining creditworthy applicants, those applicants are being harmed. The duty requires good outcomes. We are potentially producing bad ones at scale right now.</div>
+    </div>
+    <div class="reg-row">
+      <div class="reg-name">Contract — ClearScore AI</div>
+      <div class="reg-implication">The vendor due diligence established a contractual requirement for pre-deployment notification of model updates. That requirement was not met. This is a breach. It has direct financial consequences for Veriflow.</div>
+    </div>
+    <div class="reg-row">
+      <div class="reg-name">EU AI Act Art. 72</div>
+      <div class="reg-implication">Post-market monitoring obligations. A material change in model outputs constitutes a significant event that may require regulatory notification depending on the severity assessment.</div>
+    </div>
+  </div>
+
+  <div class="decision-section">
+    <div class="decision-title">My decision and the reasoning behind it</div>
+    <div class="decision-body">
+
+      <div class="uncertainty">
+        I don't know whether the new model is right or wrong. The approval rate drop might reflect genuine risk recalibration — in which case stopping it would be the wrong call. Or it might reflect a miscalibrated update — in which case continuing it is causing harm. I am making a decision without knowing which is true.
+      </div>
+
+      <p>This situation is different from the bias incident. There, I had insufficient evidence to act. Here, I have direct evidence of a material change in model behaviour — a 26 percentage point shift in outcomes — caused by an undisclosed vendor action that breached our contract. That changes the calculus.</p>
+
+      <p>My recommendation is to <strong>suspend the updated model and revert to manual decision-making for new applications within 24 hours</strong>, while we obtain the information needed to assess whether the update was appropriate. This is a significant operational recommendation. I am making it because we are currently running a system whose behaviour has changed materially in ways we cannot explain, and we are making credit decisions that may be systematically wrong — either too restrictive or in ways that create regulatory exposure. The cost of continuing while we investigate is the risk of ongoing harm at scale. The cost of suspending is operational disruption and some lost revenue.</p>
+
+      <p><strong>On the contract breach:</strong> ClearScore AI's failure to provide pre-deployment notification is not just a process failure — it directly caused us to be in this position. I am recommending we issue a formal breach notice and that commercial leadership considers whether the contract value should be adjusted to account for the financial impact. This needs Legal involved.</p>
+
+      <div class="priorities">
+        <h4>Actions, in priority order</h4>
+        <div class="priority-item">
+          <div class="p-rank">01</div>
+          <div class="p-action">
+            Recommend model suspension to CISO and CTO — implement manual review process for new applications within 24 hours
+            <div class="p-rationale">We cannot assess whether ongoing decisions are correct. Suspension is proportionate to the uncertainty.</div>
+          </div>
+        </div>
+        <div class="priority-item">
+          <div class="p-rank">02</div>
+          <div class="p-action">
+            Issue formal breach notice to ClearScore AI — require full technical documentation of the update within 48 hours
+            <div class="p-rationale">We need to understand what changed. The contractual breach creates leverage. Use it.</div>
+          </div>
+        </div>
+        <div class="priority-item">
+          <div class="p-rank">03</div>
+          <div class="p-action">
+            Commission retrospective review of decisions made since the update — sample 50 declined applications for manual assessment
+            <div class="p-rationale">If incorrectly declined applicants can be identified and contacted, we may be able to remediate. This also builds the evidence base for the regulatory question.</div>
+          </div>
+        </div>
+        <div class="priority-item">
+          <div class="p-rank">04</div>
+          <div class="p-action">
+            Notify DPO and assess whether FCA notification is required under operational resilience reporting
+            <div class="p-rationale">A material unexplained change in credit decision outputs may constitute a notifiable event. Better to assess and decide not to notify than to miss a notification obligation.</div>
+          </div>
+        </div>
+        <div class="priority-item">
+          <div class="p-rank">05</div>
+          <div class="p-action">
+            Begin evaluation of alternative credit scoring vendors — do not wait for this incident to resolve before assessing dependency risk
+            <div class="p-rationale">This is the second significant failure from ClearScore AI. Vendor concentration risk is now a board-level concern.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reflection">
+    <h3>What I'm sitting with</h3>
+    <p>The recommendation to suspend is the right call analytically, but I'm aware it will face pushback. "We're losing £340k in revenue and your solution is to take the model offline" is a hard message. My answer is that we don't know whether the model is producing the right outcomes, and continuing to make high-stakes credit decisions on a system whose behaviour we cannot explain is not acceptable — regardless of the short-term revenue cost.</p>
+    <p>The deeper concern here is systemic. We detected this incident because of revenue impact, not because we were monitoring model behaviour. That means the monitoring gap we identified in our risk register was real and consequential. If the model had drifted in a direction that was harder to see in the numbers — a subtle increase in bias, for example — we might not have caught it at all. The incident is resolved by suspension. The underlying problem is resolved by building real-time monitoring into our deployer infrastructure. That should be a post-incident commitment, not a future consideration.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ════════════════ SCENARIO 03 ════════════════ -->
+<div class="scenario-panel" id="panel-2">
+<div class="scenario-wrap">
+
+  <div class="incident-header">
+    <div>
+      <div class="incident-title">Third-Party Model Failure:<br>ClearScore AI Service Disruption — Suspected Data Breach</div>
+      <div class="incident-meta">
+        <div class="meta-item"><label>Date</label><span>22 April 2026 · 07:15</span></div>
+        <div class="meta-item"><label>System</label><span>ClearScore AI Credit Scoring</span></div>
+        <div class="meta-item"><label>Raised by</label><span>IT Operations (automated alert)</span></div>
+        <div class="meta-item"><label>Incident ref</label><span>VF-AI-INC-003</span></div>
+      </div>
+    </div>
+    <div class="sev-badge" style="background: var(--amber-dim); color: var(--amber);">● High</div>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-label">How this reached me</div>
+    <div class="timeline-entry">
+      <div class="t-time">Tue 06:43</div>
+      <div class="t-content">Automated monitoring detects that the ClearScore AI API endpoint is returning 503 errors. Credit scoring requests for merchant applications are failing. New applications cannot be processed. <span class="signal sig-alert">Service down</span></div>
+    </div>
+    <div class="timeline-entry">
+      <div class="t-time">07:00</div>
+      <div class="t-content">IT Operations attempts to contact ClearScore AI via their support channel. Automated response only. No human contact available. Status page shows "Investigating" with no detail. <span class="signal sig-flag">Vendor unresponsive</span></div>
+    </div>
+    <div class="timeline-entry">
+      <div class="t-time">07:15</div>
+      <div class="t-content">I am paged. Simultaneously, a security researcher posts on LinkedIn that a major UK credit scoring API provider has suffered a data exposure — partial training data and customer application records alleged to be circulating on a dark web forum. No vendor named yet. <span class="signal sig-alert">Possible breach</span></div>
+    </div>
+    <div class="timeline-entry">
+      <div class="t-time">07:42</div>
+      <div class="t-content">The LinkedIn post is shared in a fintech Slack community. Someone in the thread says "pretty sure it's ClearScore AI — same infrastructure fingerprint." This is unverified. Could be speculation. Could be accurate. <span class="signal sig-flag">Unverified intel</span></div>
+    </div>
+    <div class="timeline-entry">
+      <div class="t-time">08:00</div>
+      <div class="t-content">ClearScore AI sends an email: "We are experiencing a service disruption and are investigating. We will provide an update within 4 hours." No mention of a data breach. No mention of the social media claims. <span class="signal sig-info">Vendor comms</span></div>
+    </div>
+  </div>
+
+  <div class="knowledge-grid">
+    <div class="know-box known">
+      <h3>What I know</h3>
+      <ul class="know-list">
+        <li>ClearScore AI's service is currently down — Veriflow cannot process new credit applications</li>
+        <li>ClearScore AI has acknowledged a "service disruption" but has not mentioned a data breach</li>
+        <li>There are public claims of a data breach affecting a UK credit scoring API provider, with ClearScore AI named speculatively but not confirmed</li>
+        <li>Veriflow transmits applicant financial data to ClearScore AI for scoring — if they have been breached, that data may be affected</li>
+        <li>We have a contractual notification requirement — ClearScore AI must notify us of security incidents</li>
+        <li>Our vendor due diligence identified limited sub-processor visibility as a risk — we still don't know ClearScore AI's infrastructure dependencies</li>
+      </ul>
+    </div>
+    <div class="know-box unknown">
+      <h3>What I don't know</h3>
+      <ul class="know-list">
+        <li>Whether a data breach has actually occurred — the social media claims are unverified and may be inaccurate or speculative</li>
+        <li>Whether Veriflow applicant data is among any data exposed, if a breach did occur</li>
+        <li>The scope and nature of any breach — application data, model training data, or infrastructure access</li>
+        <li>When service will be restored — the 4-hour update window may or may not hold</li>
+        <li>Whether ClearScore AI is managing this as a security incident or purely as a service outage</li>
+        <li>Whether other Veriflow data transmissions to ClearScore AI are affected beyond credit scoring</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="reg-stakes">
+    <h3>Regulatory implications</h3>
+    <div class="reg-row">
+      <div class="reg-name">UK GDPR Art. 33</div>
+      <div class="reg-implication">If personal data of Veriflow applicants has been exposed, Veriflow as controller has a 72-hour notification obligation to the ICO — running from when Veriflow becomes aware, not when the breach is confirmed. The clock may already be running.</div>
+    </div>
+    <div class="reg-row">
+      <div class="reg-name">FCA PS21/3</div>
+      <div class="reg-implication">Operational resilience obligations require Veriflow to maintain the ability to process applications within defined tolerance levels. The current service disruption may breach those tolerances depending on duration.</div>
+    </div>
+    <div class="reg-row">
+      <div class="reg-name">EU AI Act Art. 26</div>
+      <div class="reg-implication">Deployer obligations include ensuring appropriate human oversight when AI systems cannot operate. We need a manual fallback process activated now — not after the vendor resolves the outage.</div>
+    </div>
+    <div class="reg-row">
+      <div class="reg-name">Contract — ClearScore AI</div>
+      <div class="reg-implication">If a breach has occurred and ClearScore AI has not notified Veriflow, they are in breach of the security incident notification clause. Their current communication makes no reference to a potential data incident.</div>
+    </div>
+  </div>
+
+  <div class="decision-section">
+    <div class="decision-title">My decision and the reasoning behind it</div>
+    <div class="decision-body">
+
+      <div class="uncertainty">
+        The breach claim is unverified. I am making decisions as if it might be true, because if it is true and I waited for confirmation, we would have missed our 72-hour ICO notification window and failed our operational resilience obligations simultaneously. I may be responding to something that turns out to be false. I can live with that outcome. I cannot live with the alternative.
+      </div>
+
+      <p>There are two separate problems here that require separate responses and I need to be careful not to conflate them. The first is the <strong>service disruption</strong> — Veriflow cannot currently process applications. The second is the <strong>potential data breach</strong> — which may or may not have occurred, and which requires a different response track.</p>
+
+      <p>On the service disruption: I am activating our manual review fallback process immediately. Applications received while the system is down will be queued for manual credit assessment. This is operationally painful but it is what our operational resilience plan requires. If this disruption extends beyond four hours, I will escalate to the CISO for an FCA operational resilience notification assessment.</p>
+
+      <p>On the potential breach: I am treating this as a <strong>possible personal data breach from this moment</strong> and starting the 72-hour ICO clock internally. The legal basis: Veriflow became aware of a credible public claim that its data processor has been breached at 07:15 this morning. "Credible" is doing work here — the claim is unverified, but it is specific, it has been corroborated by multiple people in the fintech community, and our data processor is actively experiencing a service outage consistent with an incident. That is sufficient to start our internal clock. <em>I may be starting a process that results in no notification if the breach is not confirmed. That is the right outcome — it means we responded appropriately and the situation was less severe than feared.</em></p>
+
+      <div class="priorities">
+        <h4>Actions, in priority order</h4>
+        <div class="priority-item">
+          <div class="p-rank">01</div>
+          <div class="p-action">
+            Activate manual application review fallback immediately — notify Customer Operations and commercial teams
+            <div class="p-rationale">Service is down. Applications need to be processed somehow. This is the operational response.</div>
+          </div>
+        </div>
+        <div class="priority-item">
+          <div class="p-rank">02</div>
+          <div class="p-action">
+            Notify DPO immediately — begin internal breach assessment process and start 72-hour clock
+            <div class="p-rationale">UK GDPR Art. 33 clock runs from awareness of a possible breach, not confirmed breach. We are aware.</div>
+          </div>
+        </div>
+        <div class="priority-item">
+          <div class="p-rank">03</div>
+          <div class="p-action">
+            Contact ClearScore AI's named security contact (not general support) and ask directly: is this a security incident? Require a response within 2 hours.
+            <div class="p-rationale">Their current communication avoids the breach question. We need a direct answer. Two hours, not four.</div>
+          </div>
+        </div>
+        <div class="priority-item">
+          <div class="p-rank">04</div>
+          <div class="p-action">
+            Identify and document all personal data transmitted to ClearScore AI in the last 90 days — volume, categories, applicant count
+            <div class="p-rationale">We need to know the scope of potential exposure before we can assess ICO notification requirements.</div>
+          </div>
+        </div>
+        <div class="priority-item">
+          <div class="p-rank">05</div>
+          <div class="p-action">
+            If no meaningful response from ClearScore AI within 2 hours, escalate to CISO for board notification and FCA operational resilience reporting assessment
+            <div class="p-rationale">At that point vendor unresponsiveness during a potential breach becomes an independent governance concern.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reflection">
+    <h3>What I'm sitting with</h3>
+    <p>The hardest judgement call here is when to treat an unverified claim as actionable. My reasoning: the 72-hour ICO clock is unforgiving, and "we were waiting for confirmation" is not a defence if confirmation comes at hour 60. The regulatory design is intentional — it forces organisations to act on possible breaches, not confirmed ones. I am following that design intent.</p>
+    <p>This incident also completes a pattern across the three scenarios. In each case, a risk that we identified in our vendor due diligence has materialised: lack of demographic monitoring capability, no pre-deployment notification for model updates, no sub-processor transparency. The vendor due diligence was accurate. The question is whether the controls we recommended were actually implemented — and in each case, the answer was partial at best. The lesson is not that due diligence failed. The lesson is that due diligence findings that don't convert into implemented controls are just a document. Arken Systems will be raising this as a programme-level finding, not just an incident-by-incident observation.</p>
+  </div>
+
+</div>
+</div>
+
+<script>
+function showTab(idx) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('.scenario-panel').forEach((p, i) => {
+    p.classList.toggle('active', i === idx);
+  });
+  window.scrollTo({ top: document.querySelector('.scenario-tabs').offsetTop - 20, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
