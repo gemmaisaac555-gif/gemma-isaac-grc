@@ -9,8 +9,7 @@ This is not a collection of projects. It is a working GRC environment.
 
 Background in information governance, research methodology, and cross-cultural analysis, with an MSc in Computer Science and Cybersecurity (University of York, Merit). Actively seeking Cyber Risk / GRC / AI Governance roles in the Manchester area and beyond.
 
-All artefacts use clearly defined fictional scenarios. They are thinking exercises designed to demonstrate judgement — not templates, not compliance theatre.
-
+All artefacts use clearly defined fictional scenarios. They are thinking exercises designed to demonstrate judgement.
 ---
 
 ## ⭐ Start Here
