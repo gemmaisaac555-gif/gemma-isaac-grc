@@ -119,7 +119,7 @@ AI systems introduce risks not fully addressed by traditional cybersecurity fram
 |---|---|
 | **Education** | MSc Computer Science & Cybersecurity, University of York (Merit) |
 | **Previous field** | Archive & Records Management / Information Governance |
-| **Languages** | English (native), Mandarin (intermediate) |
+| **Languages** | English (native), Mandarin (A2 Proficency) |
 | **Community** | OWASP Manchester, Grey Hats, BSides |
 | **Home lab** | Kali Linux, Metasploitable, CSI Linux — 24GB RAM |
 | **Certifications** | ISO 27001 Lead Implementer (in progress) · IAPP AIGP (in progress) |
